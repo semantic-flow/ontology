@@ -1,0 +1,219 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<> a owl:Ontology ;
+    rdfs:label "Semantic Flow Ontology (alpha)"@en ;
+    rdfs:comment "Formal ontology for the Semantic Flow mesh architecture, defining the core structure for mesh repositories, nodes, and elements. The recommended prefix is 'flow'."@en .
+
+#################################################################
+#    Classes
+#################################################################
+
+MeshResource a owl:Class ;
+    rdfs:comment "Abstract base class for all mesh resources. Provides fundamental properties for identification, metadata, and versioning in the Semantic Flow mesh architecture."@en ;
+    rdfs:label "Mesh Resource"@en .
+
+MeshNode a owl:Class ;
+    rdfs:subClassOf MeshResource ;
+    rdfs:comment "Structural units that organize and contain other MeshNodes. Nodes form the structure of the mesh. They have elements."@en ;
+    rdfs:label "Mesh Node"@en .
+
+Element a owl:Class ;
+    rdfs:subClassOf MeshResource ;
+    rdfs:comment "Terminal resources that provide specific mesh functionality."@en ;
+    rdfs:label "Mesh Element"@en .
+
+NamespaceNode a owl:Class ;
+    rdfs:subClassOf MeshNode ;
+    rdfs:comment "Containers for other nodes. Identifiers for NamespaceNodes don't refer to things or concepts other than themselves."@en ;
+    rdfs:label "Namespace Node"@en .
+
+ReferenceNode a owl:Class ;
+    rdfs:subClassOf MeshNode ;
+    rdfs:comment "Nodes refer to some 'thing' or concept other than themselves."@en ;
+    rdfs:label "Reference Node"@en .
+
+DataNode a owl:Class ;
+    rdfs:subClassOf MeshNode ;
+    rdfs:comment "Nodes that provide 'payload data'."@en ;
+    rdfs:label "Data Node"@en .
+
+Component a owl:Class ;
+    rdfs:subClassOf dcat:DatasetSeries ;
+    rdfs:comment "Abstract datasets for node metadata, reference data, or payload data. Node components are realized through component layers that represent specific states or versions."@en ;
+    rdfs:label "Node Component"@en .
+
+MetadataComponent a owl:Class ;
+    rdfs:subClassOf Element ;
+    rdfs:comment "Centralized per-node metadata management for nodes and their elements."@en ;
+    rdfs:label "Metadata Component"@en .
+
+ReferenceComponent a owl:Class ;
+    rdfs:subClassOf Element ;
+    rdfs:comment "Reference resolution data elements that contain the data needed to resolve references to their targets, implementing the single referent principle."@en ;
+    rdfs:label "Reference Component"@en .
+
+DataComponent a owl:Class ;
+    rdfs:subClassOf Element ;
+    rdfs:comment "Actual content storage elements that contain the concrete data and information that forms the payload of data nodes."@en ;
+    rdfs:label "Data Component"@en .
+
+NodeHandle a owl:Class ;
+    rdfs:subClassOf Element ;
+    rdfs:comment "Node handles have an interest referent: their parent node 'as a node' (as opposed to the thing/concept referred to by the parent)."@en ;
+    rdfs:label "Node Handle"@en .
+
+AssetTree a owl:Class ;
+    rdfs:subClassOf Element ;
+    rdfs:comment "Asset trees contain collections of files and directories that are not MeshResources."@en ;
+    rdfs:label "Asset Tree"@en .
+
+ComponentLayer a owl:Class ;
+    rdfs:subClassOf Element ;
+    rdfs:comment "Layers represent distinct states of a node dataset,  and contain actual RDF data files (aka Distributions)."@en ;
+    rdfs:label "Component Layer"@en .
+
+DocumentationResource a owl:Class ;
+    rdfs:subClassOf Element
+    rdfs:comment "Documentation files that provide human-readable information about mesh resources. Documentation resources support the human-context layer with explanatory content."@en ;
+    rdfs:label "Documentation Resource"@en .
+
+ResourcePage a owl:Class ;
+    rdfs:subClassOf DocumentationResource
+    rdfs:comment "Human-readable interface pages that provide web-based access to mesh resources. Resource pages enable the human-context layer of the mesh architecture."@en ;
+    rdfs:label "Resource Page"@en .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+hasElement a owl:ObjectProperty ;
+    rdfs:domain MeshNode ;
+    rdfs:range Element ;
+    rdfs:comment "Associates nodes with their operational elements. This property links nodes to the specific mesh elements that provide their functionality."@en ;
+    rdfs:label "has element"@en .
+
+refersTo a owl:ObjectProperty ;
+    rdfs:domain ReferenceNode ;
+    rdfs:range DataNode ;
+    rdfs:comment "Indicates that a reference node points to a data node, implementing the single referent principle. This property creates the indirection that enables transposability."@en ;
+    rdfs:label "refers to"@en .
+
+isHandleFor a owl:ObjectProperty ;
+    rdfs:domain NodeHandle ;
+    rdfs:range MeshNode ;
+    rdfs:comment "Indicates that a handle element provides identification and routing for a specific node. This property enables location-independent node access."@en ;
+    rdfs:label "is handle for"@en .
+
+hasNodeHandle a owl:ObjectProperty ;
+    rdfs:domain MeshNode ;
+    rdfs:range NodeHandle ;
+    rdfs:comment "Associates a mesh node with its persistent handle identifier. This property enables location-independent node addressing and routing across mesh topology changes."@en ;
+    rdfs:label "has mesh node handle"@en .
+
+hasReferenceComponent a owl:ObjectProperty ;
+    rdfs:domain MeshNode ;
+    rdfs:range NodeComponent ;
+    rdfs:comment "Associates a mesh node with its persistent dataset series. This property links nodes to their persistent datasets."@en ;
+    rdfs:label "has node component"@en .
+
+hasMetadataComponent a owl:ObjectProperty ;
+    rdfs:domain MeshNode ;
+    rdfs:range MetadataComponent ;
+    rdfs:comment "Links mesh nodes to their metadata components."@en ;
+    rdfs:label "has metadata component"@en .
+
+hasDataComponent a owl:ObjectProperty ;
+    rdfs:domain MeshNode ;
+    rdfs:range DataComponent ;
+    rdfs:comment "Links mesh nodes to their metadata components."@en ;
+    rdfs:label "has metadata component"@en .
+
+hasComponentLayer a owl:ObjectProperty ;
+    rdfs:domain NodeComponent ;
+    rdfs:range ComponentLayer ;
+    rdfs:comment "Associates a node component with its versioned layers. This property enables version management within components."@en ;
+    rdfs:label "has component layer"@en .
+
+#################################################################
+#    Data Properties
+#################################################################
+
+hasVersion a owl:DatatypeProperty ;
+    rdfs:domain MeshResource ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Specifies the version identifier for a mesh resource. Version tracking supports evolution and compatibility management in the mesh architecture."@en ;
+    rdfs:label "has version"@en .
+
+hasMetadata a owl:ObjectProperty ;
+    rdfs:domain MeshResource ;
+    rdfs:range MetadataComponent ;
+    rdfs:comment "Links mesh resources to their metadata components. This property enables structured metadata management and discovery capabilities."@en ;
+    rdfs:label "has metadata"@en .
+
+dcterms:identifier a owl:DatatypeProperty ;
+    rdfs:domain MeshResource ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Mandatory unique identifier for all mesh resources. This property ensures every mesh resource has a stable identifier for referencing and discovery."@en ;
+    rdfs:label "identifier"@en .
+
+
+#################################################################
+#    Disjointness Axioms
+#################################################################
+
+###  MeshNode and Element are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( MeshNode Element )
+] .
+
+###  Node types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( NamespaceNode ReferenceNode DataNode )
+] .
+
+###  Element types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( MetadataComponent NodeHandle ReferenceComponent DataComponent AssetTree )
+] .
+
+
+[ a owl:AllDisjointClasses ;
+    owl:members ( MetadataComponent ReferenceComponent DataComponent )
+] .
+
+
+#################################################################
+#    SHACL Constraints
+#################################################################
+
+# Abstract Classes
+
+:NodeComponentShape a sh:NodeShape ;
+    sh:targetClass :NodeComponent ;
+    sh:not [ sh:class :NodeComponent ] ;  # No direct instances
+    sh:message "NodeComponent is abstract - use a specific subclass" .
+
+:ComponentLayerShape a sh:NodeShape ;
+    sh:targetClass :ComponentLayer ;
+    sh:not [ sh:class :ComponentLayer ] ;
+    sh:message "ComponentLayer is abstract - use CurrentLayer, NextLayer, or VersionLayer" .
+
+:DocumentationResourceShape a sh:NodeShape ;
+    sh:targetClass :DocumentationResource ;
+    sh:not [ sh:class :DocumentationResource ] ;
+    sh:message "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass" .
+
+#################################################################
+#    Annotations
+#################################################################
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
+###  Semantic Flow Ontology Phase 1 - Core Structure Implementation
+###  Implements foundational class hierarchy and properties for mesh architecture
