@@ -129,14 +129,8 @@
 <hasElement> a owl:ObjectProperty ;
     rdfs:domain <MeshNode> ;
     rdfs:range <Element> ;
-    rdfs:comment "Associates nodes with their operational elements. This property links nodes to the specific mesh elements that provide their functionality."@en ;
+    rdfs:comment "Associates nodes with their supporting elements."@en ;
     rdfs:label "has element"@en .
-
-<refersTo> a owl:ObjectProperty ;
-    rdfs:domain <ReferenceNode> ;
-    rdfs:range <DataNode> ;
-    rdfs:comment "Indicates that a reference node points to a data node, implementing the single referent principle. This property creates the indirection that enables transposability."@en ;
-    rdfs:label "refers to"@en .
 
 <isHandleFor> a owl:ObjectProperty ;
     rdfs:domain <NodeHandle> ;
@@ -195,7 +189,7 @@
 <representsLayer> a owl:ObjectProperty ;
     rdfs:domain <CurrentLayer> ;
     rdfs:range <VersionLayer> ;
-    rdfs:comment "Associates a current layer with its current version layer."@en ;
+    rdfs:comment "Associates a current layer with its version layer."@en ;
     rdfs:label "represents layer"@en .
 
 #################################################################
