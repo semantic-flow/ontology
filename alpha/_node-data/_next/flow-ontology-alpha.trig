@@ -1,10 +1,8 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
 
 <> a owl:Ontology ;
     rdfs:label "Semantic Flow Ontology (alpha)"@en ;
@@ -29,7 +27,7 @@ FolderResource a owl:Class ;
     rdfs:label "Folder Resource"@en .
 
 MeshNode a owl:Class ;
-    rdfs:subClassOf FolderResource ;
+    rdfs:subClassOf MeshResource ;
     rdfs:comment "Structural units that organize and contain other MeshNodes. Nodes form the structure of the mesh. They have elements."@en ;
     rdfs:label "Mesh Node"@en .
 
@@ -155,20 +153,20 @@ hasNodeHandle a owl:ObjectProperty ;
 hasReferenceComponent a owl:ObjectProperty ;
     rdfs:domain MeshNode ;
     rdfs:range NodeComponent ;
-    rdfs:comment "Associates a mesh node with its persistent dataset series. This property links nodes to their persistent datasets."@en ;
-    rdfs:label "has node component"@en .
+    rdfs:comment "Links mesh nodes to their reference component."@en ;
+    rdfs:label "has reference component"@en .
 
 hasMetadataComponent a owl:ObjectProperty ;
     rdfs:domain MeshNode ;
     rdfs:range MetadataComponent ;
-    rdfs:comment "Links mesh nodes to their metadata components."@en ;
+    rdfs:comment "Links mesh nodes to their metadata component."@en ;
     rdfs:label "has metadata component"@en .
 
 hasDataComponent a owl:ObjectProperty ;
     rdfs:domain MeshNode ;
     rdfs:range DataComponent ;
-    rdfs:comment "Links mesh nodes to their metadata components."@en ;
-    rdfs:label "has metadata component"@en .
+    rdfs:comment "Links mesh nodes to their data component."@en ;
+    rdfs:label "has data component"@en .
 
 hasComponentLayer a owl:ObjectProperty ;
     rdfs:domain NodeComponent ;
@@ -204,13 +202,6 @@ representsLayer a owl:ObjectProperty ;
 #    Data Properties
 #################################################################
 
-hasMetadata a owl:ObjectProperty ;
-    rdfs:domain MeshResource ;
-    rdfs:range MetadataComponent ;
-    rdfs:comment "Links mesh resources to their metadata components. This property enables structured metadata management and discovery capabilities."@en ;
-    rdfs:label "has metadata"@en .
-
-
 
 #################################################################
 #    Disjointness Axioms
@@ -228,7 +219,7 @@ hasMetadata a owl:ObjectProperty ;
 
 ###  Element types are disjoint
 [ a owl:AllDisjointClasses ;
-    owl:members ( MetadataComponent NodeHandle ReferenceComponent DataComponent AssetTree )
+    owl:members ( NodeHandle MetadataComponent ReferenceComponent DataComponent ComponentLayer AssetTree DocumentationResource )
 ] .
 
 ###  Resource types are disjoint
@@ -285,6 +276,35 @@ hasMetadata a owl:ObjectProperty ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
        sh:message "Every MeshNode must have exactly one NodeHandle"
+   ] .
+
+# Node-specific component constraints
+
+:ReferenceNodeShape a sh:NodeShape ;
+   sh:targetClass ReferenceNode ;
+   sh:property [
+       sh:path :hasReferenceComponent ;
+       sh:class :ReferenceComponent ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every ReferenceNode must have exactly one ReferenceComponent"
+   ] .
+
+:DataNodeShape a sh:NodeShape ;
+   sh:targetClass DataNode ;
+   sh:property [
+       sh:path :hasDataComponent ;
+       sh:class :DataComponent ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every DataNode must have exactly one DataComponent"
+   ] ;
+   sh:property [
+       sh:path :hasReferenceComponent ;
+       sh:class :ReferenceComponent ;
+       sh:minCount 0 ;
+       sh:maxCount 1 ;
+       sh:message "DataNode can have at most one ReferenceComponent"
    ] .
 
 #################################################################
