@@ -152,7 +152,7 @@ hasNodeHandle a owl:ObjectProperty ;
 
 hasReferenceComponent a owl:ObjectProperty ;
     rdfs:domain MeshNode ;
-    rdfs:range NodeComponent ;
+    rdfs:range ReferenceComponent ;
     rdfs:comment "Links mesh nodes to their reference component."@en ;
     rdfs:label "has reference component"@en .
 
@@ -169,7 +169,7 @@ hasDataComponent a owl:ObjectProperty ;
     rdfs:label "has data component"@en .
 
 hasComponentLayer a owl:ObjectProperty ;
-    rdfs:domain NodeComponent ;
+    rdfs:domain Component ;
     rdfs:range ComponentLayer ;
     rdfs:comment "Associates a node component with its versioned layers. This property enables version management within components."@en ;
     rdfs:label "has component layer"@en .
@@ -219,7 +219,12 @@ representsLayer a owl:ObjectProperty ;
 
 ###  Element types are disjoint
 [ a owl:AllDisjointClasses ;
-    owl:members ( NodeHandle MetadataComponent ReferenceComponent DataComponent ComponentLayer AssetTree DocumentationResource )
+    owl:members ( NodeHandle Component ComponentLayer AssetTree DocumentationResource )
+] .
+
+###  Component types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( MetadataComponent ReferenceComponent DataComponent )
 ] .
 
 ###  Resource types are disjoint
@@ -244,35 +249,35 @@ representsLayer a owl:ObjectProperty ;
 
 # Abstract Classes
 
-:NodeComponentShape a sh:NodeShape ;
-    sh:targetClass :NodeComponent ;
-    sh:not [ sh:class :NodeComponent ] ;  # No direct instances
-    sh:message "NodeComponent is abstract - use a specific subclass" .
+ComponentShape a sh:NodeShape ;
+    sh:targetClass Component ;
+    sh:not [ sh:class Component ] ;  # No direct instances
+    sh:message "Component is abstract - use a specific subclass" .
 
-:ComponentLayerShape a sh:NodeShape ;
-    sh:targetClass :ComponentLayer ;
-    sh:not [ sh:class :ComponentLayer ] ;
+ComponentLayerShape a sh:NodeShape ;
+    sh:targetClass ComponentLayer ;
+    sh:not [ sh:class ComponentLayer ] ;
     sh:message "ComponentLayer is abstract - use CurrentLayer, NextLayer, or VersionLayer" .
 
-:DocumentationResourceShape a sh:NodeShape ;
-    sh:targetClass :DocumentationResource ;
-    sh:not [ sh:class :DocumentationResource ] ;
+DocumentationResourceShape a sh:NodeShape ;
+    sh:targetClass DocumentationResource ;
+    sh:not [ sh:class DocumentationResource ] ;
     sh:message "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass" .
 
 # Every MeshNode gets a Handle and a MetadataComponent
 
-:MeshNodeShape a sh:NodeShape ;
+MeshNodeShape a sh:NodeShape ;
    sh:targetClass MeshNode ;
    sh:property [
-       sh:path :hasMetadataComponent ;
-       sh:class :MetadataComponent ;
+       sh:path hasMetadataComponent ;
+       sh:class MetadataComponent ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
        sh:message "Every MeshNode must have exactly one MetadataComponent"
    ] ;
    sh:property [
-       sh:path :hasNodeHandle ;
-       sh:class :NodeHandle ;
+       sh:path hasNodeHandle ;
+       sh:class NodeHandle ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
        sh:message "Every MeshNode must have exactly one NodeHandle"
@@ -280,32 +285,44 @@ representsLayer a owl:ObjectProperty ;
 
 # Node-specific component constraints
 
-:ReferenceNodeShape a sh:NodeShape ;
+ReferenceNodeShape a sh:NodeShape ;
    sh:targetClass ReferenceNode ;
    sh:property [
-       sh:path :hasReferenceComponent ;
-       sh:class :ReferenceComponent ;
+       sh:path hasReferenceComponent ;
+       sh:class ReferenceComponent ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
        sh:message "Every ReferenceNode must have exactly one ReferenceComponent"
    ] .
 
-:DataNodeShape a sh:NodeShape ;
+DataNodeShape a sh:NodeShape ;
    sh:targetClass DataNode ;
    sh:property [
-       sh:path :hasDataComponent ;
-       sh:class :DataComponent ;
+       sh:path hasDataComponent ;
+       sh:class DataComponent ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
        sh:message "Every DataNode must have exactly one DataComponent"
    ] ;
    sh:property [
-       sh:path :hasReferenceComponent ;
-       sh:class :ReferenceComponent ;
+       sh:path hasReferenceComponent ;
+       sh:class ReferenceComponent ;
        sh:minCount 0 ;
        sh:maxCount 1 ;
        sh:message "DataNode can have at most one ReferenceComponent"
    ] .
+
+# Every FolderResource should have a ResourcePage
+
+FolderResourceShape a sh:NodeShape ;
+    sh:targetClass FolderResource ;
+    sh:property [
+        sh:path hasResourcePage ;
+        sh:class ResourcePage ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Every FolderResource should have a ResourcePage"
+    ] .
 
 #################################################################
 #    Annotations
