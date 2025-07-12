@@ -71,6 +71,11 @@
     rdfs:comment "Actual content storage elements that contain the concrete data and information that forms the payload of data nodes."@en ;
     rdfs:label "DataComponent"@en .
 
+<ConfigComponent> a owl:Class ;
+    rdfs:subClassOf <Component>, <FolderResource> ;
+    rdfs:comment "Per-node config info for the flow-service."@en ;
+    rdfs:label "ConfigComponent"@en .
+
 <NodeHandle> a owl:Class ;
     rdfs:subClassOf <Element>, <FolderResource> ;
     rdfs:comment "Node handles have an interest referent: their parent node 'as a node' (as opposed to the thing/concept referred to by the parent)."@en ;
@@ -118,7 +123,7 @@
 
 <ResourcePage> a owl:Class ;
     rdfs:subClassOf <DocumentationResource>, <FileResource> ;
-    rdfs:comment "Human-readable `index.html` pages that provide web-based access to mesh resources. Resource pages enable the human-context layer of the mesh architecture."@en ;
+    rdfs:comment "Human-readable `index.html` pages that provide web-based access to mesh resources. Resource pages enable dereferencability for ."@en ;
     rdfs:label "ResourcePage"@en .
 
 
@@ -162,6 +167,12 @@
     rdfs:comment "Links mesh nodes to their data component."@en ;
     rdfs:label "hasDataComponent"@en .
 
+<hasConfigComponent> a owl:ObjectProperty ;
+    rdfs:domain <MeshNode> ;
+    rdfs:range <ConfigComponent> ;
+    rdfs:comment "Links mesh nodes to their config component."@en ;
+    rdfs:label "hasConfigComponent"@en .
+
 <hasComponentLayer> a owl:ObjectProperty ;
     rdfs:domain <Component> ;
     rdfs:range <ComponentLayer> ;
@@ -186,11 +197,11 @@
     rdfs:comment "Associates a mesh resource with its changelog documentation file."@en ;
     rdfs:label "hasChangelog"@en .
 
-<representsLayer> a owl:ObjectProperty ;
+<duplicatesLayer> a owl:ObjectProperty ;
     rdfs:domain <CurrentLayer> ;
     rdfs:range <VersionLayer> ;
-    rdfs:comment "Associates a current layer with its version layer."@en ;
-    rdfs:label "representsLayer"@en .
+    rdfs:comment "Associates a current layer with the most recent version layer."@en ;
+    rdfs:label "duplicatesLayer"@en .
 
 #################################################################
 #    Data Properties
