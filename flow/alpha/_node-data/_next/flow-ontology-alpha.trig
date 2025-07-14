@@ -146,7 +146,7 @@
 <hasNodeHandle> a owl:ObjectProperty ;
     rdfs:domain <MeshNode> ;
     rdfs:range <NodeHandle> ;
-    rdfs:comment "Associates a mesh node with its persistent handle identifier. This property enables location-independent node addressing and routing across mesh topology changes."@en ;
+    rdfs:comment "Associates a mesh node with its persistent handle identifier. This property enables node addressing without overloading the node's canonical, potentially-referring URL."@en ;
     rdfs:label "hasNodeHandle"@en .
 
 <hasReferenceComponent> a owl:ObjectProperty ;
