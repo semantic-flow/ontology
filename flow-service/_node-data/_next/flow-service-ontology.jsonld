@@ -42,6 +42,12 @@
             "rdfs:comment": "Configuration for services contained within flow-service"
         },
         {
+            "@id": "fsvc:MeshPath",
+            "@type": "owl:Class",
+            "rdfs:label": "Mesh Path",
+            "rdfs:comment": "Represents a local file system path to a mesh directory"
+        },
+        {
             "@id": "fsvc:port",
             "@type": "owl:DatatypeProperty",
             "rdfs:label": "port",
@@ -170,6 +176,14 @@
             "rdfs:range": { "@id": "xsd:boolean" }
         },
         {
+            "@id": "fsvc:meshPaths",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:label": "mesh paths",
+            "rdfs:comment": "Array of local file system paths to mesh directories",
+            "rdfs:domain": { "@id": "fsvc:ServiceConfig" },
+            "rdfs:range": { "@id": "xsd:string" }
+        },
+        {
             "@id": "fsvc:nodeDefaults",
             "@type": "owl:ObjectProperty",
             "rdfs:label": "node defaults",
@@ -210,6 +224,22 @@
                     "sh:message": "Host must be a non-empty string"
                 }
             ]
+        },
+        {
+            "@id": "fsvc:MeshPathsShape",
+            "@type": "sh:NodeShape",
+            "@context": {
+                "sh": "http://www.w3.org/ns/shacl#"
+            },
+            "sh:targetObjectsOf": { "@id": "fsvc:meshPaths" },
+            "sh:property": {
+                "@type": "sh:PropertyShape",
+                "sh:path": { "@id": "rdf:value" },
+                "sh:datatype": { "@id": "xsd:string" },
+                "sh:minLength": 1,
+                "sh:pattern": "^[^<>:\"|?*]+$",
+                "sh:message": "Mesh path must be a valid file system path (no invalid characters: < > : \" | ? *)"
+            }
         }
     ]
 }
