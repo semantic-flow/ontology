@@ -128,6 +128,46 @@
             "rdfs:range": { "@id": "xsd:anyURI" }
         },
         {
+            "@id": "fsvc:sentryLoggingEnabled",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:label": "sentry logging enabled",
+            "rdfs:comment": "Whether Sentry log message sending is enabled (separate from error reporting)",
+            "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+            "rdfs:range": { "@id": "xsd:boolean" }
+        },
+        {
+            "@id": "fsvc:logRetentionDays",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:label": "log retention days",
+            "rdfs:comment": "Number of days to retain log files before deletion",
+            "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+            "rdfs:range": { "@id": "xsd:integer" }
+        },
+        {
+            "@id": "fsvc:logMaxFiles",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:label": "log max files",
+            "rdfs:comment": "Maximum number of log files to keep during rotation",
+            "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+            "rdfs:range": { "@id": "xsd:integer" }
+        },
+        {
+            "@id": "fsvc:logMaxFileSize",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:label": "log max file size",
+            "rdfs:comment": "Maximum size per log file in bytes (for size-based rotation)",
+            "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+            "rdfs:range": { "@id": "xsd:integer" }
+        },
+        {
+            "@id": "fsvc:logRotationInterval",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:label": "log rotation interval",
+            "rdfs:comment": "Log rotation interval (daily, weekly, monthly, or size-based)",
+            "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+            "rdfs:range": { "@id": "xsd:string" }
+        },
+        {
             "@id": "fsvc:hasContainedServices",
             "@type": "owl:ObjectProperty",
             "rdfs:label": "has contained services",
@@ -240,6 +280,45 @@
                 "sh:pattern": "^[^<>:\"|?*]+$",
                 "sh:message": "Mesh path must be a valid file system path (no invalid characters: < > : \" | ? *)"
             }
+        },
+        {
+            "@id": "fsvc:LogRetentionShape",
+            "@type": "sh:NodeShape",
+            "sh:targetClass": { "@id": "fsvc:LogChannelConfig" },
+            "sh:property": [
+                {
+                    "@type": "sh:PropertyShape",
+                    "sh:path": { "@id": "fsvc:logRetentionDays" },
+                    "sh:datatype": { "@id": "xsd:integer" },
+                    "sh:minInclusive": 1,
+                    "sh:maxInclusive": 365,
+                    "sh:message": "Log retention days must be an integer between 1 and 365"
+                },
+                {
+                    "@type": "sh:PropertyShape",
+                    "sh:path": { "@id": "fsvc:logMaxFiles" },
+                    "sh:datatype": { "@id": "xsd:integer" },
+                    "sh:minInclusive": 1,
+                    "sh:maxInclusive": 100,
+                    "sh:message": "Log max files must be an integer between 1 and 100"
+                },
+                {
+                    "@type": "sh:PropertyShape",
+                    "sh:path": { "@id": "fsvc:logMaxFileSize" },
+                    "sh:datatype": { "@id": "xsd:integer" },
+                    "sh:minInclusive": 1048576,
+                    "sh:message": "Log max file size must be at least 1MB (1048576 bytes)"
+                },
+                {
+                    "@type": "sh:PropertyShape",
+                    "sh:path": { "@id": "fsvc:logRotationInterval" },
+                    "sh:datatype": { "@id": "xsd:string" },
+                    "sh:in": {
+                        "@list": ["daily", "weekly", "monthly", "size-based"]
+                    },
+                    "sh:message": "Log rotation interval must be one of: daily, weekly, monthly, size-based"
+                }
+            ]
         }
     ]
 }
