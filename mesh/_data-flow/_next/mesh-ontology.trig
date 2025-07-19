@@ -1,0 +1,163 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix mesh: <https://semantic-flow.github.io/ontology/mesh/> .
+
+<> a owl:Ontology ;
+    dcterms:title "Semantic Flow Mesh Ontology" ;
+    dcterms:description "Core mesh architecture concepts for the Semantic Flow mesh, defining fundamental resource types, nodes, and elements. The recommended prefix is 'mesh' (alternatives: 'smesh', 'sf-mesh', 'semantic-mesh')." ;
+    dcterms:creator "Semantic Flow Project" ;
+    owl:versionInfo "0.1.0" .
+
+#################################################################
+#    Classes
+#################################################################
+
+mesh:Resource a owl:Class ;
+    rdfs:label "Resource" ;
+    rdfs:comment "Abstract base class for all mesh resources. Provides fundamental properties for identification, metadata, and versioning in the Semantic Flow mesh architecture." .
+
+mesh:FileResource a owl:Class ;
+    rdfs:subClassOf mesh:Resource ;
+    rdfs:label "FileResource" ;
+    rdfs:comment "File-based mesh resources." .
+
+mesh:FolderResource a owl:Class ;
+    rdfs:subClassOf mesh:Resource ;
+    rdfs:label "FolderResource" ;
+    rdfs:comment "Folder-based mesh resources." .
+
+mesh:Node a owl:Class ;
+    rdfs:subClassOf mesh:Resource ;
+    rdfs:label "Node" ;
+    rdfs:comment "Structural units that organize and contain other Nodes. Nodes form the structure of the mesh. They have elements." .
+
+mesh:Element a owl:Class ;
+    rdfs:subClassOf mesh:Resource ;
+    rdfs:label "Element" ;
+    rdfs:comment "Terminal resources that provide specific mesh functionality." .
+
+mesh:NamespaceNode a owl:Class ;
+    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
+    rdfs:label "NamespaceNode" ;
+    rdfs:comment "Containers for other nodes. Identifiers for NamespaceNodes don't refer to things or concepts other than themselves." .
+
+mesh:ReferenceNode a owl:Class ;
+    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
+    rdfs:label "ReferenceNode" ;
+    rdfs:comment "Nodes refer to some 'thing' or concept other than themselves." .
+
+mesh:DataNode a owl:Class ;
+    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
+    rdfs:label "DataNode" ;
+    rdfs:comment "Nodes that provide 'payload data'." .
+
+mesh:AssetTree a owl:Class ;
+    rdfs:subClassOf mesh:Element, mesh:FolderResource ;
+    rdfs:label "AssetTree" ;
+    rdfs:comment "Asset trees contain collections of files and directories that are not MeshResources. Can be contained in any FolderResource." .
+
+mesh:DocumentationResource a owl:Class ;
+    rdfs:subClassOf mesh:Element ;
+    rdfs:label "DocumentationResource" ;
+    rdfs:comment "Documentation files that provide human-readable information about mesh resources." .
+
+mesh:Changelog a owl:Class ;
+    rdfs:subClassOf mesh:DocumentationResource, mesh:FileResource ;
+    rdfs:label "Changelog" ;
+    rdfs:comment "Changelog files that document version history and changes over time for mesh resources." .
+
+mesh:Readme a owl:Class ;
+    rdfs:subClassOf mesh:DocumentationResource, mesh:FileResource ;
+    rdfs:label "Readme" ;
+    rdfs:comment "Readme files that provide introductory documentation and usage information for mesh resources." .
+
+mesh:ResourcePage a owl:Class ;
+    rdfs:subClassOf mesh:DocumentationResource, mesh:FileResource ;
+    rdfs:label "ResourcePage" ;
+    rdfs:comment "Human-readable `index.html` pages that provide context and dereferencability for folder-based mesh resources." .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+mesh:hasResourcePage a owl:ObjectProperty ;
+    rdfs:domain mesh:FolderResource ;
+    rdfs:range mesh:ResourcePage ;
+    rdfs:label "hasResourcePage" ;
+    rdfs:comment "Associates a mesh resource with its resource page." .
+
+mesh:hasReadme a owl:ObjectProperty ;
+    rdfs:domain mesh:FolderResource ;
+    rdfs:range mesh:Readme ;
+    rdfs:label "hasReadme" ;
+    rdfs:comment "Associates a mesh resource with its readme documentation file." .
+
+mesh:hasChangelog a owl:ObjectProperty ;
+    rdfs:domain mesh:FolderResource ;
+    rdfs:range mesh:Changelog ;
+    rdfs:label "hasChangelog" ;
+    rdfs:comment "Associates a mesh resource with its changelog documentation file." .
+
+#################################################################
+#    Data Properties
+#################################################################
+
+mesh:preferredNamespacePrefix a owl:DatatypeProperty ;
+    owl:sameAs vann:preferredNamespacePrefix ;
+    rdfs:label "preferred namespace prefix" ;
+    rdfs:comment "The preferred namespace prefix to use when referencing terms from this ontology." ;
+    rdfs:domain owl:Ontology ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+
+mesh:alternateNamespacePrefix a owl:DatatypeProperty ;
+    rdfs:label "alternate namespace prefix" ;
+    rdfs:comment "Alternative namespace prefixes that can be used when the preferred prefix conflicts with existing namespaces." ;
+    rdfs:domain owl:Ontology ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+
+#################################################################
+#    Disjointness Axioms
+#################################################################
+
+### Node and Element are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( mesh:Node mesh:Element )
+] .
+
+### Node types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( mesh:NamespaceNode mesh:ReferenceNode mesh:DataNode )
+] .
+
+### Resource types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( mesh:FileResource mesh:FolderResource )
+] .
+
+### Documentation types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( mesh:Changelog mesh:Readme mesh:ResourcePage )
+] .
+
+#################################################################
+#    SHACL Constraints
+#################################################################
+
+# Every FolderResource should have a ResourcePage
+mesh:FolderResourceShape a sh:NodeShape ;
+    sh:targetClass mesh:FolderResource ;
+    sh:property [
+        sh:path mesh:hasResourcePage ;
+        sh:class mesh:ResourcePage ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Every FolderResource should have a ResourcePage"
+    ] .
+
+mesh:DocumentationResourceShape a sh:NodeShape ;
+    sh:targetClass mesh:DocumentationResource ;
+    sh:not [ sh:class mesh:DocumentationResource ] ;
+    sh:message "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass" .

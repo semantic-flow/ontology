@@ -1,0 +1,83 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix mesh: <https://semantic-flow.github.io/ontology/mesh/> .
+@prefix node: <https://semantic-flow.github.io/ontology/node/> .
+@prefix flow: <https://semantic-flow.github.io/ontology/flow/> .
+
+<> a owl:Ontology ;
+    dcterms:title "Semantic Flow Flow Ontology" ;
+    dcterms:description "Temporal and flow concepts for the Semantic Flow mesh, defining snapshots, versioning, and temporal relationships. The recommended prefix is 'flow' (alternatives: 'sfflow', 'temporal', 'tflow')." ;
+    dcterms:creator "Semantic Flow Project" ;
+    owl:versionInfo "0.1.0" .
+
+#################################################################
+#    Classes
+#################################################################
+
+flow:Snapshot a owl:Class ;
+    rdfs:subClassOf mesh:Element, dcat:Dataset ;
+    rdfs:label "Snapshot" ;
+    rdfs:comment "Snapshots represent distinct states of a node flow (dataset), and contain actual RDF data files (aka Distributions)." .
+
+flow:CurrentSnapshot a owl:Class ;
+    rdfs:subClassOf flow:Snapshot, mesh:FolderResource ;
+    rdfs:label "CurrentSnapshot" ;
+    rdfs:comment "Current stable version snapshot of a node flow, representing the active state of the flow." .
+
+flow:NextSnapshot a owl:Class ;
+    rdfs:subClassOf flow:Snapshot, mesh:FolderResource ;
+    rdfs:label "NextSnapshot" ;
+    rdfs:comment "Draft version snapshot of a node flow, representing work-in-progress state." .
+
+flow:VersionSnapshot a owl:Class ;
+    rdfs:subClassOf flow:Snapshot, mesh:FolderResource ;
+    rdfs:label "VersionSnapshot" ;
+    rdfs:comment "Historical version snapshot of a node flow, representing a specific versioned snapshot." .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+flow:hasSnapshot a owl:ObjectProperty ;
+    rdfs:domain node:Flow ;
+    rdfs:range flow:Snapshot ;
+    rdfs:label "hasSnapshot" ;
+    rdfs:comment "Associates a Flow with its snapshots. This property enables version management within flows." .
+
+flow:duplicatesSnapshot a owl:ObjectProperty ;
+    rdfs:domain flow:CurrentSnapshot ;
+    rdfs:range flow:VersionSnapshot ;
+    rdfs:label "duplicatesSnapshot" ;
+    rdfs:comment "Associates a current snapshot with the most recent version snapshot." .
+
+#################################################################
+#    Data Properties
+#################################################################
+
+flow:versioningEnabled a owl:DatatypeProperty ;
+    rdfs:domain node:Flow ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
+    rdfs:label "versioning enabled" ;
+    rdfs:comment "Whether versioning is enabled for this flow." .
+
+#################################################################
+#    Disjointness Axioms
+#################################################################
+
+### Snapshot types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( flow:CurrentSnapshot flow:NextSnapshot flow:VersionSnapshot )
+] .
+
+#################################################################
+#    SHACL Constraints
+#################################################################
+
+# Abstract Classes
+flow:SnapshotShape a sh:NodeShape ;
+    sh:targetClass flow:Snapshot ;
+    sh:not [ sh:class flow:Snapshot ] ;
+    sh:message "Snapshot is abstract - use CurrentSnapshot, NextSnapshot, or VersionSnapshot" .

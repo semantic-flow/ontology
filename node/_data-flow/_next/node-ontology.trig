@@ -1,0 +1,220 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix mesh: <https://semantic-flow.github.io/ontology/mesh/> .
+@prefix node: <https://semantic-flow.github.io/ontology/node/> .
+
+<> a owl:Ontology ;
+    dcterms:title "Semantic Flow Node Ontology" ;
+    dcterms:description "Node operations and behaviors for the Semantic Flow mesh, defining node handles, flows, and node-specific properties. The recommended prefix is 'node' (alternatives: 'sfnode', 'mesh-node', 'nodeops')." ;
+    dcterms:creator "Semantic Flow Project" ;
+    owl:versionInfo "0.1.1" .
+
+#################################################################
+#    Classes
+#################################################################
+
+node:Handle a owl:Class ;
+    rdfs:subClassOf mesh:Element, mesh:FolderResource ;
+    rdfs:label "Handle" ;
+    rdfs:comment "Node handles have an interest referent: their parent node 'as a node' (as opposed to the thing/concept referred to by the parent)." .
+
+node:Flow a owl:Class ;
+    rdfs:subClassOf dcat:DatasetSeries, mesh:Element ;
+    rdfs:label "Flow" ;
+    rdfs:comment "Abstract evolvable datasets for node metadata, reference data, payload data, and configuration data. Node flows are realized through flow snapshots that represent specific states or versions, so they are DatasetSeries." .
+
+node:MetadataFlow a owl:Class ;
+    rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "MetadataFlow" ;
+    rdfs:comment "Centralized per-node metadata management for nodes and their elements." .
+
+node:ReferenceFlow a owl:Class ;
+    rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "ReferenceFlow" ;
+    rdfs:comment "Reference resolution data elements that contain the data needed to resolve references to their targets, implementing the single referent principle." .
+
+node:DataFlow a owl:Class ;
+    rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "DataFlow" ;
+    rdfs:comment "Actual content storage elements that contain the concrete data and information that forms the payload of data nodes." .
+
+node:ConfigFlow a owl:Class ;
+    rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "ConfigFlow" ;
+    rdfs:comment "Per-node config info for the flow-service." .
+
+node:TemplateMapping a owl:Class ;
+    rdfs:subClassOf mesh:Resource ;
+    rdfs:label "Template Mapping" ;
+    rdfs:comment "Configuration mapping for template-based resource page generation" .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+node:hasElement a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range mesh:Element ;
+    rdfs:label "hasElement" ;
+    rdfs:comment "Associates nodes with their supporting elements." .
+
+node:isHandleFor a owl:ObjectProperty ;
+    rdfs:domain node:Handle ;
+    rdfs:range mesh:Node ;
+    rdfs:label "isHandleFor" ;
+    rdfs:comment "Indicates that a handle element provides identification and routing for a specific node. This property enables location-independent node access." .
+
+node:hasHandle a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range node:Handle ;
+    rdfs:label "hasHandle" ;
+    rdfs:comment "Associates a mesh node with its persistent handle identifier. This property enables node addressing without overloading the node's canonical, potentially-referring URL." .
+
+node:hasReferenceFlow a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range node:ReferenceFlow ;
+    rdfs:label "hasReferenceFlow" ;
+    rdfs:comment "Links mesh nodes to their reference flow." .
+
+node:hasMetadataFlow a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range node:MetadataFlow ;
+    rdfs:label "hasMetadataFlow" ;
+    rdfs:comment "Links mesh nodes to their metadata flow." .
+
+node:hasDataFlow a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range node:DataFlow ;
+    rdfs:label "hasDataFlow" ;
+    rdfs:comment "Links mesh nodes to their data flow." .
+
+node:hasConfigFlow a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range node:ConfigFlow ;
+    rdfs:label "hasConfigFlow" ;
+    rdfs:comment "Links mesh nodes to their config flow." .
+
+#################################################################
+#    Data Properties
+#################################################################
+
+node:configInheritanceEnabled a owl:DatatypeProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
+    rdfs:label "config inheritance enabled" ;
+    rdfs:comment "Whether this node inherits configuration from parent nodes" .
+
+node:distributionFormats a owl:DatatypeProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> ;
+    rdfs:label "distribution formats" ;
+    rdfs:comment "List of RDF serialization formats to generate for distributions" .
+
+node:generateUnifiedDataset a owl:DatatypeProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
+    rdfs:label "generate unified dataset" ;
+    rdfs:comment "Whether to generate unified dataset components" .
+
+node:generateAggregatedDataset a owl:DatatypeProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
+    rdfs:label "generate aggregated dataset" ;
+    rdfs:comment "Whether to generate aggregated dataset components" .
+
+node:generateResourcePages a owl:DatatypeProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
+    rdfs:label "generate resource pages" ;
+    rdfs:comment "Whether to generate HTML resource pages during weave" .
+
+node:stylesheetPath a owl:DatatypeProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> ;
+    rdfs:label "stylesheet path" ;
+    rdfs:comment "Path to CSS stylesheet for generated pages" .
+
+node:resourcePage a owl:DatatypeProperty ;
+    rdfs:domain node:TemplateMapping ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> ;
+    rdfs:label "resource page template" ;
+    rdfs:comment "Template file path for resource pages" .
+
+node:hasTemplateMapping a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range node:TemplateMapping ;
+    rdfs:label "has template mapping" ;
+    rdfs:comment "Template mappings for resource page generation" .
+
+#################################################################
+#    Disjointness Axioms
+#################################################################
+
+### Flow types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( node:MetadataFlow node:ReferenceFlow node:DataFlow node:ConfigFlow )
+] .
+
+### Element types include Handle, Flow and others from mesh ontology
+[ a owl:AllDisjointClasses ;
+    owl:members ( node:Handle node:Flow mesh:AssetTree mesh:DocumentationResource )
+] .
+
+#################################################################
+#    SHACL Constraints
+#################################################################
+
+# Abstract Classes
+node:FlowShape a sh:NodeShape ;
+    sh:targetClass node:Flow ;
+    sh:not [ sh:class node:Flow ] ;
+    sh:message "Flow is abstract - use a specific subclass" .
+
+# Every Node gets a Handle and a MetadataFlow
+node:NodeShape a sh:NodeShape ;
+   sh:targetClass mesh:Node ;
+   sh:property [
+       sh:path node:hasMetadataFlow ;
+       sh:class node:MetadataFlow ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every Node must have exactly one MetadataFlow"
+   ] ;
+   sh:property [
+       sh:path node:hasHandle ;
+       sh:class node:Handle ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every Node must have exactly one Handle"
+   ] .
+
+# Node-specific flow constraints
+node:ReferenceNodeShape a sh:NodeShape ;
+   sh:targetClass mesh:ReferenceNode ;
+   sh:property [
+       sh:path node:hasReferenceFlow ;
+       sh:class node:ReferenceFlow ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every ReferenceNode must have exactly one ReferenceFlow"
+   ] .
+
+node:DataNodeShape a sh:NodeShape ;
+   sh:targetClass mesh:DataNode ;
+   sh:property [
+       sh:path node:hasDataFlow ;
+       sh:class node:DataFlow ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every DataNode must have exactly one DataFlow"
+   ] ;
+   sh:property [
+       sh:path node:hasReferenceFlow ;
+       sh:class node:ReferenceFlow ;
+       sh:minCount 0 ;
+       sh:maxCount 1 ;
+       sh:message "DataNode can have at most one ReferenceFlow"
+   ] .
