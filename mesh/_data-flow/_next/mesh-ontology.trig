@@ -2,14 +2,15 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix vann: <http://purl.org/vocab/vann/> .
 @prefix mesh: <https://semantic-flow.github.io/ontology/mesh/> .
 
 <> a owl:Ontology ;
     dcterms:title "Semantic Flow Mesh Ontology" ;
     dcterms:description "Core mesh architecture concepts for the Semantic Flow mesh, defining fundamental resource types, nodes, and elements. The recommended prefix is 'mesh' (alternatives: 'smesh', 'sf-mesh', 'semantic-mesh')." ;
     dcterms:creator "Semantic Flow Project" ;
-    owl:versionInfo "0.1.0" .
+    owl:versionInfo "0.1.0" ;
+    mesh:preferredNamespacePrefix "mesh" ;
+    mesh:alternateNamespacePrefix "smesh", "sf-mesh", "semantic-mesh" .
 
 #################################################################
 #    Classes
@@ -106,7 +107,7 @@ mesh:hasChangelog a owl:ObjectProperty ;
 #################################################################
 
 mesh:preferredNamespacePrefix a owl:DatatypeProperty ;
-    owl:sameAs vann:preferredNamespacePrefix ;
+    owl:sameAs <http://purl.org/vocab/vann/preferredNamespacePrefix> ;
     rdfs:label "preferred namespace prefix" ;
     rdfs:comment "The preferred namespace prefix to use when referencing terms from this ontology." ;
     rdfs:domain owl:Ontology ;

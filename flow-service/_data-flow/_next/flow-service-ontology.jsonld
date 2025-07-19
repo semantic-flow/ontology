@@ -1,0 +1,330 @@
+{
+  "@context": {
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "fsvc": "https://semantic-flow.github.io/ontology/flow-service/"
+  },
+  "@graph": [
+    {
+      "@id": "fsvc:",
+      "@type": "owl:Ontology",
+      "dcterms:title": "Flow Service Ontology",
+      "dcterms:description": "Vocabulary for configuring the flow-service application",
+      "dcterms:creator": "Semantic Flow Project",
+      "owl:versionInfo": "1.0.0",
+      "mesh:preferredNamespacePrefix": "fsvc",
+      "mesh:alternateNamespacePrefix": [
+        "flow-service",
+        "sflow-service",
+        "flow-svc"
+      ]
+    },
+    {
+      "@id": "fsvc:ServiceConfig",
+      "@type": "owl:Class",
+      "rdfs:label": "Service Configuration",
+      "rdfs:comment": "Root configuration class for flow-service instance"
+    },
+    {
+      "@id": "fsvc:LoggingConfig",
+      "@type": "owl:Class",
+      "rdfs:label": "Logging Configuration",
+      "rdfs:comment": "Configuration for service logging behavior"
+    },
+    {
+      "@id": "fsvc:LogChannelConfig",
+      "@type": "owl:Class",
+      "rdfs:label": "Log Channel Configuration",
+      "rdfs:comment": "Configuration for individual logging channels (console, file, sentry)"
+    },
+    {
+      "@id": "fsvc:ContainedServicesConfig",
+      "@type": "owl:Class",
+      "rdfs:label": "Contained Services Configuration",
+      "rdfs:comment": "Configuration for services contained within flow-service"
+    },
+    {
+      "@id": "fsvc:MeshPath",
+      "@type": "owl:Class",
+      "rdfs:label": "Mesh Path",
+      "rdfs:comment": "Represents a local file system path to a mesh directory"
+    },
+    {
+      "@id": "fsvc:port",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "port",
+      "rdfs:comment": "TCP port for the service to listen on",
+      "rdfs:domain": { "@id": "fsvc:ServiceConfig" },
+      "rdfs:range": { "@id": "xsd:integer" }
+    },
+    {
+      "@id": "fsvc:host",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "host",
+      "rdfs:comment": "Host address for the service to bind to",
+      "rdfs:domain": { "@id": "fsvc:ServiceConfig" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "fsvc:hasLoggingConfig",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has logging configuration",
+      "rdfs:comment": "Logging configuration for the service",
+      "rdfs:domain": { "@id": "fsvc:ServiceConfig" },
+      "rdfs:range": { "@id": "fsvc:LoggingConfig" }
+    },
+    {
+      "@id": "fsvc:hasConsoleChannel",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has console channel",
+      "rdfs:comment": "Console logging channel configuration",
+      "rdfs:domain": { "@id": "fsvc:LoggingConfig" },
+      "rdfs:range": { "@id": "fsvc:LogChannelConfig" }
+    },
+    {
+      "@id": "fsvc:hasFileChannel",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has file channel",
+      "rdfs:comment": "File logging channel configuration",
+      "rdfs:domain": { "@id": "fsvc:LoggingConfig" },
+      "rdfs:range": { "@id": "fsvc:LogChannelConfig" }
+    },
+    {
+      "@id": "fsvc:hasSentryChannel",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has sentry channel",
+      "rdfs:comment": "Sentry error reporting configuration",
+      "rdfs:domain": { "@id": "fsvc:LoggingConfig" },
+      "rdfs:range": { "@id": "fsvc:LogChannelConfig" }
+    },
+    {
+      "@id": "fsvc:logChannelEnabled",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "log channel enabled",
+      "rdfs:comment": "Whether this logging channel is enabled",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:boolean" }
+    },
+    {
+      "@id": "fsvc:logLevel",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "log level",
+      "rdfs:comment": "Minimum log level for this channel",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "fsvc:logFilePath",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "log file path",
+      "rdfs:comment": "Path for file logging output",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "fsvc:sentryDsn",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "sentry DSN",
+      "rdfs:comment": "Sentry Data Source Name for error reporting",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:anyURI" }
+    },
+    {
+      "@id": "fsvc:sentryLoggingEnabled",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "sentry logging enabled",
+      "rdfs:comment": "Whether Sentry log message sending is enabled (separate from error reporting)",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:boolean" }
+    },
+    {
+      "@id": "fsvc:logRetentionDays",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "log retention days",
+      "rdfs:comment": "Number of days to retain log files before deletion",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:integer" }
+    },
+    {
+      "@id": "fsvc:logMaxFiles",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "log max files",
+      "rdfs:comment": "Maximum number of log files to keep during rotation",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:integer" }
+    },
+    {
+      "@id": "fsvc:logMaxFileSize",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "log max file size",
+      "rdfs:comment": "Maximum size per log file in bytes (for size-based rotation)",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:integer" }
+    },
+    {
+      "@id": "fsvc:logRotationInterval",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "log rotation interval",
+      "rdfs:comment": "Log rotation interval (daily, weekly, monthly, or size-based)",
+      "rdfs:domain": { "@id": "fsvc:LogChannelConfig" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "fsvc:hasContainedServices",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has contained services",
+      "rdfs:comment": "Configuration for services contained within flow-service",
+      "rdfs:domain": { "@id": "fsvc:ServiceConfig" },
+      "rdfs:range": { "@id": "fsvc:ContainedServicesConfig" }
+    },
+    {
+      "@id": "fsvc:apiEnabled",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "API enabled",
+      "rdfs:comment": "Whether the REST API is enabled",
+      "rdfs:domain": { "@id": "fsvc:ContainedServicesConfig" },
+      "rdfs:range": { "@id": "xsd:boolean" }
+    },
+    {
+      "@id": "fsvc:sparqlEnabled",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "SPARQL enabled",
+      "rdfs:comment": "Whether the SPARQL endpoint is enabled",
+      "rdfs:domain": { "@id": "fsvc:ContainedServicesConfig" },
+      "rdfs:range": { "@id": "xsd:boolean" }
+    },
+    {
+      "@id": "fsvc:queryWidgetEnabled",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "query widget enabled",
+      "rdfs:comment": "Whether the Comunica query widget is enabled",
+      "rdfs:domain": { "@id": "fsvc:ContainedServicesConfig" },
+      "rdfs:range": { "@id": "xsd:boolean" }
+    },
+    {
+      "@id": "fsvc:staticServerEnabled",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "static server enabled",
+      "rdfs:comment": "Whether the static mesh content server is enabled",
+      "rdfs:domain": { "@id": "fsvc:ContainedServicesConfig" },
+      "rdfs:range": { "@id": "xsd:boolean" }
+    },
+    {
+      "@id": "fsvc:apiDocsEnabled",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "API docs enabled",
+      "rdfs:comment": "Whether the API documentation interface is enabled",
+      "rdfs:domain": { "@id": "fsvc:ContainedServicesConfig" },
+      "rdfs:range": { "@id": "xsd:boolean" }
+    },
+    {
+      "@id": "fsvc:meshPaths",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "mesh paths",
+      "rdfs:comment": "Array of local file system paths to mesh directories",
+      "rdfs:domain": { "@id": "fsvc:ServiceConfig" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "fsvc:nodeDefaults",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "node defaults",
+      "rdfs:comment": "Default configuration settings to apply to mesh nodes",
+      "rdfs:domain": { "@id": "fsvc:ServiceConfig" }
+    },
+    {
+      "@id": "fsvc:LogLevelShape",
+      "@type": "sh:NodeShape",
+      "sh:targetObjectsOf": { "@id": "fsvc:logLevel" },
+      "sh:property": {
+        "@type": "sh:PropertyShape",
+        "sh:path": { "@id": "rdf:value" },
+        "sh:in": {
+          "@list": ["debug", "info", "warn", "error"]
+        },
+        "sh:message": "Log level must be one of: debug, info, warn, error"
+      }
+    },
+    {
+      "@id": "fsvc:ServiceConfigShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "fsvc:ServiceConfig" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "fsvc:port" },
+          "sh:datatype": { "@id": "xsd:integer" },
+          "sh:minInclusive": 1,
+          "sh:maxInclusive": 65535,
+          "sh:message": "Port must be an integer between 1 and 65535"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "fsvc:host" },
+          "sh:datatype": { "@id": "xsd:string" },
+          "sh:minLength": 1,
+          "sh:message": "Host must be a non-empty string"
+        }
+      ]
+    },
+    {
+      "@id": "fsvc:MeshPathsShape",
+      "@type": "sh:NodeShape",
+      "@context": {
+        "sh": "http://www.w3.org/ns/shacl#"
+      },
+      "sh:targetObjectsOf": { "@id": "fsvc:meshPaths" },
+      "sh:property": {
+        "@type": "sh:PropertyShape",
+        "sh:path": { "@id": "rdf:value" },
+        "sh:datatype": { "@id": "xsd:string" },
+        "sh:minLength": 1,
+        "sh:pattern": "^[^<>:\"|?*]+$",
+        "sh:message": "Mesh path must be a valid file system path (no invalid characters: < > : \" | ? *)"
+      }
+    },
+    {
+      "@id": "fsvc:LogRetentionShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "fsvc:LogChannelConfig" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "fsvc:logRetentionDays" },
+          "sh:datatype": { "@id": "xsd:integer" },
+          "sh:minInclusive": 1,
+          "sh:maxInclusive": 365,
+          "sh:message": "Log retention days must be an integer between 1 and 365"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "fsvc:logMaxFiles" },
+          "sh:datatype": { "@id": "xsd:integer" },
+          "sh:minInclusive": 1,
+          "sh:maxInclusive": 100,
+          "sh:message": "Log max files must be an integer between 1 and 100"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "fsvc:logMaxFileSize" },
+          "sh:datatype": { "@id": "xsd:integer" },
+          "sh:minInclusive": 1048576,
+          "sh:message": "Log max file size must be at least 1MB (1048576 bytes)"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "fsvc:logRotationInterval" },
+          "sh:datatype": { "@id": "xsd:string" },
+          "sh:in": {
+            "@list": ["daily", "weekly", "monthly", "size-based"]
+          },
+          "sh:message": "Log rotation interval must be one of: daily, weekly, monthly, size-based"
+        }
+      ]
+    }
+  ]
+}

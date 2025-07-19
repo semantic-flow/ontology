@@ -10,7 +10,9 @@
     dcterms:title "Semantic Flow Node Ontology" ;
     dcterms:description "Node operations and behaviors for the Semantic Flow mesh, defining node handles, flows, and node-specific properties. The recommended prefix is 'node' (alternatives: 'sfnode', 'mesh-node', 'nodeops')." ;
     dcterms:creator "Semantic Flow Project" ;
-    owl:versionInfo "0.1.1" .
+    owl:versionInfo "0.1.0" ;
+    mesh:preferredNamespacePrefix "node" ;
+    mesh:alternateNamespacePrefix "sfnode", "mesh-node", "nodeops" .
 
 #################################################################
 #    Classes
@@ -46,10 +48,6 @@ node:ConfigFlow a owl:Class ;
     rdfs:label "ConfigFlow" ;
     rdfs:comment "Per-node config info for the flow-service." .
 
-node:TemplateMapping a owl:Class ;
-    rdfs:subClassOf mesh:Resource ;
-    rdfs:label "Template Mapping" ;
-    rdfs:comment "Configuration mapping for template-based resource page generation" .
 
 #################################################################
 #    Object Properties
@@ -100,54 +98,6 @@ node:hasConfigFlow a owl:ObjectProperty ;
 #################################################################
 #    Data Properties
 #################################################################
-
-node:configInheritanceEnabled a owl:DatatypeProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
-    rdfs:label "config inheritance enabled" ;
-    rdfs:comment "Whether this node inherits configuration from parent nodes" .
-
-node:distributionFormats a owl:DatatypeProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#string> ;
-    rdfs:label "distribution formats" ;
-    rdfs:comment "List of RDF serialization formats to generate for distributions" .
-
-node:generateUnifiedDataset a owl:DatatypeProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
-    rdfs:label "generate unified dataset" ;
-    rdfs:comment "Whether to generate unified dataset components" .
-
-node:generateAggregatedDataset a owl:DatatypeProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
-    rdfs:label "generate aggregated dataset" ;
-    rdfs:comment "Whether to generate aggregated dataset components" .
-
-node:generateResourcePages a owl:DatatypeProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
-    rdfs:label "generate resource pages" ;
-    rdfs:comment "Whether to generate HTML resource pages during weave" .
-
-node:stylesheetPath a owl:DatatypeProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#string> ;
-    rdfs:label "stylesheet path" ;
-    rdfs:comment "Path to CSS stylesheet for generated pages" .
-
-node:resourcePage a owl:DatatypeProperty ;
-    rdfs:domain node:TemplateMapping ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#string> ;
-    rdfs:label "resource page template" ;
-    rdfs:comment "Template file path for resource pages" .
-
-node:hasTemplateMapping a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range node:TemplateMapping ;
-    rdfs:label "has template mapping" ;
-    rdfs:comment "Template mappings for resource page generation" .
 
 #################################################################
 #    Disjointness Axioms

@@ -11,7 +11,9 @@
     dcterms:title "Semantic Flow Flow Ontology" ;
     dcterms:description "Temporal and flow concepts for the Semantic Flow mesh, defining snapshots, versioning, and temporal relationships. The recommended prefix is 'flow' (alternatives: 'sfflow', 'temporal', 'tflow')." ;
     dcterms:creator "Semantic Flow Project" ;
-    owl:versionInfo "0.1.0" .
+    owl:versionInfo "0.1.0" ;
+    mesh:preferredNamespacePrefix "flow" ;
+    mesh:alternateNamespacePrefix "sfflow", "temporal", "tflow" .
 
 #################################################################
 #    Classes
@@ -56,12 +58,6 @@ flow:duplicatesSnapshot a owl:ObjectProperty ;
 #################################################################
 #    Data Properties
 #################################################################
-
-flow:versioningEnabled a owl:DatatypeProperty ;
-    rdfs:domain node:Flow ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> ;
-    rdfs:label "versioning enabled" ;
-    rdfs:comment "Whether versioning is enabled for this flow." .
 
 #################################################################
 #    Disjointness Axioms
