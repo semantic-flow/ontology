@@ -51,30 +51,30 @@
     rdfs:comment "Nodes that provide 'payload data'."@en ;
     rdfs:label "DataNode"@en .
 
-<Component> a owl:Class ;
+<Flow> a owl:Class ;
     rdfs:subClassOf dcat:DatasetSeries, <Element> ;
-    rdfs:comment "Abstract datasets for node metadata, reference data, or payload data. Node components are realized through component layers that represent specific states or versions, so they are DatasetSeries."@en ;
-    rdfs:label "Component"@en .
+    rdfs:comment "Abstract evolvable datasets for node metadata, reference data, payload data, and configuration data. Node flows are realized through flow snapshots that represent specific states or versions, so they are DatasetSeries."@en ;
+    rdfs:label "Flow"@en .
 
-<MetadataComponent> a owl:Class ;
-    rdfs:subClassOf <Component>, <FolderResource> ;
+<MetadataFlow> a owl:Class ;
+    rdfs:subClassOf <Flow>, <FolderResource> ;
     rdfs:comment "Centralized per-node metadata management for nodes and their elements."@en ;
-    rdfs:label "MetadataComponent"@en .
+    rdfs:label "MetadataFlow"@en .
 
-<ReferenceComponent> a owl:Class ;
-    rdfs:subClassOf <Component>, <FolderResource> ;
-    rdfs:comment "Reference resolution data elements that contain the data needed to resolve references to their targets, implementing the single referent principle."@en ;
-    rdfs:label "ReferenceComponent"@en .
+<ReferenceFlow> a owl:Class ;
+    rdfs:subClassOf <Flow>, <FolderResource> ;
+    rdfs:comment "Reference flows contain information about their targets, implementing the single referent principle."@en ;
+    rdfs:label "ReferenceFlow"@en .
 
-<DataComponent> a owl:Class ;
-    rdfs:subClassOf <Component>, <FolderResource> ;
-    rdfs:comment "Actual content storage elements that contain the concrete data and information that forms the payload of data nodes."@en ;
-    rdfs:label "DataComponent"@en .
+<DataFlow> a owl:Class ;
+    rdfs:subClassOf <Flow>, <FolderResource> ;
+    rdfs:comment "'Abstract dataset' flow elements that contain snapshots and information that forms the payload of data nodes."@en ;
+    rdfs:label "DataFlow"@en .
 
-<ConfigComponent> a owl:Class ;
-    rdfs:subClassOf <Component>, <FolderResource> ;
+<ConfigFlow> a owl:Class ;
+    rdfs:subClassOf <Flow>, <FolderResource> ;
     rdfs:comment "Per-node config info for the flow-service."@en ;
-    rdfs:label "ConfigComponent"@en .
+    rdfs:label "ConfigFlow"@en .
 
 <NodeHandle> a owl:Class ;
     rdfs:subClassOf <Element>, <FolderResource> ;
@@ -86,29 +86,29 @@
     rdfs:comment "Asset trees contain collections of files and directories that are not MeshResources."@en ;
     rdfs:label "AssetTree"@en .
 
-<ComponentLayer> a owl:Class ;
+<FlowSnapshot> a owl:Class ;
     rdfs:subClassOf <Element>, dcat:Dataset ;
-    rdfs:comment "Layers represent distinct states of a node component (dataset), and contain actual RDF data files (aka Distributions)."@en ;
-    rdfs:label "ComponentLayer"@en .
+    rdfs:comment "Snapshots represent distinct states of a node flow (dataset), and contain actual RDF data files (aka Distributions)."@en ;
+    rdfs:label "FlowSnapshot"@en .
 
-<CurrentLayer> a owl:Class ;
-    rdfs:subClassOf <ComponentLayer>, <FolderResource> ;
-    rdfs:comment "Current stable version layer of a node component, representing the active state of the component."@en ;
-    rdfs:label "CurrentLayer"@en .
+<CurrentSnapshot> a owl:Class ;
+    rdfs:subClassOf <FlowSnapshot>, <FolderResource> ;
+    rdfs:comment "Current stable version snapshot of a node flow, representing the active state of the flow."@en ;
+    rdfs:label "CurrentSnapshot"@en .
 
-<NextLayer> a owl:Class ;
-    rdfs:subClassOf <ComponentLayer>, <FolderResource> ;
-    rdfs:comment "Draft version layer of a node component, representing work-in-progress state."@en ;
-    rdfs:label "NextLayer"@en .
+<NextSnapshot> a owl:Class ;
+    rdfs:subClassOf <FlowSnapshot>, <FolderResource> ;
+    rdfs:comment "Draft version snapshot of a node flow, representing work-in-progress state."@en ;
+    rdfs:label "NextSnapshot"@en .
 
-<VersionLayer> a owl:Class ;
-    rdfs:subClassOf <ComponentLayer>, <FolderResource> ;
-    rdfs:comment "Historical version layer of a node component, representing a specific versioned snapshot."@en ;
-    rdfs:label "VersionLayer"@en .
+<VersionSnapshot> a owl:Class ;
+    rdfs:subClassOf <FlowSnapshot>, <FolderResource> ;
+    rdfs:comment "Historical version snapshot of a node flow, representing a specific versioned snapshot."@en ;
+    rdfs:label "VersionSnapshot"@en .
 
 <DocumentationResource> a owl:Class ;
     rdfs:subClassOf <Element> ;
-    rdfs:comment "Documentation files that provide human-readable information about mesh resources. Documentation resources support the human-context layer with explanatory content."@en ;
+    rdfs:comment "Documentation files that provide human-readable information about mesh resources."@en ;
     rdfs:label "DocumentationResource"@en .
 
 <Changelog> a owl:Class ;
@@ -123,7 +123,7 @@
 
 <ResourcePage> a owl:Class ;
     rdfs:subClassOf <DocumentationResource>, <FileResource> ;
-    rdfs:comment "Human-readable `index.html` pages that provide web-based access to mesh resources. Resource pages enable dereferencability for ."@en ;
+    rdfs:comment "Human-readable `index.html` pages that provide context and dereferencability for folder-based mesh resources."@en ;
     rdfs:label "ResourcePage"@en .
 
 
@@ -149,40 +149,40 @@
     rdfs:comment "Associates a mesh node with its persistent handle identifier. This property enables node addressing without overloading the node's canonical, potentially-referring URL."@en ;
     rdfs:label "hasNodeHandle"@en .
 
-<hasReferenceComponent> a owl:ObjectProperty ;
+<hasReferenceFlow> a owl:ObjectProperty ;
     rdfs:domain <MeshNode> ;
-    rdfs:range <ReferenceComponent> ;
-    rdfs:comment "Links mesh nodes to their reference component."@en ;
-    rdfs:label "hasReferenceComponent"@en .
+    rdfs:range <ReferenceFlow> ;
+    rdfs:comment "Links mesh nodes to their reference flow."@en ;
+    rdfs:label "hasReferenceFlow"@en .
 
-<hasMetadataComponent> a owl:ObjectProperty ;
+<hasMetadataFlow> a owl:ObjectProperty ;
     rdfs:domain <MeshNode> ;
-    rdfs:range <MetadataComponent> ;
-    rdfs:comment "Links mesh nodes to their metadata component."@en ;
-    rdfs:label "hasMetadataComponent"@en .
+    rdfs:range <MetadataFlow> ;
+    rdfs:comment "Links mesh nodes to their metadata flow."@en ;
+    rdfs:label "hasMetadataFlow"@en .
 
-<hasDataComponent> a owl:ObjectProperty ;
+<hasDataFlow> a owl:ObjectProperty ;
     rdfs:domain <MeshNode> ;
-    rdfs:range <DataComponent> ;
-    rdfs:comment "Links mesh nodes to their data component."@en ;
-    rdfs:label "hasDataComponent"@en .
+    rdfs:range <DataFlow> ;
+    rdfs:comment "Links mesh nodes to their data flow."@en ;
+    rdfs:label "hasDataFlow"@en .
 
-<hasConfigComponent> a owl:ObjectProperty ;
+<hasConfigFlow> a owl:ObjectProperty ;
     rdfs:domain <MeshNode> ;
-    rdfs:range <ConfigComponent> ;
-    rdfs:comment "Links mesh nodes to their config component."@en ;
-    rdfs:label "hasConfigComponent"@en .
+    rdfs:range <ConfigFlow> ;
+    rdfs:comment "Links mesh nodes to their config flow."@en ;
+    rdfs:label "hasConfigFlow"@en .
 
-<hasComponentLayer> a owl:ObjectProperty ;
-    rdfs:domain <Component> ;
-    rdfs:range <ComponentLayer> ;
-    rdfs:comment "Associates a node component with its versioned layers. This property enables version management within components."@en ;
-    rdfs:label "hasComponentLayer"@en .
+<hasFlowSnapshot> a owl:ObjectProperty ;
+    rdfs:domain <Flow> ;
+    rdfs:range <FlowSnapshot> ;
+    rdfs:comment "Associates a Flow with its snapshots. This property enables version management within flows."@en ;
+    rdfs:label "hasFlowSnapshot"@en .
 
 <hasResourcePage> a owl:ObjectProperty ;
     rdfs:domain <FolderResource> ;
     rdfs:range <ResourcePage> ;
-    rdfs:comment "Associates a mesh resource with its resource page that provides human-readable access."@en ;
+    rdfs:comment "Associates a mesh resource with its resource page."@en ;
     rdfs:label "hasResourcePage"@en .
 
 <hasReadme> a owl:ObjectProperty ;
@@ -197,11 +197,11 @@
     rdfs:comment "Associates a mesh resource with its changelog documentation file."@en ;
     rdfs:label "hasChangelog"@en .
 
-<duplicatesLayer> a owl:ObjectProperty ;
-    rdfs:domain <CurrentLayer> ;
-    rdfs:range <VersionLayer> ;
-    rdfs:comment "Associates a current layer with the most recent version layer."@en ;
-    rdfs:label "duplicatesLayer"@en .
+<duplicatesSnapshot> a owl:ObjectProperty ;
+    rdfs:domain <CurrentSnapshot> ;
+    rdfs:range <VersionSnapshot> ;
+    rdfs:comment "Associates a current snapshot with the most recent version snapshot."@en ;
+    rdfs:label "duplicatesSnapshot"@en .
 
 #################################################################
 #    Data Properties
@@ -224,12 +224,12 @@
 
 ###  Element types are disjoint
 [ a owl:AllDisjointClasses ;
-    owl:members ( <NodeHandle> <Component> <ComponentLayer> <AssetTree> <DocumentationResource> )
+    owl:members ( <NodeHandle> <Flow> <FlowSnapshot> <AssetTree> <DocumentationResource> )
 ] .
 
-###  Component types are disjoint
+###  Flow types are disjoint
 [ a owl:AllDisjointClasses ;
-    owl:members ( <MetadataComponent> <ReferenceComponent> <DataComponent> )
+    owl:members ( <MetadataFlow> <ReferenceFlow> <DataFlow> )
 ] .
 
 ###  Resource types are disjoint
@@ -242,9 +242,9 @@
     owl:members ( <Changelog> <Readme> <ResourcePage> )
 ] .
 
-###  Layer types are disjoint
+###  Snapshot types are disjoint
 [ a owl:AllDisjointClasses ;
-    owl:members ( <CurrentLayer> <NextLayer> <VersionLayer> )
+    owl:members ( <CurrentSnapshot> <NextSnapshot> <VersionSnapshot> )
 ] .
 
 
@@ -254,31 +254,31 @@
 
 # Abstract Classes
 
-<ComponentShape> a sh:NodeShape ;
-    sh:targetClass <Component> ;
-    sh:not [ sh:class <Component> ] ;  # No direct instances
-    sh:message "Component is abstract - use a specific subclass" .
+<FlowShape> a sh:NodeShape ;
+    sh:targetClass <Flow> ;
+    sh:not [ sh:class <Flow> ] ;  # No direct instances
+    sh:message "Flow is abstract - use a specific subclass" .
 
-<ComponentLayerShape> a sh:NodeShape ;
-    sh:targetClass <ComponentLayer> ;
-    sh:not [ sh:class <ComponentLayer> ] ;
-    sh:message "ComponentLayer is abstract - use CurrentLayer, NextLayer, or VersionLayer" .
+<FlowSnapshotShape> a sh:NodeShape ;
+    sh:targetClass <FlowSnapshot> ;
+    sh:not [ sh:class <FlowSnapshot> ] ;
+    sh:message "FlowSnapshot is abstract - use CurrentSnapshot, NextSnapshot, or VersionSnapshot" .
 
 <DocumentationResourceShape> a sh:NodeShape ;
     sh:targetClass <DocumentationResource> ;
     sh:not [ sh:class <DocumentationResource> ] ;
     sh:message "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass" .
 
-# Every MeshNode gets a Handle and a MetadataComponent
+# Every MeshNode gets a Handle and a MetadataFlow
 
 <MeshNodeShape> a sh:NodeShape ;
    sh:targetClass <MeshNode> ;
    sh:property [
-       sh:path <hasMetadataComponent> ;
-       sh:class <MetadataComponent> ;
+       sh:path <hasMetadataFlow> ;
+       sh:class <MetadataFlow> ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
-       sh:message "Every MeshNode must have exactly one MetadataComponent"
+       sh:message "Every MeshNode must have exactly one MetadataFlow"
    ] ;
    sh:property [
        sh:path <hasNodeHandle> ;
@@ -288,33 +288,33 @@
        sh:message "Every MeshNode must have exactly one NodeHandle"
    ] .
 
-# Node-specific component constraints
+# Node-specific flow constraints
 
 <ReferenceNodeShape> a sh:NodeShape ;
    sh:targetClass <ReferenceNode> ;
    sh:property [
-       sh:path <hasReferenceComponent> ;
-       sh:class <ReferenceComponent> ;
+       sh:path <hasReferenceFlow> ;
+       sh:class <ReferenceFlow> ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
-       sh:message "Every ReferenceNode must have exactly one ReferenceComponent"
+       sh:message "Every ReferenceNode must have exactly one ReferenceFlow"
    ] .
 
 <DataNodeShape> a sh:NodeShape ;
    sh:targetClass <DataNode> ;
    sh:property [
-       sh:path <hasDataComponent> ;
-       sh:class <DataComponent> ;
+       sh:path <hasDataFlow> ;
+       sh:class <DataFlow> ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
-       sh:message "Every DataNode must have exactly one DataComponent"
+       sh:message "Every DataNode must have exactly one DataFlow"
    ] ;
    sh:property [
-       sh:path <hasReferenceComponent> ;
-       sh:class <ReferenceComponent> ;
+       sh:path <hasReferenceFlow> ;
+       sh:class <ReferenceFlow> ;
        sh:minCount 0 ;
        sh:maxCount 1 ;
-       sh:message "DataNode can have at most one ReferenceComponent"
+       sh:message "DataNode can have at most one ReferenceFlow"
    ] .
 
 # Every FolderResource should have a ResourcePage

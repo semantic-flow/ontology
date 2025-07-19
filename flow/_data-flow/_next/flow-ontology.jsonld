@@ -1,0 +1,492 @@
+{
+  "@context": {
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "flow": "https://semantic-flow.github.io/ontology/flow/"
+  },
+  "@graph": [
+    {
+      "@id": "flow:",
+      "@type": "owl:Ontology",
+      "dcterms:title": "Semantic Flow Ontology",
+      "dcterms:description": "Formal ontology for the Semantic Flow mesh architecture, defining the core structure for mesh repositories, nodes, and elements. The recommended prefix is 'flow'.",
+      "dcterms:creator": "Semantic Flow Project",
+      "owl:versionInfo": "0.1.0"
+    },
+    {
+      "@id": "flow:MeshResource",
+      "@type": "owl:Class",
+      "rdfs:label": "MeshResource",
+      "rdfs:comment": "Abstract base class for all mesh resources. Provides fundamental properties for identification, metadata, and versioning in the Semantic Flow mesh architecture."
+    },
+    {
+      "@id": "flow:FileResource",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "flow:MeshResource" },
+      "rdfs:label": "FileResource",
+      "rdfs:comment": "File-based mesh resources."
+    },
+    {
+      "@id": "flow:FolderResource",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "flow:MeshResource" },
+      "rdfs:label": "FolderResource",
+      "rdfs:comment": "Folder-based mesh resources."
+    },
+    {
+      "@id": "flow:MeshNode",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "flow:MeshResource" },
+      "rdfs:label": "MeshNode",
+      "rdfs:comment": "Structural units that organize and contain other MeshNodes. Nodes form the structure of the mesh. They have elements."
+    },
+    {
+      "@id": "flow:Element",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "flow:MeshResource" },
+      "rdfs:label": "Element",
+      "rdfs:comment": "Terminal resources that provide specific mesh functionality."
+    },
+    {
+      "@id": "flow:NamespaceNode",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:MeshNode" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "NamespaceNode",
+      "rdfs:comment": "Containers for other nodes. Identifiers for NamespaceNodes don't refer to things or concepts other than themselves."
+    },
+    {
+      "@id": "flow:ReferenceNode",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:MeshNode" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "ReferenceNode",
+      "rdfs:comment": "Nodes refer to some 'thing' or concept other than themselves."
+    },
+    {
+      "@id": "flow:DataNode",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:MeshNode" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "DataNode",
+      "rdfs:comment": "Nodes that provide 'payload data'."
+    },
+    {
+      "@id": "flow:Flow",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "dcat:DatasetSeries" },
+        { "@id": "flow:Element" }
+      ],
+      "rdfs:label": "Flow",
+      "rdfs:comment": "Abstract evolvable datasets for node metadata, reference data, payload data, and configuration data. Node flows are realized through flow snapshots that represent specific states or versions, so they are DatasetSeries."
+    },
+    {
+      "@id": "flow:MetadataFlow",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:Flow" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "MetadataFlow",
+      "rdfs:comment": "Centralized per-node metadata management for nodes and their elements."
+    },
+    {
+      "@id": "flow:ReferenceFlow",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:Flow" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "ReferenceFlow",
+      "rdfs:comment": "Reference resolution data elements that contain the data needed to resolve references to their targets, implementing the single referent principle."
+    },
+    {
+      "@id": "flow:DataFlow",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:Flow" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "DataFlow",
+      "rdfs:comment": "Actual content storage elements that contain the concrete data and information that forms the payload of data nodes."
+    },
+    {
+      "@id": "flow:ConfigFlow",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:Flow" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "ConfigFlow",
+      "rdfs:comment": "Per-node config info for the flow-service."
+    },
+    {
+      "@id": "flow:NodeHandle",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:Element" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "NodeHandle",
+      "rdfs:comment": "Node handles have an interest referent: their parent node 'as a node' (as opposed to the thing/concept referred to by the parent)."
+    },
+    {
+      "@id": "flow:AssetTree",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:Element" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "AssetTree",
+      "rdfs:comment": "Asset trees contain collections of files and directories that are not MeshResources."
+    },
+    {
+      "@id": "flow:FlowSnapshot",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:Element" },
+        { "@id": "dcat:Dataset" }
+      ],
+      "rdfs:label": "FlowSnapshot",
+      "rdfs:comment": "Snapshots represent distinct states of a node flow (dataset), and contain actual RDF data files (aka Distributions)."
+    },
+    {
+      "@id": "flow:CurrentSnapshot",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:FlowSnapshot" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "CurrentSnapshot",
+      "rdfs:comment": "Current stable version snapshot of a node flow, representing the active state of the flow."
+    },
+    {
+      "@id": "flow:NextSnapshot",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:FlowSnapshot" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "NextSnapshot",
+      "rdfs:comment": "Draft version snapshot of a node flow, representing work-in-progress state."
+    },
+    {
+      "@id": "flow:VersionSnapshot",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:FlowSnapshot" },
+        { "@id": "flow:FolderResource" }
+      ],
+      "rdfs:label": "VersionSnapshot",
+      "rdfs:comment": "Historical version snapshot of a node flow, representing a specific versioned snapshot."
+    },
+    {
+      "@id": "flow:DocumentationResource",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "flow:Element" },
+      "rdfs:label": "DocumentationResource",
+      "rdfs:comment": "Documentation files that provide human-readable information about mesh resources."
+    },
+    {
+      "@id": "flow:Changelog",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:DocumentationResource" },
+        { "@id": "flow:FileResource" }
+      ],
+      "rdfs:label": "Changelog",
+      "rdfs:comment": "Changelog files that document version history and changes over time for mesh resources."
+    },
+    {
+      "@id": "flow:Readme",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:DocumentationResource" },
+        { "@id": "flow:FileResource" }
+      ],
+      "rdfs:label": "Readme",
+      "rdfs:comment": "Readme files that provide introductory documentation and usage information for mesh resources."
+    },
+    {
+      "@id": "flow:ResourcePage",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "flow:DocumentationResource" },
+        { "@id": "flow:FileResource" }
+      ],
+      "rdfs:label": "ResourcePage",
+      "rdfs:comment": "Human-readable `index.html` pages that provide context and dereferencability for folder-based mesh resources."
+    },
+    {
+      "@id": "flow:hasElement",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:MeshNode" },
+      "rdfs:range": { "@id": "flow:Element" },
+      "rdfs:label": "hasElement",
+      "rdfs:comment": "Associates nodes with their supporting elements."
+    },
+    {
+      "@id": "flow:isHandleFor",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:NodeHandle" },
+      "rdfs:range": { "@id": "flow:MeshNode" },
+      "rdfs:label": "isHandleFor",
+      "rdfs:comment": "Indicates that a handle element provides identification and routing for a specific node. This property enables location-independent node access."
+    },
+    {
+      "@id": "flow:hasNodeHandle",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:MeshNode" },
+      "rdfs:range": { "@id": "flow:NodeHandle" },
+      "rdfs:label": "hasNodeHandle",
+      "rdfs:comment": "Associates a mesh node with its persistent handle identifier. This property enables node addressing without overloading the node's canonical, potentially-referring URL."
+    },
+    {
+      "@id": "flow:hasReferenceFlow",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:MeshNode" },
+      "rdfs:range": { "@id": "flow:ReferenceFlow" },
+      "rdfs:label": "hasReferenceFlow",
+      "rdfs:comment": "Links mesh nodes to their reference flow."
+    },
+    {
+      "@id": "flow:hasMetadataFlow",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:MeshNode" },
+      "rdfs:range": { "@id": "flow:MetadataFlow" },
+      "rdfs:label": "hasMetadataFlow",
+      "rdfs:comment": "Links mesh nodes to their metadata flow."
+    },
+    {
+      "@id": "flow:hasDataFlow",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:MeshNode" },
+      "rdfs:range": { "@id": "flow:DataFlow" },
+      "rdfs:label": "hasDataFlow",
+      "rdfs:comment": "Links mesh nodes to their data flow."
+    },
+    {
+      "@id": "flow:hasConfigFlow",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:MeshNode" },
+      "rdfs:range": { "@id": "flow:ConfigFlow" },
+      "rdfs:label": "hasConfigFlow",
+      "rdfs:comment": "Links mesh nodes to their config flow."
+    },
+    {
+      "@id": "flow:hasFlowSnapshot",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:Flow" },
+      "rdfs:range": { "@id": "flow:FlowSnapshot" },
+      "rdfs:label": "hasFlowSnapshot",
+      "rdfs:comment": "Associates a Flow with its snapshots. This property enables version management within flows."
+    },
+    {
+      "@id": "flow:hasResourcePage",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:FolderResource" },
+      "rdfs:range": { "@id": "flow:ResourcePage" },
+      "rdfs:label": "hasResourcePage",
+      "rdfs:comment": "Associates a mesh resource with its resource page."
+    },
+    {
+      "@id": "flow:hasReadme",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:FolderResource" },
+      "rdfs:range": { "@id": "flow:Readme" },
+      "rdfs:label": "hasReadme",
+      "rdfs:comment": "Associates a mesh resource with its readme documentation file."
+    },
+    {
+      "@id": "flow:hasChangelog",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:FolderResource" },
+      "rdfs:range": { "@id": "flow:Changelog" },
+      "rdfs:label": "hasChangelog",
+      "rdfs:comment": "Associates a mesh resource with its changelog documentation file."
+    },
+    {
+      "@id": "flow:duplicatesSnapshot",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": { "@id": "flow:CurrentSnapshot" },
+      "rdfs:range": { "@id": "flow:VersionSnapshot" },
+      "rdfs:label": "duplicatesSnapshot",
+      "rdfs:comment": "Associates a current snapshot with the most recent version snapshot."
+    },
+    {
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "flow:MeshNode" },
+          { "@id": "flow:Element" }
+        ]
+      }
+    },
+    {
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "flow:NamespaceNode" },
+          { "@id": "flow:ReferenceNode" },
+          { "@id": "flow:DataNode" }
+        ]
+      }
+    },
+    {
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "flow:NodeHandle" },
+          { "@id": "flow:Flow" },
+          { "@id": "flow:FlowSnapshot" },
+          { "@id": "flow:AssetTree" },
+          { "@id": "flow:DocumentationResource" }
+        ]
+      }
+    },
+    {
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "flow:MetadataFlow" },
+          { "@id": "flow:ReferenceFlow" },
+          { "@id": "flow:DataFlow" }
+        ]
+      }
+    },
+    {
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "flow:FileResource" },
+          { "@id": "flow:FolderResource" }
+        ]
+      }
+    },
+    {
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "flow:Changelog" },
+          { "@id": "flow:Readme" },
+          { "@id": "flow:ResourcePage" }
+        ]
+      }
+    },
+    {
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "flow:CurrentSnapshot" },
+          { "@id": "flow:NextSnapshot" },
+          { "@id": "flow:VersionSnapshot" }
+        ]
+      }
+    },
+    {
+      "@id": "flow:FlowShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "flow:Flow" },
+      "sh:not": { "sh:class": { "@id": "flow:Flow" } },
+      "sh:message": "Flow is abstract - use a specific subclass"
+    },
+    {
+      "@id": "flow:FlowSnapshotShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "flow:FlowSnapshot" },
+      "sh:not": { "sh:class": { "@id": "flow:FlowSnapshot" } },
+      "sh:message": "FlowSnapshot is abstract - use CurrentSnapshot, NextSnapshot, or VersionSnapshot"
+    },
+    {
+      "@id": "flow:DocumentationResourceShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "flow:DocumentationResource" },
+      "sh:not": { "sh:class": { "@id": "flow:DocumentationResource" } },
+      "sh:message": "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass"
+    },
+    {
+      "@id": "flow:MeshNodeShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "flow:MeshNode" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "flow:hasMetadataFlow" },
+          "sh:class": { "@id": "flow:MetadataFlow" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Every MeshNode must have exactly one MetadataFlow"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "flow:hasNodeHandle" },
+          "sh:class": { "@id": "flow:NodeHandle" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Every MeshNode must have exactly one NodeHandle"
+        }
+      ]
+    },
+    {
+      "@id": "flow:ReferenceNodeShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "flow:ReferenceNode" },
+      "sh:property": {
+        "@type": "sh:PropertyShape",
+        "sh:path": { "@id": "flow:hasReferenceFlow" },
+        "sh:class": { "@id": "flow:ReferenceFlow" },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:message": "Every ReferenceNode must have exactly one ReferenceFlow"
+      }
+    },
+    {
+      "@id": "flow:DataNodeShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "flow:DataNode" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "flow:hasDataFlow" },
+          "sh:class": { "@id": "flow:DataFlow" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Every DataNode must have exactly one DataFlow"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "flow:hasReferenceFlow" },
+          "sh:class": { "@id": "flow:ReferenceFlow" },
+          "sh:minCount": 0,
+          "sh:maxCount": 1,
+          "sh:message": "DataNode can have at most one ReferenceFlow"
+        }
+      ]
+    },
+    {
+      "@id": "flow:FolderResourceShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "flow:FolderResource" },
+      "sh:property": {
+        "@type": "sh:PropertyShape",
+        "sh:path": { "@id": "flow:hasResourcePage" },
+        "sh:class": { "@id": "flow:ResourcePage" },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:message": "Every FolderResource should have a ResourcePage"
+      }
+    }
+  ]
+}
