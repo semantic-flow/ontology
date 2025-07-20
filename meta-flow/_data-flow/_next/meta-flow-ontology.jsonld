@@ -1,0 +1,226 @@
+{
+  "@context": {
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
+    "mesh": "https://semantic-flow.github.io/ontology/mesh/",
+    "node": "https://semantic-flow.github.io/ontology/node/",
+    "flow": "https://semantic-flow.github.io/ontology/flow/"
+  },
+  "@graph": [
+    {
+      "@id": "meta:",
+      "@type": "owl:Ontology",
+      "dcterms:title": "Semantic Flow Meta-Flow Ontology",
+      "dcterms:description": "Provenance and metadata schema for nodes, their flow datasets, and other elements. Defines properties for tracking dataset series information, versioning states, node containment, and flow provenance data. Unlike config-flow, this focuses on metadata about flows rather than configuration settings. The recommended prefix is 'meta' (alternatives: 'metaflow', 'meta-flow', 'mf').",
+      "dcterms:creator": "Semantic Flow Project",
+      "owl:versionInfo": "0.1.0",
+      "mesh:preferredNamespacePrefix": "meta",
+      "mesh:alternateNamespacePrefix": ["metaflow", "meta-flow", "mf"]
+    },
+    {
+      "@id": "meta:VersioningState",
+      "@type": "owl:Class",
+      "rdfs:label": "Versioning State",
+      "rdfs:comment": "Represents the versioning state of a flow (versioned, unversioned, or deversioned)."
+    },
+    {
+      "@id": "meta:FlowInfo",
+      "@type": "owl:Class",
+      "rdfs:label": "Flow Info",
+      "rdfs:comment": "Version-specific information about individual versions within a flow, including version numbers, creation times, and version creators."
+    },
+    {
+      "@id": "meta:FlowProvenance",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "prov:Entity" },
+      "rdfs:label": "Flow Provenance",
+      "rdfs:comment": "Overall provenance information about the flow as a whole, including flow creation, last modification, and flow-level creators/modifiers."
+    },
+    {
+      "@id": "meta:ContainmentInfo",
+      "@type": "owl:Class",
+      "rdfs:label": "Containment Info",
+      "rdfs:comment": "Information about node containment relationships and hierarchical structure."
+    },
+    {
+      "@id": "meta:hasVersioningState",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has versioning state",
+      "rdfs:comment": "Associates a flow with its current versioning state.",
+      "rdfs:domain": { "@id": "node:Flow" },
+      "rdfs:range": { "@id": "meta:VersioningState" }
+    },
+    {
+      "@id": "meta:hasFlowInfo",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has flow info",
+      "rdfs:comment": "Associates a flow with version-specific information about its individual versions.",
+      "rdfs:domain": { "@id": "node:Flow" },
+      "rdfs:range": { "@id": "meta:FlowInfo" }
+    },
+    {
+      "@id": "meta:hasFlowProvenance",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has flow provenance",
+      "rdfs:comment": "Associates a flow with its provenance information.",
+      "rdfs:domain": { "@id": "node:Flow" },
+      "rdfs:range": { "@id": "meta:FlowProvenance" }
+    },
+    {
+      "@id": "meta:hasContainmentInfo",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has containment info",
+      "rdfs:comment": "Associates a node with information about its contained nodes.",
+      "rdfs:domain": { "@id": "mesh:Node" },
+      "rdfs:range": { "@id": "meta:ContainmentInfo" }
+    },
+    {
+      "@id": "meta:containsNode",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "contains node",
+      "rdfs:comment": "Indicates that this node contains another node.",
+      "rdfs:domain": { "@id": "mesh:Node" },
+      "rdfs:range": { "@id": "mesh:Node" }
+    },
+    {
+      "@id": "meta:versioningStateValue",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "versioning state value",
+      "rdfs:comment": "The actual versioning state: 'versioned', 'unversioned', or 'deversioned'.",
+      "rdfs:domain": { "@id": "meta:VersioningState" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "meta:versionNumber",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "version number",
+      "rdfs:comment": "Version number for a specific version in the flow.",
+      "rdfs:domain": { "@id": "meta:FlowInfo" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "meta:versionCreated",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "version created",
+      "rdfs:comment": "Timestamp when a version was created.",
+      "rdfs:domain": { "@id": "meta:FlowInfo" },
+      "rdfs:range": { "@id": "xsd:dateTime" }
+    },
+    {
+      "@id": "meta:versionCreator",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "version creator",
+      "rdfs:comment": "Identifier of who created this version.",
+      "rdfs:domain": { "@id": "meta:FlowInfo" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "meta:nodeIdentifier",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "node identifier",
+      "rdfs:comment": "Folder name or other identifier for the node (may not be needed if derivable).",
+      "rdfs:domain": { "@id": "mesh:Node" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "meta:containedNodeCount",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "contained node count",
+      "rdfs:comment": "Number of nodes contained within this node.",
+      "rdfs:domain": { "@id": "meta:ContainmentInfo" },
+      "rdfs:range": { "@id": "xsd:nonNegativeInteger" }
+    },
+    {
+      "@id": "meta:lastModified",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "last modified",
+      "rdfs:comment": "Timestamp when the flow was last modified.",
+      "rdfs:domain": { "@id": "meta:FlowProvenance" },
+      "rdfs:range": { "@id": "xsd:dateTime" }
+    },
+    {
+      "@id": "meta:createdBy",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "created by",
+      "rdfs:comment": "Identifier of who created the flow.",
+      "rdfs:domain": { "@id": "meta:FlowProvenance" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "meta:modifiedBy",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "modified by",
+      "rdfs:comment": "Identifier of who last modified the flow.",
+      "rdfs:domain": { "@id": "meta:FlowProvenance" },
+      "rdfs:range": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "meta:VersioningStateShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "meta:VersioningState" },
+      "sh:property": {
+        "@type": "sh:PropertyShape",
+        "sh:path": { "@id": "meta:versioningStateValue" },
+        "sh:in": {
+          "@list": [
+            "versioned",
+            "unversioned",
+            "deversioned"
+          ]
+        },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:message": "Versioning state value must be 'versioned', 'unversioned', or 'deversioned'"
+      }
+    },
+    {
+      "@id": "meta:FlowInfoShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "meta:FlowInfo" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "meta:versionNumber" },
+          "sh:datatype": { "@id": "xsd:string" },
+          "sh:minCount": 1,
+          "sh:message": "Dataset series info must have a version number"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "meta:versionCreated" },
+          "sh:datatype": { "@id": "xsd:dateTime" },
+          "sh:minCount": 1,
+          "sh:message": "Dataset series info must have a creation timestamp"
+        }
+      ]
+    },
+    {
+      "@id": "meta:FlowProvenanceShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "meta:FlowProvenance" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "meta:createdBy" },
+          "sh:datatype": { "@id": "xsd:string" },
+          "sh:minCount": 1,
+          "sh:message": "Flow provenance must specify who created it"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "meta:lastModified" },
+          "sh:datatype": { "@id": "xsd:dateTime" },
+          "sh:minCount": 1,
+          "sh:message": "Flow provenance must have a last modified timestamp"
+        }
+      ]
+    }
+  ]
+}

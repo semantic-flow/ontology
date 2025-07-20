@@ -42,7 +42,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "config inheritance enabled",
       "rdfs:comment": "Whether this node inherits configuration from parent nodes",
-      "rdfs:domain": { "@id": "mesh:Node" },
+      "rdfs:domain": { "@id": "node:Handle" },
       "rdfs:range": { "@id": "xsd:boolean" }
     },
     {
@@ -58,7 +58,7 @@
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has template mapping",
       "rdfs:comment": "Template mappings for resource page generation",
-      "rdfs:domain": { "@id": "mesh:Node" },
+      "rdfs:domain": { "@id": "node:Handle" },
       "rdfs:range": { "@id": "config:TemplateMapping" }
     },
     {
@@ -74,7 +74,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate unified dataset",
       "rdfs:comment": "Whether to generate unified dataset components",
-      "rdfs:domain": { "@id": "mesh:Node" },
+      "rdfs:domain": { "@id": "node:Handle" },
       "rdfs:range": { "@id": "xsd:boolean" }
     },
     {
@@ -82,7 +82,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate aggregated dataset",
       "rdfs:comment": "Whether to generate aggregated dataset components",
-      "rdfs:domain": { "@id": "mesh:Node" },
+      "rdfs:domain": { "@id": "node:Handle" },
       "rdfs:range": { "@id": "xsd:boolean" }
     },
     {
