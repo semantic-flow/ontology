@@ -102,6 +102,14 @@
       "rdfs:range": { "@id": "xsd:string" }
     },
     {
+      "@id": "config:containsNode",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "contains node",
+      "rdfs:comment": "Indicates that this node handle contains another node handle.",
+      "rdfs:domain": { "@id": "node:Handle" },
+      "rdfs:range": { "@id": "node:Handle" }
+    },
+    {
       "@id": "config:DistributionFormatShape",
       "@type": "sh:NodeShape",
       "sh:targetObjectsOf": { "@id": "config:distributionFormats" },

@@ -92,6 +92,12 @@ mesh:hasChangelog a owl:ObjectProperty ;
 #    Data Properties
 #################################################################
 
+mesh:relativeIdentifier a owl:DatatypeProperty ;
+    rdfs:label "relative identifier" ;
+    rdfs:comment "Filesystem-based relative identifier for mesh resources, corresponding directly to file paths in the mesh structure." ;
+    rdfs:domain mesh:Resource ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#anyURI> .
+
 mesh:preferredNamespacePrefix a owl:DatatypeProperty ;
     owl:sameAs <http://purl.org/vocab/vann/preferredNamespacePrefix> ;
     rdfs:label "preferred namespace prefix" ;
@@ -113,7 +119,7 @@ mesh:alternateNamespacePrefix a owl:DatatypeProperty ;
 [ a owl:AllDisjointClasses ;
     owl:members ( mesh:Node mesh:Element )
 ] .
-
+    
 
 ### Resource types are disjoint
 [ a owl:AllDisjointClasses ;
@@ -128,6 +134,17 @@ mesh:alternateNamespacePrefix a owl:DatatypeProperty ;
 #################################################################
 #    SHACL Constraints
 #################################################################
+
+# Every Resource must have exactly one relativeIdentifier
+mesh:ResourceIdentifierShape a sh:NodeShape ;
+    sh:targetClass mesh:Resource ;
+    sh:property [
+        sh:path mesh:relativeIdentifier ;
+        sh:datatype <http://www.w3.org/2001/XMLSchema#anyURI> ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Every mesh Resource must have exactly one relativeIdentifier"
+    ] .
 
 # Every FolderResource should have a ResourcePage
 mesh:FolderResourceShape a sh:NodeShape ;

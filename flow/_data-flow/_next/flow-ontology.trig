@@ -109,6 +109,27 @@ flow:hasSnapshot a owl:ObjectProperty ;
     rdfs:label "hasSnapshot" ;
     rdfs:comment "Associates a Flow with its snapshots. This property enables version management within flows." .
 
+flow:hasCurrentSnapshot a owl:ObjectProperty ;
+    rdfs:subPropertyOf flow:hasSnapshot ;
+    rdfs:domain node:Flow ;
+    rdfs:range flow:CurrentSnapshot ;
+    rdfs:label "hasCurrentSnapshot" ;
+    rdfs:comment "Associates a Flow with its current snapshot." .
+
+flow:hasNextSnapshot a owl:ObjectProperty ;
+    rdfs:subPropertyOf flow:hasSnapshot ;
+    rdfs:domain node:Flow ;
+    rdfs:range flow:NextSnapshot ;
+    rdfs:label "hasNextSnapshot" ;
+    rdfs:comment "Associates a Flow with its next (draft) snapshot." .
+
+flow:hasVersionSnapshot a owl:ObjectProperty ;
+    rdfs:subPropertyOf flow:hasSnapshot ;
+    rdfs:domain node:Flow ;
+    rdfs:range flow:VersionSnapshot ;
+    rdfs:label "hasVersionSnapshot" ;
+    rdfs:comment "Associates a Flow with its version snapshots." .
+
 flow:duplicatesSnapshot a owl:ObjectProperty ;
     rdfs:domain flow:CurrentSnapshot ;
     rdfs:range flow:VersionSnapshot ;
@@ -116,25 +137,25 @@ flow:duplicatesSnapshot a owl:ObjectProperty ;
     rdfs:comment "Associates a current snapshot with the most recent version snapshot." .
 
 flow:hasConfig a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
+    rdfs:domain node:Handle ;
     rdfs:range flow:Config ;
     rdfs:label "hasConfig" ;
     rdfs:comment "Links mesh nodes to their config flow." .
 
 flow:hasMetadata a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
+    rdfs:domain node:Handle ;
     rdfs:range flow:Metadata ;
     rdfs:label "hasMetadata" ;
     rdfs:comment "Links mesh nodes to their metadata flow." .
 
 flow:hasReference a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
+    rdfs:domain node:Handle ;
     rdfs:range flow:Reference ;
     rdfs:label "hasReference" ;
     rdfs:comment "Links mesh nodes to their reference flow." .
 
 flow:hasData a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
+    rdfs:domain node:Handle ;
     rdfs:range flow:Data ;
     rdfs:label "hasData" ;
     rdfs:comment "Links mesh nodes to their data flow." .
@@ -186,7 +207,14 @@ flow:ReferenceNodeShape a sh:NodeShape ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
        sh:message "Every Reference node must have exactly one Reference flow"
-   ] .
+   ] ;
+   sh:not [
+       sh:property [
+           sh:path flow:hasData ;
+           sh:minCount 1
+       ]
+   ] ;
+   sh:message "Reference nodes cannot have Data flows" .
 
 flow:DataNodeShape a sh:NodeShape ;
    sh:targetClass node:Data ;
@@ -197,21 +225,10 @@ flow:DataNodeShape a sh:NodeShape ;
        sh:maxCount 1 ;
        sh:message "Every Data node must have exactly one Data flow"
    ] ;
-   sh:property [
-       sh:path flow:hasReference ;
-       sh:class flow:Reference ;
-       sh:minCount 0 ;
-       sh:maxCount 1 ;
-       sh:message "Data node can have at most one Reference flow"
-   ] .
-
-# Every Node gets a Metadata flow
-flow:NodeMetadataShape a sh:NodeShape ;
-   sh:targetClass mesh:Node ;
-   sh:property [
-       sh:path flow:hasMetadata ;
-       sh:class flow:Metadata ;
-       sh:minCount 1 ;
-       sh:maxCount 1 ;
-       sh:message "Every Node must have exactly one Metadata flow"
-   ] .
+   sh:not [
+       sh:property [
+           sh:path flow:hasReference ;
+           sh:minCount 1
+       ]
+   ] ;
+   sh:message "Data nodes cannot have Reference flows" .

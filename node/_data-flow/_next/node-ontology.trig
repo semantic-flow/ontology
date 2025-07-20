@@ -5,6 +5,7 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix mesh: <https://semantic-flow.github.io/ontology/mesh/> .
 @prefix node: <https://semantic-flow.github.io/ontology/node/> .
+@prefix flow: <https://semantic-flow.github.io/ontology/flow/> .
 
 <> a owl:Ontology ;
     dcterms:title "Semantic Flow Node Ontology" ;
@@ -49,25 +50,25 @@ node:Flow a owl:Class ;
 #################################################################
 
 node:hasElement a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
+    rdfs:domain node:Handle ;
     rdfs:range mesh:Element ;
     rdfs:label "hasElement" ;
     rdfs:comment "Associates nodes with their supporting elements." .
 
 node:isHandleFor a owl:ObjectProperty ;
     rdfs:domain node:Handle ;
-    rdfs:range mesh:Node ;
+    rdfs:range node:Handle ;
     rdfs:label "isHandleFor" ;
     rdfs:comment "Indicates that a handle element provides identification and routing for a specific node. This property enables location-independent node access." .
 
 node:hasHandle a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
+    rdfs:domain node:Handle ;
     rdfs:range node:Handle ;
     rdfs:label "hasHandle" ;
     rdfs:comment "Associates a mesh node with its persistent handle identifier. This property enables node addressing without overloading the node's canonical, potentially-referring URL." .
 
 node:hasFlow a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
+    rdfs:domain node:Handle ;
     rdfs:range node:Flow ;
     rdfs:label "hasFlow" ;
     rdfs:comment "Links mesh nodes to their flows." .
@@ -101,6 +102,7 @@ node:FlowShape a sh:NodeShape ;
     sh:message "Flow is abstract - use a specific subclass" .
 
 # Every Node gets a Handle
+# This is tricky because usually the node would be referenced by its handle. Since node URIs have the special sense of a thing/concept, effectively we're saying that "the thing referenced by this node has a handle" instead of "this node has a handle".
 node:NodeShape a sh:NodeShape ;
    sh:targetClass mesh:Node ;
    sh:property [
@@ -109,4 +111,22 @@ node:NodeShape a sh:NodeShape ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
        sh:message "Every Node must have exactly one Handle"
+   ] .
+
+# Every Node gets Config and Metadata flows through its handle(universal requirements)
+node:HandleConfigShape a sh:NodeShape ;
+   sh:targetClass node:Handle ;
+   sh:property [
+       sh:path flow:hasConfig ;
+       sh:class flow:Config ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every Handle must have exactly one Config flow"
+   ] ;
+   sh:property [
+       sh:path flow:hasMetadata ;
+       sh:class flow:Metadata ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every Handle must have exactly one Metadata flow"
    ] .
