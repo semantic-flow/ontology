@@ -39,6 +39,66 @@ flow:VersionSnapshot a owl:Class ;
     rdfs:label "VersionSnapshot" ;
     rdfs:comment "Historical version snapshot of a node flow, representing a specific versioned snapshot." .
 
+flow:ConfigSnapshot a owl:Class ;
+    rdfs:subClassOf flow:Snapshot, mesh:FolderResource ;
+    rdfs:label "ConfigSnapshot" ;
+    rdfs:comment "Temporal state of a configuration flow, containing config distributions." .
+
+flow:MetadataSnapshot a owl:Class ;
+    rdfs:subClassOf flow:Snapshot, mesh:FolderResource ;
+    rdfs:label "MetadataSnapshot" ;
+    rdfs:comment "Temporal state of a metadata flow, containing metadata distributions." .
+
+flow:ReferenceSnapshot a owl:Class ;
+    rdfs:subClassOf flow:Snapshot, mesh:FolderResource ;
+    rdfs:label "ReferenceSnapshot" ;
+    rdfs:comment "Temporal state of a reference flow, containing reference resolution distributions." .
+
+flow:DataSnapshot a owl:Class ;
+    rdfs:subClassOf flow:Snapshot, mesh:FolderResource ;
+    rdfs:label "DataSnapshot" ;
+    rdfs:comment "Temporal state of a data flow, containing payload data distributions." .
+
+flow:Config a owl:Class ;
+    rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "Config" ;
+    rdfs:comment "Per-node config info for the flow-service." .
+
+flow:Metadata a owl:Class ;
+    rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "Metadata" ;
+    rdfs:comment "Centralized per-node metadata management for nodes and their elements." .
+
+flow:Reference a owl:Class ;
+    rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "Reference" ;
+    rdfs:comment "Reference resolution data elements that contain the data needed to resolve references to their targets, implementing the single referent principle." .
+
+flow:Data a owl:Class ;
+    rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "Data" ;
+    rdfs:comment "Actual content storage elements that contain the concrete data and information that forms the payload of data nodes." .
+
+flow:ConfigDistribution a owl:Class ;
+    rdfs:subClassOf dcat:Distribution, mesh:FileResource ;
+    rdfs:label "ConfigDistribution" ;
+    rdfs:comment "Concrete serialization of configuration data, such as JSON-LD files containing actual configuration terms and values." .
+
+flow:MetadataDistribution a owl:Class ;
+    rdfs:subClassOf dcat:Distribution, mesh:FileResource ;
+    rdfs:label "MetadataDistribution" ;
+    rdfs:comment "Concrete serialization of metadata, such as RDF files containing actual metadata terms and values." .
+
+flow:ReferenceDistribution a owl:Class ;
+    rdfs:subClassOf dcat:Distribution, mesh:FileResource ;
+    rdfs:label "ReferenceDistribution" ;
+    rdfs:comment "Concrete serialization of reference data, such as RDF files containing actual reference resolution terms and values." .
+
+flow:DataDistribution a owl:Class ;
+    rdfs:subClassOf dcat:Distribution, mesh:FileResource ;
+    rdfs:label "DataDistribution" ;
+    rdfs:comment "Concrete serialization of payload data, such as RDF files containing actual content terms and values." .
+
 #################################################################
 #    Object Properties
 #################################################################
@@ -55,6 +115,30 @@ flow:duplicatesSnapshot a owl:ObjectProperty ;
     rdfs:label "duplicatesSnapshot" ;
     rdfs:comment "Associates a current snapshot with the most recent version snapshot." .
 
+flow:hasConfig a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range flow:Config ;
+    rdfs:label "hasConfig" ;
+    rdfs:comment "Links mesh nodes to their config flow." .
+
+flow:hasMetadata a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range flow:Metadata ;
+    rdfs:label "hasMetadata" ;
+    rdfs:comment "Links mesh nodes to their metadata flow." .
+
+flow:hasReference a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range flow:Reference ;
+    rdfs:label "hasReference" ;
+    rdfs:comment "Links mesh nodes to their reference flow." .
+
+flow:hasData a owl:ObjectProperty ;
+    rdfs:domain mesh:Node ;
+    rdfs:range flow:Data ;
+    rdfs:label "hasData" ;
+    rdfs:comment "Links mesh nodes to their data flow." .
+
 #################################################################
 #    Data Properties
 #################################################################
@@ -68,6 +152,21 @@ flow:duplicatesSnapshot a owl:ObjectProperty ;
     owl:members ( flow:CurrentSnapshot flow:NextSnapshot flow:VersionSnapshot )
 ] .
 
+### Flow types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( flow:Config flow:Metadata flow:Reference flow:Data )
+] .
+
+### Specific snapshot types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( flow:ConfigSnapshot flow:MetadataSnapshot flow:ReferenceSnapshot flow:DataSnapshot )
+] .
+
+### Distribution types are disjoint
+[ a owl:AllDisjointClasses ;
+    owl:members ( flow:ConfigDistribution flow:MetadataDistribution flow:ReferenceDistribution flow:DataDistribution )
+] .
+
 #################################################################
 #    SHACL Constraints
 #################################################################
@@ -77,3 +176,42 @@ flow:SnapshotShape a sh:NodeShape ;
     sh:targetClass flow:Snapshot ;
     sh:not [ sh:class flow:Snapshot ] ;
     sh:message "Snapshot is abstract - use CurrentSnapshot, NextSnapshot, or VersionSnapshot" .
+
+# Node-specific flow constraints
+flow:ReferenceNodeShape a sh:NodeShape ;
+   sh:targetClass node:Reference ;
+   sh:property [
+       sh:path flow:hasReference ;
+       sh:class flow:Reference ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every Reference node must have exactly one Reference flow"
+   ] .
+
+flow:DataNodeShape a sh:NodeShape ;
+   sh:targetClass node:Data ;
+   sh:property [
+       sh:path flow:hasData ;
+       sh:class flow:Data ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every Data node must have exactly one Data flow"
+   ] ;
+   sh:property [
+       sh:path flow:hasReference ;
+       sh:class flow:Reference ;
+       sh:minCount 0 ;
+       sh:maxCount 1 ;
+       sh:message "Data node can have at most one Reference flow"
+   ] .
+
+# Every Node gets a Metadata flow
+flow:NodeMetadataShape a sh:NodeShape ;
+   sh:targetClass mesh:Node ;
+   sh:property [
+       sh:path flow:hasMetadata ;
+       sh:class flow:Metadata ;
+       sh:minCount 1 ;
+       sh:maxCount 1 ;
+       sh:message "Every Node must have exactly one Metadata flow"
+   ] .

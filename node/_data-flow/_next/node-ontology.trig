@@ -23,30 +23,25 @@ node:Handle a owl:Class ;
     rdfs:label "Handle" ;
     rdfs:comment "Node handles have an interest referent: their parent node 'as a node' (as opposed to the thing/concept referred to by the parent)." .
 
+node:Namespace a owl:Class ;
+    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
+    rdfs:label "Namespace" ;
+    rdfs:comment "Containers for other nodes. Identifiers for NamespaceNodes don't refer to things or concepts other than themselves." .
+
+node:Reference a owl:Class ;
+    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
+    rdfs:label "Reference" ;
+    rdfs:comment "Nodes refer to some 'thing' or concept other than themselves." .
+
+node:Data a owl:Class ;
+    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
+    rdfs:label "Data" ;
+    rdfs:comment "Nodes that provide 'payload data'." .
+
 node:Flow a owl:Class ;
-    rdfs:subClassOf dcat:DatasetSeries, mesh:Element ;
+    rdfs:subClassOf dcat:DatasetSeries, mesh:Resource ;
     rdfs:label "Flow" ;
     rdfs:comment "Abstract evolvable datasets for node metadata, reference data, payload data, and configuration data. Node flows are realized through flow snapshots that represent specific states or versions, so they are DatasetSeries." .
-
-node:MetadataFlow a owl:Class ;
-    rdfs:subClassOf node:Flow, mesh:FolderResource ;
-    rdfs:label "MetadataFlow" ;
-    rdfs:comment "Centralized per-node metadata management for nodes and their elements." .
-
-node:ReferenceFlow a owl:Class ;
-    rdfs:subClassOf node:Flow, mesh:FolderResource ;
-    rdfs:label "ReferenceFlow" ;
-    rdfs:comment "Reference resolution data elements that contain the data needed to resolve references to their targets, implementing the single referent principle." .
-
-node:DataFlow a owl:Class ;
-    rdfs:subClassOf node:Flow, mesh:FolderResource ;
-    rdfs:label "DataFlow" ;
-    rdfs:comment "Actual content storage elements that contain the concrete data and information that forms the payload of data nodes." .
-
-node:ConfigFlow a owl:Class ;
-    rdfs:subClassOf node:Flow, mesh:FolderResource ;
-    rdfs:label "ConfigFlow" ;
-    rdfs:comment "Per-node config info for the flow-service." .
 
 
 #################################################################
@@ -71,29 +66,11 @@ node:hasHandle a owl:ObjectProperty ;
     rdfs:label "hasHandle" ;
     rdfs:comment "Associates a mesh node with its persistent handle identifier. This property enables node addressing without overloading the node's canonical, potentially-referring URL." .
 
-node:hasReferenceFlow a owl:ObjectProperty ;
+node:hasFlow a owl:ObjectProperty ;
     rdfs:domain mesh:Node ;
-    rdfs:range node:ReferenceFlow ;
-    rdfs:label "hasReferenceFlow" ;
-    rdfs:comment "Links mesh nodes to their reference flow." .
-
-node:hasMetadataFlow a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range node:MetadataFlow ;
-    rdfs:label "hasMetadataFlow" ;
-    rdfs:comment "Links mesh nodes to their metadata flow." .
-
-node:hasDataFlow a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range node:DataFlow ;
-    rdfs:label "hasDataFlow" ;
-    rdfs:comment "Links mesh nodes to their data flow." .
-
-node:hasConfigFlow a owl:ObjectProperty ;
-    rdfs:domain mesh:Node ;
-    rdfs:range node:ConfigFlow ;
-    rdfs:label "hasConfigFlow" ;
-    rdfs:comment "Links mesh nodes to their config flow." .
+    rdfs:range node:Flow ;
+    rdfs:label "hasFlow" ;
+    rdfs:comment "Links mesh nodes to their flows." .
 
 #################################################################
 #    Data Properties
@@ -103,14 +80,14 @@ node:hasConfigFlow a owl:ObjectProperty ;
 #    Disjointness Axioms
 #################################################################
 
-### Flow types are disjoint
+### Node types are disjoint
 [ a owl:AllDisjointClasses ;
-    owl:members ( node:MetadataFlow node:ReferenceFlow node:DataFlow node:ConfigFlow )
+    owl:members ( node:Namespace node:Reference node:Data )
 ] .
 
-### Element types include Handle, Flow and others from mesh ontology
+### Element types include Handle and others from mesh ontology
 [ a owl:AllDisjointClasses ;
-    owl:members ( node:Handle node:Flow mesh:AssetTree mesh:DocumentationResource )
+    owl:members ( node:Handle mesh:AssetTree mesh:DocumentationResource )
 ] .
 
 #################################################################
@@ -123,48 +100,13 @@ node:FlowShape a sh:NodeShape ;
     sh:not [ sh:class node:Flow ] ;
     sh:message "Flow is abstract - use a specific subclass" .
 
-# Every Node gets a Handle and a MetadataFlow
+# Every Node gets a Handle
 node:NodeShape a sh:NodeShape ;
    sh:targetClass mesh:Node ;
-   sh:property [
-       sh:path node:hasMetadataFlow ;
-       sh:class node:MetadataFlow ;
-       sh:minCount 1 ;
-       sh:maxCount 1 ;
-       sh:message "Every Node must have exactly one MetadataFlow"
-   ] ;
    sh:property [
        sh:path node:hasHandle ;
        sh:class node:Handle ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
        sh:message "Every Node must have exactly one Handle"
-   ] .
-
-# Node-specific flow constraints
-node:ReferenceNodeShape a sh:NodeShape ;
-   sh:targetClass mesh:ReferenceNode ;
-   sh:property [
-       sh:path node:hasReferenceFlow ;
-       sh:class node:ReferenceFlow ;
-       sh:minCount 1 ;
-       sh:maxCount 1 ;
-       sh:message "Every ReferenceNode must have exactly one ReferenceFlow"
-   ] .
-
-node:DataNodeShape a sh:NodeShape ;
-   sh:targetClass mesh:DataNode ;
-   sh:property [
-       sh:path node:hasDataFlow ;
-       sh:class node:DataFlow ;
-       sh:minCount 1 ;
-       sh:maxCount 1 ;
-       sh:message "Every DataNode must have exactly one DataFlow"
-   ] ;
-   sh:property [
-       sh:path node:hasReferenceFlow ;
-       sh:class node:ReferenceFlow ;
-       sh:minCount 0 ;
-       sh:maxCount 1 ;
-       sh:message "DataNode can have at most one ReferenceFlow"
    ] .

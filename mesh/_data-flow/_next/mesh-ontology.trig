@@ -40,20 +40,6 @@ mesh:Element a owl:Class ;
     rdfs:label "Element" ;
     rdfs:comment "Terminal resources that provide specific mesh functionality." .
 
-mesh:NamespaceNode a owl:Class ;
-    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
-    rdfs:label "NamespaceNode" ;
-    rdfs:comment "Containers for other nodes. Identifiers for NamespaceNodes don't refer to things or concepts other than themselves." .
-
-mesh:ReferenceNode a owl:Class ;
-    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
-    rdfs:label "ReferenceNode" ;
-    rdfs:comment "Nodes refer to some 'thing' or concept other than themselves." .
-
-mesh:DataNode a owl:Class ;
-    rdfs:subClassOf mesh:Node, mesh:FolderResource ;
-    rdfs:label "DataNode" ;
-    rdfs:comment "Nodes that provide 'payload data'." .
 
 mesh:AssetTree a owl:Class ;
     rdfs:subClassOf mesh:Element, mesh:FolderResource ;
@@ -128,10 +114,6 @@ mesh:alternateNamespacePrefix a owl:DatatypeProperty ;
     owl:members ( mesh:Node mesh:Element )
 ] .
 
-### Node types are disjoint
-[ a owl:AllDisjointClasses ;
-    owl:members ( mesh:NamespaceNode mesh:ReferenceNode mesh:DataNode )
-] .
 
 ### Resource types are disjoint
 [ a owl:AllDisjointClasses ;
