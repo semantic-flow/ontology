@@ -6,6 +6,8 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "sh": "http://www.w3.org/ns/shacl#",
     "dcterms": "http://purl.org/dc/terms/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
     "mesh": "https://semantic-flow.github.io/ontology/mesh/",
     "fsvc": "https://semantic-flow.github.io/ontology/flow-service/"
   },
@@ -236,6 +238,38 @@
       "rdfs:label": "node defaults",
       "rdfs:comment": "Default configuration settings to apply to mesh nodes",
       "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" }
+    },
+    {
+      "@id": "fsvc:defaultDelegationChain",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "default delegation chain",
+      "rdfs:comment": "Specifies the default delegation chain template for new nodes created by this service.",
+      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
+      "schema:rangeIncludes": { "@id": "meta:DelegationChain" }
+    },
+    {
+      "@id": "fsvc:defaultLicense",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "default license",
+      "rdfs:comment": "Specifies the default license URI to apply to new snapshots (used for dcterms:license).",
+      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
+      "schema:rangeIncludes": { "@id": "xsd:anyURI" }
+    },
+    {
+      "@id": "fsvc:defaultRightsHolder",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "default rights holder",
+      "rdfs:comment": "Specifies the default rights holder agent for new snapshots (used for dcterms:rightsHolder).",
+      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
+      "schema:rangeIncludes": { "@id": "prov:Agent" }
+    },
+    {
+      "@id": "fsvc:defaultRights",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "default rights",
+      "rdfs:comment": "Specifies the default rights statement for new snapshots (used for dcterms:rights).",
+      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
+      "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
       "@id": "fsvc:LogLevelShape",

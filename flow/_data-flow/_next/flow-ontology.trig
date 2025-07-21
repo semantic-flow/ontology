@@ -61,8 +61,7 @@ flow:Data a owl:Class ;
 
 flow:hasSnapshot a owl:ObjectProperty ;
     rdfs:subPropertyOf prov:generalizationOf ; 
-    rdfs:domainIncludes node:Flow ;
-    rdfs:rangeIncludes flow:Snapshot ;
+    schema:domainIncludes node:Flow ;
     schema:rangeIncludes flow:Snapshot ;
     rdfs:label "hasSnapshot" ;
     rdfs:comment "Associates a Flow with its snapshots. This property enables version management within flows and helps implement the prov: model" .

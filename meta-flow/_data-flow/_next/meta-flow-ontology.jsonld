@@ -285,14 +285,6 @@
         },
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "prov:actedOnBehalfOf" },
-          "sh:class": { "@id": "prov:Agent" },
-          "sh:minCount": 1,
-          "sh:maxCount": 1,
-          "sh:message": "Delegation step must specify exactly one entity the agent acts for"
-        },
-        {
-          "@type": "sh:PropertyShape",
           "sh:path": { "@id": "meta:stepOrder" },
           "sh:datatype": { "@id": "xsd:integer" },
           "sh:minInclusive": 1,
@@ -320,6 +312,41 @@
           "sh:minCount": 1,
           "sh:maxCount": 1,
           "sh:message": "Agent role must specify exactly one role type"
+        },
+        {
+          "@id": "meta:DelegationStepConditionalShape",
+          "@type": "sh:NodeShape",
+          "sh:targetClass": { "@id": "meta:DelegationStep" },
+          "sh:or": [
+            {
+              "@type": "sh:NodeShape",
+              "sh:property": [
+                {
+                  "@type": "sh:PropertyShape",
+                  "sh:path": { "@id": "meta:stepOrder" },
+                  "sh:hasValue": 1
+                }
+              ]
+            },
+            {
+              "@type": "sh:NodeShape",
+              "sh:property": [
+                {
+                  "@type": "sh:PropertyShape",
+                  "sh:path": { "@id": "meta:stepOrder" },
+                  "sh:minExclusive": 1
+                },
+                {
+                  "@type": "sh:PropertyShape",
+                  "sh:path": { "@id": "prov:actedOnBehalfOf" },
+                  "sh:class": { "@id": "prov:Agent" },
+                  "sh:minCount": 1,
+                  "sh:maxCount": 1,
+                  "sh:message": "Delegation steps after step 1 must specify exactly one entity the agent acts for"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
