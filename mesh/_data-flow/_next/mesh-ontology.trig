@@ -71,20 +71,20 @@ mesh:ResourcePage a owl:Class ;
 #################################################################
 
 mesh:hasResourcePage a owl:ObjectProperty ;
-    rdfs:domain mesh:FolderResource ;
-    rdfs:range mesh:ResourcePage ;
+    schema:domainIncludes mesh:FolderResource ;
+    schema:rangeIncludes mesh:ResourcePage ;
     rdfs:label "hasResourcePage" ;
     rdfs:comment "Associates a mesh resource with its resource page." .
 
 mesh:hasReadme a owl:ObjectProperty ;
-    rdfs:domain mesh:FolderResource ;
-    rdfs:range mesh:Readme ;
+    schema:domainIncludes mesh:FolderResource ;
+    schema:rangeIncludes mesh:Readme ;
     rdfs:label "hasReadme" ;
     rdfs:comment "Associates a mesh resource with its readme documentation file." .
 
 mesh:hasChangelog a owl:ObjectProperty ;
-    rdfs:domain mesh:FolderResource ;
-    rdfs:range mesh:Changelog ;
+    schema:domainIncludes mesh:FolderResource ;
+    schema:rangeIncludes mesh:Changelog ;
     rdfs:label "hasChangelog" ;
     rdfs:comment "Associates a mesh resource with its changelog documentation file." .
 
@@ -95,21 +95,21 @@ mesh:hasChangelog a owl:ObjectProperty ;
 mesh:relativeIdentifier a owl:DatatypeProperty ;
     rdfs:label "relative identifier" ;
     rdfs:comment "Filesystem-based relative identifier for mesh resources, corresponding directly to file paths in the mesh structure, as seen from a metadata distribution." ;
-    rdfs:domain mesh:Resource ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#anyURI> .
+    schema:domainIncludes mesh:Resource ;
+    schema:rangeIncludes <http://www.w3.org/2001/XMLSchema#anyURI> .
 
 mesh:preferredNamespacePrefix a owl:DatatypeProperty ;
     owl:sameAs <http://purl.org/vocab/vann/preferredNamespacePrefix> ;
     rdfs:label "preferred namespace prefix" ;
     rdfs:comment "The preferred namespace prefix to use when referencing terms from this ontology." ;
-    rdfs:domain owl:Ontology ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+    schema:domainIncludes owl:Ontology ;
+    schema:rangeIncludes <http://www.w3.org/2001/XMLSchema#string> .
 
 mesh:alternateNamespacePrefix a owl:DatatypeProperty ;
     rdfs:label "alternate namespace prefix" ;
     rdfs:comment "Alternative namespace prefixes that can be used when the preferred prefix conflicts with existing namespaces." ;
-    rdfs:domain owl:Ontology ;
-    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+    schema:domainIncludes owl:Ontology ;
+    schema:rangeIncludes <http://www.w3.org/2001/XMLSchema#string> .
 
 #################################################################
 #    Disjointness Axioms

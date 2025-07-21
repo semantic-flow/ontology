@@ -50,26 +50,26 @@ node:Flow a owl:Class ;
 #################################################################
 
 node:hasElement a owl:ObjectProperty ;
-    rdfs:domain node:Handle ;
-    rdfs:range mesh:Element ;
+    schema:domainIncludes node:Handle ;
+    schema:rangeIncludes mesh:Element ;
     rdfs:label "hasElement" ;
     rdfs:comment "Associates nodes with their supporting elements." .
 
 node:isHandleFor a owl:ObjectProperty ;
-    rdfs:domain node:Handle ;
-    rdfs:range node:Handle ;
+    schema:domainIncludes node:Handle ;
+    schema:rangeIncludes node:Handle ;
     rdfs:label "isHandleFor" ;
     rdfs:comment "Indicates that a handle element provides identification and routing for a specific node. This property enables location-independent node access." .
 
 node:hasHandle a owl:ObjectProperty ;
-    rdfs:domain node:Handle ;
-    rdfs:range node:Handle ;
+    schema:domainIncludes node:Handle ;
+    schema:rangeIncludes node:Handle ;
     rdfs:label "hasHandle" ;
     rdfs:comment "Associates a mesh node with its persistent handle identifier. This property enables node addressing without overloading the node's canonical, potentially-referring URL." .
 
 node:hasFlow a owl:ObjectProperty ;
-    rdfs:domain node:Handle ;
-    rdfs:range node:Flow ;
+    schema:domainIncludes node:Handle ;
+    schema:rangeIncludes node:Flow ;
     rdfs:label "hasFlow" ;
     rdfs:comment "Links mesh nodes to their flows." .
 

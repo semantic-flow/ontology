@@ -60,17 +60,18 @@ flow:Data a owl:Class ;
 #################################################################
 
 flow:hasSnapshot a owl:ObjectProperty ;
-    rdfs:subPropertyOf prov:specializationOf 
-    rdfs:domain node:Flow ;
-    rdfs:range flow:Snapshot ;
+    rdfs:subPropertyOf prov:generalizationOf ; 
+    rdfs:domainIncludes node:Flow ;
+    rdfs:rangeIncludes flow:Snapshot ;
+    schema:rangeIncludes flow:Snapshot ;
     rdfs:label "hasSnapshot" ;
-    rdfs:comment "Associates a Flow with its snapshots. This property enables version management within flows." .
+    rdfs:comment "Associates a Flow with its snapshots. This property enables version management within flows and helps implement the prov: model" .
 
 
 flow:hasVersionSnapshot a owl:ObjectProperty ;
     rdfs:subPropertyOf flow:hasSnapshot ;
-    rdfs:domain node:Flow ;
-    rdfs:range flow:VersionSnapshot ;
+    schema:domainIncludes node:Flow ;
+    schema:rangeIncludes flow:VersionSnapshot ;
     rdfs:label "hasVersionSnapshot" ;
     rdfs:comment "Associates a Flow with its version snapshots." .
 
@@ -90,26 +91,26 @@ flow:versioningState a owl:DatatypeProperty ;
     schema:rangeIncludes xsd:string .
 
 flow:hasConfig a owl:ObjectProperty ;
-    rdfs:domain node:Handle ;
-    rdfs:range flow:Config ;
+    schema:domainIncludes node:Handle ;
+    schema:rangeIncludes flow:Config ;
     rdfs:label "hasConfig" ;
     rdfs:comment "Links mesh nodes to their config flow." .
 
 flow:hasMetadata a owl:ObjectProperty ;
-    rdfs:domain node:Handle ;
-    rdfs:range flow:Metadata ;
+    schema:domainIncludes node:Handle ;
+    schema:rangeIncludes flow:Metadata ;
     rdfs:label "hasMetadata" ;
     rdfs:comment "Links mesh nodes to their metadata flow." .
 
 flow:hasReference a owl:ObjectProperty ;
-    rdfs:domain node:Handle ;
-    rdfs:range flow:Reference ;
+    schema:domainIncludes node:Handle ;
+    schema:rangeIncludes flow:Reference ;
     rdfs:label "hasReference" ;
     rdfs:comment "Links mesh nodes to their reference flow." .
 
 flow:hasData a owl:ObjectProperty ;
-    rdfs:domain node:Handle ;
-    rdfs:range flow:Data ;
+    schema:domainIncludes node:Handle ;
+    schema:rangeIncludes flow:Data ;
     rdfs:label "hasData" ;
     rdfs:comment "Links mesh nodes to their data flow." .
 
