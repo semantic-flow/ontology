@@ -6,6 +6,7 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "sh": "http://www.w3.org/ns/shacl#",
     "dcterms": "http://purl.org/dc/terms/",
+    "mesh": "https://semantic-flow.github.io/ontology/mesh/",
     "fsvc": "https://semantic-flow.github.io/ontology/flow-service/"
   },
   "@graph": [

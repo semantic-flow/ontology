@@ -102,7 +102,7 @@ node:FlowShape a sh:NodeShape ;
     sh:message "Flow is abstract - use a specific subclass" .
 
 # Every Node gets a Handle
-# This is tricky because usually the node would be referenced by its handle. Since node URIs have the special sense of a thing/concept, effectively we're saying that "the thing referenced by this node has a handle" instead of "this node has a handle".
+# This is tricky because usually the node would be referenced by its handle. Since node URIs have the special sense of a thing/concept, effectively we're saying that "the thing referenced by this node has a handle" instead of "this node has a handle". But that's probably acceptable. 
 node:NodeShape a sh:NodeShape ;
    sh:targetClass mesh:Node ;
    sh:property [

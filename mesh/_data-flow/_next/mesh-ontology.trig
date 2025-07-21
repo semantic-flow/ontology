@@ -94,7 +94,7 @@ mesh:hasChangelog a owl:ObjectProperty ;
 
 mesh:relativeIdentifier a owl:DatatypeProperty ;
     rdfs:label "relative identifier" ;
-    rdfs:comment "Filesystem-based relative identifier for mesh resources, corresponding directly to file paths in the mesh structure." ;
+    rdfs:comment "Filesystem-based relative identifier for mesh resources, corresponding directly to file paths in the mesh structure, as seen from a metadata distribution." ;
     rdfs:domain mesh:Resource ;
     rdfs:range <http://www.w3.org/2001/XMLSchema#anyURI> .
 
