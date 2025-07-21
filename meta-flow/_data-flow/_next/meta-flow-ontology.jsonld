@@ -19,11 +19,131 @@
       "@id": "meta:",
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow Meta-Flow Ontology",
-      "dcterms:description": "Provenance and metadata schema for nodes, their flow datasets, and other elements. Defines properties for tracking dataset series information, versioning states, node containment, and flow provenance data. Unlike config-flow, this focuses on metadata about flows rather than configuration settings. The recommended prefix is 'meta' (alternatives: 'metaflow', 'meta-flow', 'mf').",
+      "dcterms:description": "Comprehensive provenance and metadata schema for nodes, their flow datasets, and weaving operations. Defines properties for tracking dataset series information, versioning states, provenance contexts, delegation chains, agent roles, and weave activities. Captures complex authorship scenarios and collaborative activities within the Semantic Flow mesh ecosystem. The recommended prefix is 'meta' (alternatives: 'metaflow', 'meta-flow', 'mf').",
       "dcterms:creator": "Semantic Flow Project",
-      "owl:versionInfo": "0.1.0",
+      "owl:versionInfo": "0.2.0",
       "mesh:preferredNamespacePrefix": "meta",
       "mesh:alternateNamespacePrefix": ["metaflow", "meta-flow", "mf"]
+    },
+    {
+      "@id": "meta:ProvenanceEntity",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Provenance Entity",
+      "rdfs:comment": "Abstract entities that describe provenance relationships within RDF distributions."
+    },
+    {
+      "@id": "meta:ProvenanceContext",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Provenance Context",
+      "rdfs:comment": "A relator that captures complex authorship scenarios for mesh operations, binding together activities, agents, delegation chains, and agent roles. Uses prov:wasAttributedTo to identify the primary responsible agent.",
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+    },
+    {
+      "@id": "meta:DelegationChain",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Delegation Chain",
+      "rdfs:comment": "A collection of delegation steps that form an authorization chain. Earlier",
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+    },
+    {
+      "@id": "meta:DelegationStep",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Delegation Step",
+      "rdfs:comment": "An individual step in an authorization chain, showing one agent acting on behalf of another using prov:agent and prov:actedOnBehalfOf.",
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+    },
+    {
+      "@id": "meta:AgentRoleCollection",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Agent Role Collection",
+      "rdfs:comment": "A collection of agent role assignments for collaborative activities.",
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+    },
+    {
+      "@id": "meta:AgentRole",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Agent Role",
+      "rdfs:comment": "Describes the specific role an agent plays in a collaborative activity, using prov:agent to identify the agent.",
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+    },
+    {
+      "@id": "meta:RoleType",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Role Type",
+      "rdfs:comment": "Types of roles agents can play in activities."
+    },
+    {
+      "@id": "meta:WeaveActivity",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Weave Activity",
+      "rdfs:comment": "Base class for all Semantic Flow mesh weaving operations.",
+      "rdfs:subClassOf": { "@id": "prov:Activity" }
+    },
+    {
+      "@id": "meta:ConfigWeave",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Config Weave",
+      "rdfs:comment": "Weaving operation that updates configuration flows.",
+      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+    },
+    {
+      "@id": "meta:ReferenceWeave",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Reference Weave",
+      "rdfs:comment": "Weaving operation that updates reference flows.",
+      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+    },
+    {
+      "@id": "meta:DataWeave",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Data Weave",
+      "rdfs:comment": "Weaving operation that updates data flows.",
+      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+    },
+    {
+      "@id": "meta:MetaWeave",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Meta Weave",
+      "rdfs:comment": "Weaving operation that updates meta-flows (automatically triggered).",
+      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+    },
+    {
+      "@id": "meta:NodeWeave",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Node Weave",
+      "rdfs:comment": "Weaving operation that updates all flows within a node.",
+      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+    },
+    {
+      "@id": "meta:NodeTreeWeave",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Node Tree Weave",
+      "rdfs:comment": "Weaving operation that recursively updates nodes and their contained nodes.",
+      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+    },
+    {
+      "@id": "meta:dataExtraction",
+      "@type": "meta:RoleType",
+      "rdfs:label": "data extraction",
+      "rdfs:comment": "Responsible for extracting or gathering data."
+    },
+    {
+      "@id": "meta:qualityAssurance",
+      "@type": "meta:RoleType",
+      "rdfs:label": "quality assurance",
+      "rdfs:comment": "Responsible for validating and ensuring quality."
+    },
+    {
+      "@id": "meta:finalApproval",
+      "@type": "meta:RoleType",
+      "rdfs:label": "final approval",
+      "rdfs:comment": "Responsible for final review and approval."
+    },
+    {
+      "@id": "meta:coordination",
+      "@type": "meta:RoleType",
+      "rdfs:label": "coordination",
+      "rdfs:comment": "Responsible for coordinating between other agents."
     },
     {
       "@id": "meta:versioningState",
@@ -34,13 +154,76 @@
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
-      "@id": "meta:hasPreviousVersion",
+      "@id": "meta:forActivity",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": { "@id": "dcat:previousVersion" },
-      "rdfs:label": "has previous version",
-      "rdfs:comment": "Links to the previous version of this snapshot.",
-      "schema:domainIncludes": { "@id": "flow:VersionSnapshot" },
-      "schema:rangeIncludes": { "@id": "flow:VersionSnapshot" }
+      "rdfs:label": "for activity",
+      "rdfs:comment": "Links a provenance context to the activity it describes.",
+      "schema:domainIncludes": { "@id": "meta:ProvenanceContext" },
+      "schema:rangeIncludes": { "@id": "prov:Activity" }
+    },
+    {
+      "@id": "meta:forSnapshot",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "for snapshot",
+      "rdfs:comment": "Links a provenance context to the specific snapshot it describes.",
+      "schema:domainIncludes": { "@id": "meta:ProvenanceContext" },
+      "schema:rangeIncludes": { "@id": "flow:Snapshot" }
+    },
+    {
+      "@id": "meta:delegationChain",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "delegation chain",
+      "rdfs:comment": "Links to a collection of delegation steps showing the authorization chain.",
+      "schema:domainIncludes": { "@id": "meta:ProvenanceContext" },
+      "schema:rangeIncludes": { "@id": "meta:DelegationChain" }
+    },
+    {
+      "@id": "meta:agentRoles",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "agent roles",
+      "rdfs:comment": "Links to a collection of agent role assignments.",
+      "schema:domainIncludes": { "@id": "meta:ProvenanceContext" },
+      "schema:rangeIncludes": { "@id": "meta:AgentRoleCollection" }
+    },
+    {
+      "@id": "meta:hasStep",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has step",
+      "rdfs:comment": "Links a delegation chain to its individual steps.",
+      "schema:domainIncludes": { "@id": "meta:DelegationChain" },
+      "schema:rangeIncludes": { "@id": "meta:DelegationStep" }
+    },
+    {
+      "@id": "meta:stepOrder",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "step order",
+      "rdfs:comment": "The order of this step in the delegation chain (1, 2, 3, etc.).",
+      "schema:domainIncludes": { "@id": "meta:DelegationStep" },
+      "schema:rangeIncludes": { "@id": "xsd:integer" }
+    },
+    {
+      "@id": "meta:hasRole",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has role",
+      "rdfs:comment": "Links an agent role collection to individual role assignments.",
+      "schema:domainIncludes": { "@id": "meta:AgentRoleCollection" },
+      "schema:rangeIncludes": { "@id": "meta:AgentRole" }
+    },
+    {
+      "@id": "meta:role",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "role",
+      "rdfs:comment": "The specific role or function the agent performs.",
+      "schema:domainIncludes": { "@id": "meta:AgentRole" },
+      "schema:rangeIncludes": { "@id": "meta:RoleType" }
+    },
+    {
+      "@id": "meta:wasTriggeredBy",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "was triggered by",
+      "rdfs:comment": "Links an automatic activity (like MetaWeave) to the activity that triggered it.",
+      "schema:domainIncludes": { "@id": "prov:Activity" },
+      "schema:rangeIncludes": { "@id": "prov:Activity" }
     },
     {
       "@id": "meta:FlowVersioningStateShape",
@@ -55,6 +238,90 @@
         ]
       },
       "sh:message": "Versioning state must be 'versioned', 'unversioned', or 'deversioned'"
+    },
+    {
+      "@id": "meta:ProvenanceContextShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "meta:ProvenanceContext" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "meta:forActivity" },
+          "sh:class": { "@id": "prov:Activity" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Provenance context must reference exactly one activity"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "meta:forSnapshot" },
+          "sh:class": { "@id": "flow:Snapshot" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Provenance context must reference exactly one snapshot"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "prov:wasAttributedTo" },
+          "sh:class": { "@id": "prov:Agent" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Provenance context must have exactly one primary agent"
+        }
+      ]
+    },
+    {
+      "@id": "meta:DelegationStepShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "meta:DelegationStep" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "prov:agent" },
+          "sh:class": { "@id": "prov:Agent" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Delegation step must have exactly one agent"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "prov:actedOnBehalfOf" },
+          "sh:class": { "@id": "prov:Agent" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Delegation step must specify exactly one entity the agent acts for"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "meta:stepOrder" },
+          "sh:datatype": { "@id": "xsd:integer" },
+          "sh:minInclusive": 1,
+          "sh:message": "Step order must be a positive integer"
+        }
+      ]
+    },
+    {
+      "@id": "meta:AgentRoleShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "meta:AgentRole" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "prov:agent" },
+          "sh:class": { "@id": "prov:Agent" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Agent role must have exactly one agent"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "meta:role" },
+          "sh:class": { "@id": "meta:RoleType" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Agent role must specify exactly one role type"
+        }
+      ]
     }
   ]
 }
