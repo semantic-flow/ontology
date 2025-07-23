@@ -6,14 +6,14 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "sh": "http://www.w3.org/ns/shacl#",
     "dcterms": "http://purl.org/dc/terms/",
-    "config": "https://semantic-flow.github.io/ontology/config-flow/",
+    "conf": "https://semantic-flow.github.io/ontology/conf/",
     "mesh": "https://semantic-flow.github.io/ontology/mesh/",
     "node": "https://semantic-flow.github.io/ontology/node/",
     "flow": "https://semantic-flow.github.io/ontology/flow/"
   },
   "@graph": [
     {
-      "@id": "config:",
+      "@id": "conf:",
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow Configuration Ontology",
       "dcterms:description": "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh entities (nodes, flows, snapshots, etc.) and can be set through configuration files. The recommended prefix is 'conf' (alternatives: 'config', 'cfconfig', 'config-flow').",
@@ -23,14 +23,20 @@
       "mesh:alternateNamespacePrefix": ["config", "cfconfig", "config-flow"]
     },
     {
-      "@id": "config:TemplateMapping",
+      "@id": "conf:ConfigurationClass",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Configuration Class",
+      "rdfs:comment": "Classes that structure configuration information within config distributions."
+    },
+    {
+      "@id": "conf:TemplateMapping",
       "@type": "owl:Class",
-      "rdfs:subClassOf": { "@id": "mesh:Resource" },
+      "rdfs:subClassOf": { "@id": "conf:ConfigurationClass" },
       "rdfs:label": "Template Mapping",
       "rdfs:comment": "Template configuration mapping for resource page generation within node configurations."
     },
     {
-      "@id": "config:versioningEnabled",
+      "@id": "conf:versioningEnabled",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "versioning enabled",
       "rdfs:comment": "Whether versioning is enabled for this flow.",
@@ -38,7 +44,7 @@
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
-      "@id": "config:configInheritanceEnabled",
+      "@id": "conf:configInheritanceEnabled",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "config inheritance enabled",
       "rdfs:comment": "Whether this node inherits configuration from parent nodes",
@@ -46,31 +52,31 @@
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
-      "@id": "config:distributionFormats",
+      "@id": "conf:distributionFormats",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "distribution formats",
       "rdfs:comment": "List of RDF serialization formats to generate for distributions",
-      "schema:domainIncludes": { "@id": "flow:Snapshot" },
+      "schema:domainIncludes": { "@id": "node:Handle" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
-      "@id": "config:hasTemplateMapping",
+      "@id": "conf:hasTemplateMapping",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has template mapping",
       "rdfs:comment": "Template mappings for resource page generation",
       "schema:domainIncludes": { "@id": "node:Handle" },
-      "schema:rangeIncludes": { "@id": "config:TemplateMapping" }
+      "schema:rangeIncludes": { "@id": "conf:TemplateMapping" }
     },
     {
-      "@id": "config:resourcePage",
+      "@id": "conf:hasResourcePageTemplate",
       "@type": "owl:DatatypeProperty",
-      "rdfs:label": "resource page template",
+      "rdfs:label": "has resource page template",
       "rdfs:comment": "Template file path for resource pages",
-      "schema:domainIncludes": { "@id": "config:TemplateMapping" },
+      "schema:domainIncludes": { "@id": "conf:TemplateMapping" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
-      "@id": "config:generateUnifiedDataset",
+      "@id": "conf:generateUnifiedDataset",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate unified dataset",
       "rdfs:comment": "Whether to generate unified dataset components",
@@ -78,7 +84,7 @@
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
-      "@id": "config:generateAggregatedDataset",
+      "@id": "conf:generateAggregatedDataset",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate aggregated dataset",
       "rdfs:comment": "Whether to generate aggregated dataset components",
@@ -86,7 +92,7 @@
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
-      "@id": "config:generateResourcePages",
+      "@id": "conf:generateResourcePages",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate resource pages",
       "rdfs:comment": "Whether to generate HTML resource pages during weave",
@@ -94,25 +100,25 @@
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
-      "@id": "config:stylesheetPath",
+      "@id": "conf:stylesheetPath",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "stylesheet path",
       "rdfs:comment": "Path to CSS stylesheet for generated pages",
-      "schema:domainIncludes": { "@id": "mesh:ResourcePage" },
+      "schema:domainIncludes": { "@id": "node:Handle" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
-      "@id": "config:containsNode",
+      "@id": "conf:containsNode",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "contains node",
-      "rdfs:comment": "Indicates that this node handle contains another node handle.",
+      "rdfs:comment": "Indicates that this node contains another node.",
       "schema:domainIncludes": { "@id": "node:Handle" },
       "schema:rangeIncludes": { "@id": "node:Handle" }
     },
     {
-      "@id": "config:DistributionFormatShape",
+      "@id": "conf:DistributionFormatShape",
       "@type": "sh:NodeShape",
-      "sh:targetObjectsOf": { "@id": "config:distributionFormats" },
+      "sh:targetObjectsOf": { "@id": "conf:distributionFormats" },
       "sh:property": {
         "@type": "sh:PropertyShape",
         "sh:path": { "@id": "rdf:value" },
@@ -130,15 +136,34 @@
       }
     },
     {
-      "@id": "config:TemplatePathShape",
+      "@id": "conf:TemplatePathShape",
       "@type": "sh:NodeShape",
-      "sh:targetObjectsOf": { "@id": "config:resourcePage" },
+      "sh:targetObjectsOf": { "@id": "conf:hasResourcePageTemplate" },
       "sh:property": {
         "@type": "sh:PropertyShape",
         "sh:path": { "@id": "rdf:value" },
         "sh:pattern": "^[^/].*\\.(html|htm|hbs|mustache)$",
         "sh:message": "Template path must be a relative path ending in .html, .htm, .hbs, or .mustache"
       }
+    },
+    {
+      "@id": "conf:NodeShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "node:Handle" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "conf:distributionFormats" },
+          "sh:minCount": 1,
+          "sh:message": "At least one distribution format must be specified"
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "conf:stylesheetPath" },
+          "sh:pattern": "^[^/].*\\.(css|scss|sass)$",
+          "sh:message": "Stylesheet path must be a relative path ending in .css, .scss, or .sass"
+        }
+      ]
     }
   ]
 }

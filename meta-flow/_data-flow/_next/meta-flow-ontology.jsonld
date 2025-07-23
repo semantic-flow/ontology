@@ -18,7 +18,7 @@
     {
       "@id": "meta:",
       "@type": "owl:Ontology",
-      "dcterms:title": "Semantic Flow Meta-Flow Ontology",
+      "dcterms:title": "Semantic Flow Metadata-Flow Ontology",
       "dcterms:description": "Comprehensive provenance and metadata schema for nodes, their flow datasets, and weaving operations. Defines properties for tracking dataset series information, versioning states, provenance contexts, delegation chains, agent roles, and weave activities. Captures complex authorship scenarios and collaborative activities within the Semantic Flow mesh ecosystem. The recommended prefix is 'meta' (alternatives: 'metaflow', 'meta-flow', 'mf').",
       "dcterms:creator": "Semantic Flow Project",
       "owl:versionInfo": "0.2.0",
@@ -26,45 +26,52 @@
       "mesh:alternateNamespacePrefix": ["metaflow", "meta-flow", "mf"]
     },
     {
-      "@id": "meta:ProvenanceEntity",
+      "@id": "meta:MetadataClass",
       "@type": "rdfs:Class",
-      "rdfs:label": "Provenance Entity",
-      "rdfs:comment": "Abstract entities that describe provenance relationships within RDF distributions."
+      "rdfs:label": "Metadata Class",
+      "rdfs:comment": "Classes that structure metadata information within meta-flow distributions."
+    },
+    {
+      "@id": "meta:ProvenanceClass",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Provenance Class",
+      "rdfs:comment": "Classes that structure provenance information within meta-flow distributions.",
+      "rdfs:subClassOf": { "@id": "meta:MetadataClass" }
     },
     {
       "@id": "meta:ProvenanceContext",
       "@type": "rdfs:Class",
       "rdfs:label": "Provenance Context",
       "rdfs:comment": "A relator that captures complex authorship scenarios for mesh operations, binding together activities, agents, delegation chains, and agent roles. Uses prov:wasAttributedTo to identify the primary responsible agent.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
     },
     {
       "@id": "meta:DelegationChain",
       "@type": "rdfs:Class",
       "rdfs:label": "Delegation Chain",
       "rdfs:comment": "A collection of delegation steps that form an authorization chain. Earlier",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
     },
     {
       "@id": "meta:DelegationStep",
       "@type": "rdfs:Class",
       "rdfs:label": "Delegation Step",
       "rdfs:comment": "An individual step in an authorization chain, showing one agent acting on behalf of another using prov:agent and prov:actedOnBehalfOf.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
     },
     {
       "@id": "meta:AgentRoleCollection",
       "@type": "rdfs:Class",
       "rdfs:label": "Agent Role Collection",
       "rdfs:comment": "A collection of agent role assignments for collaborative activities.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
     },
     {
       "@id": "meta:AgentRole",
       "@type": "rdfs:Class",
       "rdfs:label": "Agent Role",
       "rdfs:comment": "Describes the specific role an agent plays in a collaborative activity, using prov:agent to identify the agent.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceEntity" }
+      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
     },
     {
       "@id": "meta:RoleType",
@@ -73,11 +80,46 @@
       "rdfs:comment": "Types of roles agents can play in activities."
     },
     {
+      "@id": "meta:MeshActivity",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Mesh Activity",
+      "rdfs:comment": "Base class for all Semantic Flow mesh operations including weaving, grafting, and initialization activities.",
+      "rdfs:subClassOf": { "@id": "prov:Activity" }
+    },
+    {
       "@id": "meta:WeaveActivity",
       "@type": "rdfs:Class",
       "rdfs:label": "Weave Activity",
       "rdfs:comment": "Base class for all Semantic Flow mesh weaving operations.",
-      "rdfs:subClassOf": { "@id": "prov:Activity" }
+      "rdfs:subClassOf": { "@id": "meta:MeshActivity" }
+    },
+    {
+      "@id": "meta:NodeCreation",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Node Creation",
+      "rdfs:comment": "Activity for creating new nodes in mesh repositories.",
+      "rdfs:subClassOf": { "@id": "meta:MeshActivity" }
+    },
+    {
+      "@id": "meta:GraftActivity",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Graft Activity",
+      "rdfs:comment": "Specialized node creation for preparing new '_next' nodes and flows before weaving operations.",
+      "rdfs:subClassOf": { "@id": "meta:NodeCreation" }
+    },
+    {
+      "@id": "meta:RepoInitialization",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Repository Initialization",
+      "rdfs:comment": "Activity for initializing new mesh repositories with their foundational structure.",
+      "rdfs:subClassOf": { "@id": "meta:MeshActivity" }
+    },
+    {
+      "@id": "meta:NodeInitialization",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Node Initialization",
+      "rdfs:comment": "Activity for initializing individual nodes within repository initialization.",
+      "rdfs:subClassOf": { "@id": "meta:RepoInitialization" }
     },
     {
       "@id": "meta:ConfigWeave",
