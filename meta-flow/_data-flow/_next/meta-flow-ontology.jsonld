@@ -49,7 +49,7 @@
       "@id": "meta:DelegationChain",
       "@type": "rdfs:Class",
       "rdfs:label": "Delegation Chain",
-      "rdfs:comment": "A collection of delegation steps that form an authorization chain. Earlier",
+      "rdfs:comment": "A collection of delegation steps that form an authorization chain.",
       "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
     },
     {
