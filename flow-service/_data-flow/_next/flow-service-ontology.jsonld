@@ -298,11 +298,11 @@
           "sh:message": "Port must be an integer between 1 and 65535"
         },
         {
-          "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "fsvc:host" },
-          "sh:datatype": { "@id": "xsd:string" },
-          "sh:minLength": 1,
-          "sh:message": "Host must be a non-empty string"
+          "@id": "fsvc:rootMeshNodeConfigTemplate",
+          "@type": "owl:ObjectProperty",
+          "rdfs:label": "root node config template",
+          "rdfs:comment": "Template configuration settings to apply to root mesh nodes created by the service",
+          "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" }
         }
       ]
     },
