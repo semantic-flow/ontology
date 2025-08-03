@@ -116,7 +116,7 @@
       "schema:rangeIncludes": { "@id": "node:Handle" }
     },
     {
-      "@id": "conf:defaultAttribution",
+      "@id": "conf:defaultAttributedTo",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "default attribution",
       "rdfs:comment": "Overrides the default attribution for a node and its contained elements. If inheritance is enabled, this attribution can also be inherited by contained nodes. Accepts a URI, such as an ORCID.",

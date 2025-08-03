@@ -248,6 +248,14 @@
       "schema:rangeIncludes": { "@id": "meta:DelegationChain" }
     },
     {
+      "@id": "fsvc:defaultAttributedTo",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "default attribution",
+      "rdfs:comment": "Specifies the default agent URI to use for attribution.",
+      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
+      "schema:rangeIncludes": { "@id": "xsd:anyURI" }
+    },
+    {
       "@id": "fsvc:defaultLicense",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "default license",
