@@ -73,6 +73,14 @@
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
+      "@id": "fsvc:scheme",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "scheme",
+      "rdfs:comment": "URL scheme for the service (http or https)",
+      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
+      "schema:rangeIncludes": { "@id": "xsd:string" }
+    },
+    {
       "@id": "fsvc:hasLoggingConfig",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has logging configuration",

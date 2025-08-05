@@ -29,6 +29,13 @@
       "rdfs:comment": "Classes that structure configuration information within config distributions."
     },
     {
+      "@id": "conf:TemplateMappings",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "conf:ConfigurationClass" },
+      "rdfs:label": "Template Mappings",
+      "rdfs:comment": "Collection of template mappings."
+    },
+    {
       "@id": "conf:TemplateMapping",
       "@type": "owl:Class",
       "rdfs:subClassOf": { "@id": "conf:ConfigurationClass" },
