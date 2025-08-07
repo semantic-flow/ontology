@@ -42,7 +42,7 @@
       "@id": "fsvc:LogChannelConfig",
       "@type": "owl:Class",
       "rdfs:label": "Log Channel Configuration",
-      "rdfs:comment": "Configuration for individual logging channels (console, file, sentry)"
+      "rdfs:comment": "Abstract superclass for individual logging channels (console, file, sentry)"
     },
     {
       "@id": "fsvc:ContainedServicesConfig",
@@ -143,14 +143,6 @@
       "rdfs:comment": "Sentry Data Source Name for error reporting",
       "schema:domainIncludes": { "@id": "fsvc:LogChannelConfig" },
       "schema:rangeIncludes": { "@id": "xsd:anyURI" }
-    },
-    {
-      "@id": "fsvc:sentryLoggingEnabled",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "sentry logging enabled",
-      "rdfs:comment": "Whether Sentry log message sending is enabled (separate from error reporting)",
-      "schema:domainIncludes": { "@id": "fsvc:LogChannelConfig" },
-      "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
       "@id": "fsvc:logRetentionDays",
@@ -295,9 +287,9 @@
         "@type": "sh:PropertyShape",
         "sh:path": { "@id": "rdf:value" },
         "sh:in": {
-          "@list": ["debug", "info", "warn", "error"]
+          "@list": ["debug", "info", "warn", "error", "critical"]
         },
-        "sh:message": "Log level must be one of: debug, info, warn, error"
+        "sh:message": "Log level must be one of: debug, info, warn, error, critical"
       }
     },
     {
