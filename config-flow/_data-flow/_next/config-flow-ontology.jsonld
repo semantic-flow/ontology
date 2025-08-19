@@ -6,27 +6,51 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "sh": "http://www.w3.org/ns/shacl#",
     "dcterms": "http://purl.org/dc/terms/",
+    "schema": "https://schema.org/",
     "conf": "https://semantic-flow.github.io/ontology/conf/",
     "mesh": "https://semantic-flow.github.io/ontology/mesh/",
     "node": "https://semantic-flow.github.io/ontology/node/",
-    "flow": "https://semantic-flow.github.io/ontology/flow/"
+    "flow": "https://semantic-flow.github.io/ontology/flow/",
+    "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
+    "fsvc": "https://semantic-flow.github.io/ontology/flow-service/"
   },
   "@graph": [
     {
       "@id": "conf:",
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow Configuration Ontology",
-      "dcterms:description": "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh entities (nodes, flows, snapshots, etc.) and can be set through configuration files. The recommended prefix is 'conf' (alternatives: 'config', 'cfconfig', 'config-flow').",
+      "dcterms:description": "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh entities (nodes, flows, snapshots, etc.) and can be set through configuration files. The recommended prefix is 'conf' (alternatives: 'config', 'node-config').",
       "dcterms:creator": "Semantic Flow Project",
       "owl:versionInfo": "0.1.0",
       "mesh:preferredNamespacePrefix": "conf",
-      "mesh:alternateNamespacePrefix": ["config", "cfconfig", "config-flow"]
+      "mesh:alternateNamespacePrefix": ["config", "node-config"]
     },
     {
       "@id": "conf:ConfigurationClass",
       "@type": "rdfs:Class",
       "rdfs:label": "Configuration Class",
       "rdfs:comment": "Classes that structure configuration information within config distributions."
+    },
+    {
+      "@id": "conf:AbstractNodeConfig",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Abstract Node Configuration",
+      "rdfs:comment": "Abstract base class for node configuration types. Defines the common structure for both operational and inheritable node configurations.",
+      "rdfs:subClassOf": { "@id": "conf:ConfigurationClass" }
+    },
+    {
+      "@id": "conf:OperationalNodeConfig",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Operational Node Configuration",
+      "rdfs:comment": "The actual operational configuration for a specific node. Controls how this node behaves (versioning, distribution formats, etc.). Does not participate in inheritance chain.",
+      "rdfs:subClassOf": { "@id": "conf:AbstractNodeConfig" }
+    },
+    {
+      "@id": "conf:InheritableNodeConfig",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Inheritable Node Configuration",
+      "rdfs:comment": "Configuration that can be passed down to child nodes. Used by nodes, services, and platform to provide default configuration for contained nodes.",
+      "rdfs:subClassOf": { "@id": "conf:AbstractNodeConfig" }
     },
     {
       "@id": "conf:TemplateMappings",
@@ -43,35 +67,63 @@
       "rdfs:comment": "Template configuration mapping for resource page generation within node configurations."
     },
     {
+      "@id": "conf:hasOperationalNodeConfig",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has operational node config",
+      "rdfs:comment": "Links a node to its operational configuration that controls how the node behaves.",
+      "schema:domainIncludes": { "@id": "node:Handle" },
+      "schema:rangeIncludes": { "@id": "conf:OperationalNodeConfig" }
+    },
+    {
+      "@id": "conf:hasInheritableNodeConfig",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has inheritable node config",
+      "rdfs:comment": "Links a node, service, or platform to configuration that can be inherited by child nodes.",
+      "schema:domainIncludes": [
+        { "@id": "node:Handle" },
+        { "@id": "fsvc:ServiceConfig" },
+        { "@id": "fsvc:PlatformServiceConfig" }
+      ],
+      "schema:rangeIncludes": { "@id": "conf:InheritableNodeConfig" }
+    },
+    {
       "@id": "conf:versioningEnabled",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "versioning enabled",
       "rdfs:comment": "Whether versioning is enabled for this flow.",
-      "schema:domainIncludes": { "@id": "node:Flow" },
+      "schema:domainIncludes": { "@id": "conf:AbstractNodeConfig" },
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
-      "@id": "conf:configInheritanceEnabled",
+      "@id": "conf:nodeConfigInheritanceEnabled",
       "@type": "owl:DatatypeProperty",
-      "rdfs:label": "config inheritance enabled",
+      "rdfs:label": "node config inheritance enabled",
       "rdfs:comment": "Whether this node inherits configuration from parent nodes",
-      "schema:domainIncludes": { "@id": "node:Handle" },
+      "schema:domainIncludes": { "@id": "conf:OperationalNodeConfig" },
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
       "@id": "conf:distributionFormats",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "distribution formats",
-      "rdfs:comment": "List of RDF serialization formats to generate for distributions",
-      "schema:domainIncludes": { "@id": "node:Handle" },
+      "rdfs:comment": "List of RDF serialization formats to generate for distributions; TODO: use the standard object properties",
+      "schema:domainIncludes": { "@id": "conf:AbstractNodeConfig" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
+    },
+    {
+      "@id": "conf:hasTemplateMappings",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has template mappings",
+      "rdfs:comment": "Collection of template mappings for resource page generation",
+      "schema:domainIncludes": { "@id": "conf:AbstractNodeConfig" },
+      "schema:rangeIncludes": { "@id": "conf:TemplateMappings" }
     },
     {
       "@id": "conf:hasTemplateMapping",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has template mapping",
-      "rdfs:comment": "Template mappings for resource page generation",
-      "schema:domainIncludes": { "@id": "node:Handle" },
+      "rdfs:comment": "Individual template mapping within a collection",
+      "schema:domainIncludes": { "@id": "conf:TemplateMappings" },
       "schema:rangeIncludes": { "@id": "conf:TemplateMapping" }
     },
     {
@@ -87,7 +139,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate unified dataset",
       "rdfs:comment": "Whether to generate unified dataset components",
-      "schema:domainIncludes": { "@id": "node:Handle" },
+      "schema:domainIncludes": { "@id": "conf:AbstractNodeConfig" },
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
@@ -95,7 +147,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate aggregated dataset",
       "rdfs:comment": "Whether to generate aggregated dataset components",
-      "schema:domainIncludes": { "@id": "node:Handle" },
+      "schema:domainIncludes": { "@id": "conf:AbstractNodeConfig" },
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
@@ -111,7 +163,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "stylesheet path",
       "rdfs:comment": "Path to CSS stylesheet for generated pages",
-      "schema:domainIncludes": { "@id": "node:Handle" },
+      "schema:domainIncludes": { "@id": "conf:AbstractNodeConfig" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
@@ -121,14 +173,6 @@
       "rdfs:comment": "Indicates that this node contains another node.",
       "schema:domainIncludes": { "@id": "node:Handle" },
       "schema:rangeIncludes": { "@id": "node:Handle" }
-    },
-    {
-      "@id": "conf:defaultAttributedTo",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "default attribution",
-      "rdfs:comment": "Overrides the default attribution for a node and its contained elements. If inheritance is enabled, this attribution can also be inherited by contained nodes. Accepts a URI, such as an ORCID.",
-      "schema:domainIncludes": { "@id": "node:Handle" },
-      "schema:rangeIncludes": { "@id": "xsd:anyURI" }
     },
     {
       "@id": "conf:DistributionFormatShape",

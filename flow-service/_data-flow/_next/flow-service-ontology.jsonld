@@ -7,6 +7,8 @@
     "sh": "http://www.w3.org/ns/shacl#",
     "dcterms": "http://purl.org/dc/terms/",
     "prov": "http://www.w3.org/ns/prov#",
+    "schema": "https://schema.org/",
+    "conf": "https://semantic-flow.github.io/ontology/conf/",
     "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
     "mesh": "https://semantic-flow.github.io/ontology/mesh/",
     "fsvc": "https://semantic-flow.github.io/ontology/flow-service/"
@@ -31,6 +33,13 @@
       "@type": "owl:Class",
       "rdfs:label": "Service Configuration",
       "rdfs:comment": "Root configuration class for flow-service instance"
+    },
+    {
+      "@id": "fsvc:PlatformServiceConfig",
+      "@type": "owl:Class",
+      "rdfs:label": "Platform Service Configuration",
+      "rdfs:comment": "Platform-wide default configuration including both service defaults and inheritable node configuration defaults. Extends ServiceConfig to inherit all service properties.",
+      "rdfs:subClassOf": { "@id": "fsvc:ServiceConfig" }
     },
     {
       "@id": "fsvc:LoggingConfig",
@@ -233,53 +242,6 @@
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
-      "@id": "fsvc:nodeDefaults",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "node defaults",
-      "rdfs:comment": "Default configuration settings to apply to mesh nodes",
-      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" }
-    },
-    {
-      "@id": "fsvc:defaultDelegationChain",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "default delegation chain",
-      "rdfs:comment": "Specifies the default delegation chain template for new nodes created by this service.",
-      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
-      "schema:rangeIncludes": { "@id": "meta:DelegationChain" }
-    },
-    {
-      "@id": "fsvc:defaultAttributedTo",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "default attribution",
-      "rdfs:comment": "Specifies the default agent URI to use for attribution.",
-      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
-      "schema:rangeIncludes": { "@id": "xsd:anyURI" }
-    },
-    {
-      "@id": "fsvc:defaultLicense",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "default license",
-      "rdfs:comment": "Specifies the default license URI to apply to new snapshots (used for dcterms:license).",
-      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
-      "schema:rangeIncludes": { "@id": "xsd:anyURI" }
-    },
-    {
-      "@id": "fsvc:defaultRightsHolder",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "default rights holder",
-      "rdfs:comment": "Specifies the default rights holder agent for new snapshots (used for dcterms:rightsHolder).",
-      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
-      "schema:rangeIncludes": { "@id": "prov:Agent" }
-    },
-    {
-      "@id": "fsvc:defaultRights",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "default rights",
-      "rdfs:comment": "Specifies the default rights statement for new snapshots (used for dcterms:rights).",
-      "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" },
-      "schema:rangeIncludes": { "@id": "xsd:string" }
-    },
-    {
       "@id": "fsvc:LogLevelShape",
       "@type": "sh:NodeShape",
       "sh:targetObjectsOf": { "@id": "fsvc:logLevel" },
@@ -304,13 +266,6 @@
           "sh:minInclusive": 1,
           "sh:maxInclusive": 65535,
           "sh:message": "Port must be an integer between 1 and 65535"
-        },
-        {
-          "@id": "fsvc:rootMeshNodeConfigTemplate",
-          "@type": "owl:ObjectProperty",
-          "rdfs:label": "root node config template",
-          "rdfs:comment": "Template configuration settings to apply to root mesh nodes created by the service",
-          "schema:domainIncludes": { "@id": "fsvc:ServiceConfig" }
         }
       ]
     },
@@ -368,6 +323,29 @@
           "sh:message": "Log rotation interval must be one of: daily, weekly, monthly, size-based"
         }
       ]
+    },
+    {
+      "@id": "fsvc:defaultPlatformServiceConfig",
+      "@type": "fsvc:PlatformServiceConfig",
+      "rdfs:label": "Default Platform Service Configuration",
+      "rdfs:comment": "The default configuration for the Semantic Flow platform. Provides sensible defaults for all services and nodes.",
+      "fsvc:port": 3000,
+      "fsvc:host": "localhost",
+      "fsvc:scheme": "http",
+      "conf:hasInheritableNodeConfig": {
+        "@id": "fsvc:defaultInheritableNodeConfig",
+        "@type": "conf:InheritableNodeConfig",
+        "rdfs:label": "Default Inheritable Node Configuration",
+        "rdfs:comment": "Default configuration that is inherited by all nodes unless overridden.",
+        "conf:versioningEnabled": true,
+        "conf:distributionFormats": [
+          "application/trig",
+          "application/ld+json"
+        ],
+        "conf:generateUnifiedDataset": false,
+        "conf:generateAggregatedDataset": false,
+        "conf:nodeConfigInheritanceEnabled": true
+      }
     }
   ]
 }
