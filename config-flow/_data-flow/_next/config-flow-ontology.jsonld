@@ -103,6 +103,14 @@
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
+      "@id": "conf:inheritableConfigPropagationEnabled",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "inheritable config propagation enabled",
+      "rdfs:comment": "Whether this node's InheritableNodeConfig should be available to child nodes. Default is true.",
+      "schema:domainIncludes": { "@id": "node:Handle" },
+      "schema:rangeIncludes": { "@id": "xsd:boolean" }
+    },
+    {
       "@id": "conf:distributionFormats",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "distribution formats",
