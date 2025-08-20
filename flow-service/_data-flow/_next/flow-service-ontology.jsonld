@@ -8,6 +8,7 @@
     "dcterms": "http://purl.org/dc/terms/",
     "prov": "http://www.w3.org/ns/prov#",
     "schema": "https://schema.org/",
+    "formats": "http://www.w3.org/ns/formats/",
     "conf": "https://semantic-flow.github.io/ontology/conf/",
     "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
     "mesh": "https://semantic-flow.github.io/ontology/mesh/",
@@ -338,7 +339,7 @@
         "rdfs:label": "Default Inheritable Node Configuration",
         "rdfs:comment": "Default configuration that is inherited by all nodes unless overridden.",
         "conf:versioningEnabled": true,
-        "conf:distributionFormats": [
+        "formats:media_type": [
           "application/trig",
           "application/ld+json"
         ],

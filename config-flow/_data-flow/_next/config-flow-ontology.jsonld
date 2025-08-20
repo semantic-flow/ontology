@@ -7,6 +7,7 @@
     "sh": "http://www.w3.org/ns/shacl#",
     "dcterms": "http://purl.org/dc/terms/",
     "schema": "https://schema.org/",
+    "formats": "http://www.w3.org/ns/formats/",
     "conf": "https://semantic-flow.github.io/ontology/conf/",
     "mesh": "https://semantic-flow.github.io/ontology/mesh/",
     "node": "https://semantic-flow.github.io/ontology/node/",
@@ -111,14 +112,6 @@
       "schema:rangeIncludes": { "@id": "xsd:boolean" }
     },
     {
-      "@id": "conf:distributionFormats",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "distribution formats",
-      "rdfs:comment": "List of RDF serialization formats to generate for distributions; TODO: use the standard object properties",
-      "schema:domainIncludes": { "@id": "conf:AbstractNodeConfig" },
-      "schema:rangeIncludes": { "@id": "xsd:string" }
-    },
-    {
       "@id": "conf:hasTemplateMappings",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has template mappings",
@@ -185,7 +178,7 @@
     {
       "@id": "conf:DistributionFormatShape",
       "@type": "sh:NodeShape",
-      "sh:targetObjectsOf": { "@id": "conf:distributionFormats" },
+      "sh:targetObjectsOf": { "@id": "formats:media_type" },
       "sh:property": {
         "@type": "sh:PropertyShape",
         "sh:path": { "@id": "rdf:value" },
@@ -220,7 +213,7 @@
       "sh:property": [
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "conf:distributionFormats" },
+          "sh:path": { "@id": "formats:media_type" },
           "sh:minCount": 1,
           "sh:message": "At least one distribution format must be specified"
         },
