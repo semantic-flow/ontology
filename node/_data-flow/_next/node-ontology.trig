@@ -21,7 +21,7 @@
 
 node:Handle a owl:Class ;
     rdfs:label "Handle" ;
-    rdfs:comment "Node handles have an interesting referent: their parent node 'as a node' (as opposed to the thing/concept referred to by the parent, or themselves as mesh elements). To refer to a handle as a mesh element, use a fragment identifier."
+    rdfs:comment "Node handles have an interesting referent: their parent node 'as a node' (as opposed to the thing/concept referred to by the parent, or themselves as mesh elements). To refer to a handle as a mesh element, use a fragment identifier." .
 
 # node:HandleAsMeshElement a rdfs:Class ;
 #    rdfs:label "Handle As Mesh Element" ;
