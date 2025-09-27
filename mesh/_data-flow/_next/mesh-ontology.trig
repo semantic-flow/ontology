@@ -16,52 +16,49 @@
 #    Classes
 #################################################################
 
-mesh:Resource a owl:Class ;
+mesh:Resource a rdfs:Class ;
     rdfs:label "Resource" ;
     rdfs:comment "Abstract base class for all mesh resources. Provides fundamental properties for identification, metadata, and versioning in the Semantic Flow mesh architecture." .
 
-mesh:FileResource a owl:Class ;
+mesh:FileResource a rdfs:Class ;
     rdfs:subClassOf mesh:Resource ;
     rdfs:label "FileResource" ;
     rdfs:comment "File-based mesh resources." .
 
-mesh:FolderResource a owl:Class ;
+mesh:FolderResource a rdfs:Class ;
     rdfs:subClassOf mesh:Resource ;
     rdfs:label "FolderResource" ;
     rdfs:comment "Folder-based mesh resources." .
 
-mesh:Node a owl:Class ;
+mesh:Node a rdfs:Class ;
     rdfs:subClassOf mesh:Resource ;
     rdfs:label "Node" ;
     rdfs:comment "Structural units that organize and contain other Nodes. Nodes form the structure of the mesh. They have elements." .
 
-mesh:Element a owl:Class ;
-    rdfs:subClassOf mesh:Resource ;
-    rdfs:label "Element" ;
-    rdfs:comment "Terminal resources that provide specific mesh functionality." .
 
 
-mesh:AssetTree a owl:Class ;
-    rdfs:subClassOf mesh:Element, mesh:FolderResource ;
+
+mesh:AssetTree a rdfs:Class ;
+    rdfs:subClassOf node:Component, mesh:FolderResource ;
     rdfs:label "AssetTree" ;
     rdfs:comment "Asset trees contain collections of files and directories that are not MeshResources. Can be contained in any FolderResource." .
 
-mesh:DocumentationResource a owl:Class ;
-    rdfs:subClassOf mesh:Element ;
+mesh:DocumentationResource a rdfs:Class ;
+    rdfs:subClassOf node:Component ;
     rdfs:label "DocumentationResource" ;
     rdfs:comment "Documentation files that provide human-readable information about mesh resources." .
 
-mesh:Changelog a owl:Class ;
+mesh:Changelog a rdfs:Class ;
     rdfs:subClassOf mesh:DocumentationResource, mesh:FileResource ;
     rdfs:label "Changelog" ;
     rdfs:comment "Changelog files that document version history and changes over time for mesh resources." .
 
-mesh:Readme a owl:Class ;
+mesh:Readme a rdfs:Class ;
     rdfs:subClassOf mesh:DocumentationResource, mesh:FileResource ;
     rdfs:label "Readme" ;
     rdfs:comment "Readme files that provide introductory documentation and usage information for mesh resources." .
 
-mesh:ResourcePage a owl:Class ;
+mesh:ResourcePage a rdfs:Class ;
     rdfs:subClassOf mesh:DocumentationResource, mesh:FileResource ;
     rdfs:label "ResourcePage" ;
     rdfs:comment "Human-readable `index.html` pages that provide context and dereferencability for folder-based mesh resources." .
@@ -117,7 +114,7 @@ mesh:alternateNamespacePrefix a owl:DatatypeProperty ;
 
 ### Node and Element are disjoint
 [ a owl:AllDisjointClasses ;
-    owl:members ( mesh:Node mesh:Element )
+    owl:members ( mesh:Node node:Component )
 ] .
     
 

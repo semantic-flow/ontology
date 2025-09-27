@@ -23,7 +23,7 @@
 #################################################################
 
 flow:Snapshot a owl:Class ;
-    rdfs:subClassOf mesh:Element, dcat:Dataset ;
+    rdfs:subClassOf node:Component, dcat:Dataset ;
     rdfs:label "Snapshot" ;
     rdfs:comment "Snapshots represent distinct states of a node flow (dataset), and contain actual RDF data files (aka Distributions)." .
 
@@ -36,22 +36,20 @@ flow:VersionSnapshot a owl:Class ;
 
 flow:Config a owl:Class ;
     rdfs:subClassOf node:Flow, mesh:FolderResource ;
-    rdfs:label "Config" ;
+    rdfs:label "Config Flow" ;
     rdfs:comment "Per-node config info for the flow-service." .
 
 flow:Metadata a owl:Class ;
     rdfs:subClassOf node:Flow, mesh:FolderResource ;
-    rdfs:label "Metadata" ;
-    rdfs:comment "Centralized per-node metadata management for nodes and their elements." .
+    rdfs:label "Metadata Flow" ;
+    rdfs:comment "Centralized per-node metadata management for nodes and their components." .
 
-flow:Reference a owl:Class ;
-    rdfs:subClassOf node:Flow, mesh:FolderResource ;
-    rdfs:label "Reference" ;
-    rdfs:comment "Reference resolution data elements that contain the data needed to resolve references to their targets, implementing the single referent principle." .
+flow:Reference rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "Reference Flow" ;
+    rdfs:comment "Reference flows contain the data about their node's referent." .
 
-flow:Data a owl:Class ;
-    rdfs:subClassOf node:Flow, mesh:FolderResource ;
-    rdfs:label "Data" ;
+flow:Dataset rdfs:subClassOf node:Flow, mesh:FolderResource ;
+    rdfs:label "Data Flow" ;
     rdfs:comment "Actual content storage elements that contain the concrete data and information that forms the payload of data nodes." .
 
 

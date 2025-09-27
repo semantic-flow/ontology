@@ -19,6 +19,11 @@
 #    Classes
 #################################################################
 
+node:Component a rdfs:Class ;
+    rdfs:subClassOf mesh:Resource ;
+    rdfs:label "Component" ;
+    rdfs:comment "Terminal resources that provide specific mesh functionality." .
+
 node:Handle a owl:Class ;
     rdfs:label "Handle" ;
     rdfs:comment "Node handles have an interesting referent: their parent node 'as a node' (as opposed to the thing/concept referred to by the parent, or themselves as mesh elements). To refer to a handle as a mesh element, use a fragment identifier." .
@@ -26,7 +31,7 @@ node:Handle a owl:Class ;
 # node:HandleAsMeshElement a rdfs:Class ;
 #    rdfs:label "Handle As Mesh Element" ;
 #    rdfs:comment "A handle considered as a mesh element in its own right, addressable via fragment identifier and subject to mesh operations." ;
-#    rdfs:subClassOf mesh:Element, mesh:FolderResource.    
+#    rdfs:subClassOf node:Component, mesh:FolderResource.    
 
 node:Namespace a owl:Class ;
     rdfs:subClassOf mesh:Node, mesh:FolderResource ;
@@ -55,7 +60,7 @@ node:Flow a owl:Class ;
 
 node:hasElement a owl:ObjectProperty ;
     schema:domainIncludes node:Handle ;
-    schema:rangeIncludes mesh:Element ;
+    schema:rangeIncludes node:Component ;
     rdfs:label "hasElement" ;
     rdfs:comment "Associates nodes with their supporting elements." .
 

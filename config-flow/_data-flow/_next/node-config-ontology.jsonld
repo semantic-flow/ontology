@@ -55,14 +55,14 @@
     },
     {
       "@id": "node-conf:TemplateMappings",
-      "@type": "owl:Class",
+      "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "node-conf:ConfigurationClass" },
       "rdfs:label": "Template Mappings",
       "rdfs:comment": "Collection of template mappings."
     },
     {
       "@id": "node-conf:TemplateMapping",
-      "@type": "owl:Class",
+      "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "node-conf:ConfigurationClass" },
       "rdfs:label": "Template Mapping",
       "rdfs:comment": "Template configuration mapping for resource page generation within node configurations."
