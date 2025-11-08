@@ -1,0 +1,202 @@
+@base <https://semantic-flow.github.io/ontology/node-config/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix schema: <https://schema.org/> .
+@prefix formats: <http://www.w3.org/ns/formats/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix sflo: <https://semantic-flow.github.io/ontology/semantic-flow/> .
+@prefix sflo-host: <https://semantic-flow.github.io/ontology/flow-service/> .
+@prefix node-conf: <https://semantic-flow.github.io/ontology/node-config/> .
+
+<> a owl:Ontology ;
+    dcterms:title "Semantic Flow Node Configuration Ontology" ;
+    dcterms:description "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh nodes (operational config) and through inheritable config. Used in node configuration files and sflo-host ontology for setting defaults." ;
+    dcterms:creator "Semantic Flow Project" ;
+    owl:versionInfo "1" ;
+    owl:versionIRI <https://semantic-flow.github.io/ontology/node-config-ontology/_dataset-flow/_current/node-config-ontology.ttl> ;
+    vann:preferredNamespacePrefix "node-conf" ;
+    vann:alternateNamespacePrefix "node-config" .
+
+<_node_handle/> a sflo:Handle ;
+    node-conf:distributionSlug "node-config-ontology" .
+
+#################################################################
+#    Configuration Classes
+#################################################################
+
+node-conf:ConfigurationClass a rdfs:Class ;
+    rdfs:label "Configuration Class" ;
+    rdfs:comment "Classes that structure configuration information within config distributions." .
+
+node-conf:AbstractNodeConfig a rdfs:Class ;
+    rdfs:subClassOf node-conf:ConfigurationClass ;
+    rdfs:label "Abstract Node Configuration" ;
+    rdfs:comment "Abstract base class for node configuration types. Defines the common structure for both operational and inheritable node configurations." .
+
+node-conf:OperationalNodeConfig a rdfs:Class ;
+    rdfs:subClassOf node-conf:AbstractNodeConfig ;
+    rdfs:label "Operational Node Configuration" ;
+    rdfs:comment "The actual operational configuration for a specific node. Controls how this node behaves (versioning, distribution formats, etc.) and specify the node's elements. Does not participate in inheritance chain." .
+
+node-conf:InheritableNodeConfig a rdfs:Class ;
+    rdfs:subClassOf node-conf:AbstractNodeConfig ;
+    rdfs:label "Inheritable Node Configuration" ;
+    rdfs:comment "Configuration that can be passed down to child nodes. Used by nodes, services, and platform to provide default configuration for contained nodes." .
+
+node-conf:TemplateMappings a rdfs:Class ;
+    rdfs:subClassOf node-conf:ConfigurationClass ;
+    rdfs:label "Template Mappings" ;
+    rdfs:comment "Collection of template mappings." .
+
+node-conf:TemplateMapping a rdfs:Class ;
+    rdfs:subClassOf node-conf:ConfigurationClass ;
+    rdfs:label "Template Mapping" ;
+    rdfs:comment "Template configuration mapping for resource page generation within node configurations." .
+
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+node-conf:hasOperationalNodeConfig a owl:ObjectProperty ;
+    rdfs:label "has operational node config" ;
+    rdfs:comment "Links a node to its operational configuration that controls how the node behaves." ;
+    schema:domainIncludes sflo:Handle ;
+    schema:rangeIncludes node-conf:OperationalNodeConfig .
+
+node-conf:hasInheritableNodeConfig a owl:ObjectProperty ;
+    rdfs:label "has inheritable node config" ;
+    rdfs:comment "Links a node, service, or platform to configuration that can be inherited by child nodes." ;
+    schema:domainIncludes sflo:Handle, sflo-host:ServiceConfig, sflo-host:PlatformServiceConfig ;
+    schema:rangeIncludes node-conf:InheritableNodeConfig .
+
+node-conf:hasTemplateMappings a owl:ObjectProperty ;
+    rdfs:label "has template mappings" ;
+    rdfs:comment "Collection of template mappings for resource page generation" ;
+    schema:domainIncludes node-conf:AbstractNodeConfig ;
+    schema:rangeIncludes node-conf:TemplateMappings .
+
+node-conf:hasTemplateMapping a owl:ObjectProperty ;
+    rdfs:label "has template mapping" ;
+    rdfs:comment "Individual template mapping within a collection" ;
+    schema:domainIncludes node-conf:TemplateMappings ;
+    schema:rangeIncludes node-conf:TemplateMapping .
+
+node-conf:containsNode a owl:ObjectProperty ;
+    rdfs:label "contains node" ;
+    rdfs:comment "Indicates that this node contains another node." ;
+    schema:domainIncludes sflo:Handle ;
+    schema:rangeIncludes sflo:Handle .
+
+#################################################################
+#    Data Properties
+#################################################################
+
+node-conf:distributionSlug a owl:DatatypeProperty ;
+  rdfs:label "default distribution slug" ;
+  rdfs:comment "Kebab-case stem used to name distributions for this MeshNode. If absent, default is the last path segment of the node’s namespace IRI." ;
+  schema:domainIncludes sflo:MeshNode ;
+  schema:rangeIncludes xsd:string .
+
+node-conf:versioningEnabled a owl:DatatypeProperty ;
+    rdfs:label "versioning enabled" ;
+    rdfs:comment "Whether versioning is enabled for this flow." ;
+    schema:domainIncludes node-conf:AbstractNodeConfig ;
+    schema:rangeIncludes xsd:boolean .
+
+node-conf:nodeConfigInheritanceEnabled a owl:DatatypeProperty ;
+    rdfs:label "node config inheritance enabled" ;
+    rdfs:comment "Whether this node inherits configuration from parent nodes" ;
+    schema:domainIncludes node-conf:OperationalNodeConfig ;
+    schema:rangeIncludes xsd:boolean .
+
+node-conf:inheritableConfigPropagationEnabled a owl:DatatypeProperty ;
+    rdfs:label "inheritable config propagation enabled" ;
+    rdfs:comment "Whether this node's InheritableNodeConfig should be available to child nodes. Default is true." ;
+    schema:domainIncludes sflo:Handle ;
+    schema:rangeIncludes xsd:boolean .
+
+node-conf:hasResourcePageTemplate a owl:DatatypeProperty ;
+    rdfs:label "has resource page template" ;
+    rdfs:comment "Template file path for resource pages" ;
+    schema:domainIncludes node-conf:TemplateMapping ;
+    schema:rangeIncludes xsd:string .
+
+node-conf:generateUnifiedDataset a owl:DatatypeProperty ;
+    rdfs:label "generate unified dataset" ;
+    rdfs:comment "Whether to generate unified dataset components" ;
+    schema:domainIncludes node-conf:AbstractNodeConfig ;
+    schema:rangeIncludes xsd:boolean .
+
+node-conf:generateAggregatedDataset a owl:DatatypeProperty ;
+    rdfs:label "generate aggregated dataset" ;
+    rdfs:comment "Whether to generate aggregated dataset components" ;
+    schema:domainIncludes node-conf:AbstractNodeConfig ;
+    schema:rangeIncludes xsd:boolean .
+
+node-conf:generateResourcePages a owl:DatatypeProperty ;
+    rdfs:label "generate resource pages" ;
+    rdfs:comment "Whether to generate HTML resource pages during weave" ;
+    schema:domainIncludes mesh:NamingResource ;
+    schema:rangeIncludes xsd:boolean .
+
+node-conf:stylesheetPath a owl:DatatypeProperty ;
+    rdfs:label "stylesheet path" ;
+    rdfs:comment "Path to CSS stylesheet for generated pages" ;
+    schema:domainIncludes node-conf:AbstractNodeConfig ;
+    schema:rangeIncludes xsd:string .
+
+#################################################################
+#    Disjointness Axioms 
+#################################################################
+
+# Documentation subtypes are disjoint
+[ a owl:AllDisjointClasses ;
+  owl:members ( sflo:Changelog sflo:Readme sflo:ResourcePage )
+] .
+
+
+#################################################################
+#    SHACL Shapes
+#################################################################
+
+node-conf:DistributionFormatShape a sh:NodeShape ;
+    sh:targetObjectsOf formats:media_type ;
+    sh:property [
+        sh:path rdf:value ;
+        sh:in ( 
+            "application/trig" 
+            "application/ld+json" 
+            "text/turtle" 
+            "application/n-triples" 
+            "application/n-quads" 
+            "application/rdf+xml" 
+        ) ;
+        sh:message "Distribution format must be a valid RDF media type"
+    ] .
+
+node-conf:TemplatePathShape a sh:NodeShape ;
+    sh:targetObjectsOf node-conf:hasResourcePageTemplate ;
+    sh:property [
+        sh:path rdf:value ;
+        sh:pattern "^[^/].*\\.(html|htm|hbs|mustache)$" ;
+        sh:message "Template path must be a relative path ending in .html, .htm, .hbs, or .mustache"
+    ] .
+
+node-conf:NodeShape a sh:NodeShape ;
+    sh:targetClass sflo:Handle ;
+    sh:property [
+        sh:path formats:media_type ;
+        sh:minCount 1 ;
+        sh:message "At least one distribution format must be specified"
+    ] ;
+    sh:property [
+        sh:path node-conf:stylesheetPath ;
+        sh:pattern "^[^/].*\\.(css|scss|sass)$" ;
+        sh:message "Stylesheet path must be a relative path ending in .css, .scss, or .sass"
+    ] .
