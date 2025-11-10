@@ -17,7 +17,7 @@
     dcterms:description "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh nodes (operational config) and through inheritable config. Used in node configuration files and sflo-host ontology for setting defaults." ;
     dcterms:creator "Semantic Flow Project" ;
     owl:versionInfo "1" ;
-    owl:versionIRI <https://semantic-flow.github.io/ontology/node-config-ontology/_dataset-flow/_current/node-config-ontology.ttl> ;
+    owl:versionIRI <https://semantic-flow.github.io/ontology/node-config/_dataset-flow/_default/node-config-ontology.ttl> ;
     vann:preferredNamespacePrefix "node-conf" ;
     vann:alternateNamespacePrefix "node-config" .
 
