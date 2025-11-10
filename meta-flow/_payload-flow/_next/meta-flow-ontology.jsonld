@@ -104,7 +104,7 @@
       "@id": "meta:GraftActivity",
       "@type": "rdfs:Class",
       "rdfs:label": "Graft Activity",
-      "rdfs:comment": "Specialized node creation for preparing new '_next' nodes and flows before weaving operations.",
+      "rdfs:comment": "Specialized node creation for preparing new '_working' nodes and flows before weaving operations.",
       "rdfs:subClassOf": { "@id": "meta:NodeCreation" }
     },
     {

@@ -1,0 +1,83 @@
+@base <https://semantic-flow.github.io/ontology/sflo-shacl/> .
+@prefix sflo: <https://semantic-flow.github.io/ontology/semantic-flow/> .
+@prefix sflosh: <https://semantic-flow.github.io/ontology/sflo-shacl/> .
+
+### NamingResource: IRI must end with a slash (/)
+sflosh:NamingResourceShape a sh:NodeShape ;
+    sh:targetClass sflo:NamingResource ;
+    sh:nodeKind sh:IRI ;
+    sh:sparql [
+        sh:message "NamingResource IRI must end with a slash (/)." ;
+        sh:select """
+            SELECT ?this WHERE {
+                FILTER ( !STRENDS(STR(?this), "/") )
+            }
+        """ ;
+    ] .
+
+### FileResource: IRI must NOT end with a slash (/)
+sflosh:FileResourceShape a sh:NodeShape ;
+    sh:targetClass sflo:FileResource ;
+    sh:nodeKind sh:IRI ;
+    sh:sparql [
+        sh:message "FileResource IRI must not end with a slash (/)." ;
+        sh:select """
+            SELECT ?this WHERE {
+                FILTER ( STRENDS(STR(?this), "/") )
+            }
+        """ ;
+    ] .
+    
+
+### Every MeshNode must have exactly one HandleAsComponent
+sflosh:MeshNodeShape a sh:NodeShape ;
+    sh:targetClass sflo:MeshNode ;
+    sh:property [
+        sh:path sflo:hasHandle ;
+        sh:class sflo:HandleAsComponent ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Every MeshNode must have exactly one HandleAsComponent"
+    ] ;
+    sh:property [
+        sh:path sflo:slug ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[a-z0-9]+(-[a-z0-9]+)*$" ;
+        sh:message "Every MeshNode must have exactly one slug matching kebab-case pattern (lowercase letters, numbers, hyphens)"
+    ] .
+
+### HandleAsComponent must be handle for exactly one node
+sflosh:HandleAsComponentShape a sh:NodeShape ;
+    sh:targetClass sflo:HandleAsComponent ;
+    sh:property [
+        sh:path sflo:isHandleFor ;
+        sh:class sflo:MeshNode ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Every HandleAsComponent must be handle for exactly one MeshNode"
+    ] .
+
+
+# Every NamingResource should have a ResourcePage
+sflosh:NamingResourceShape a sh:NodeShape ;
+    sh:targetClass mesh:FolderResource ;
+    sh:property [
+        sh:path sflo:hasResourcePage ;
+        sh:class sflo:ResourcePage ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Every NamingResource should have a ResourcePage"
+    ] .
+
+# Abstract Classes
+sflosh:SnapshotShape a sh:NodeShape ;
+    sh:targetClass sflo:Snapshot ;
+    sh:not [ sh:class sflo:Snapshot ] ;
+    sh:message "Snapshot is abstract - use VersionSnapshot or other concrete snapshot types" .
+
+sflosh:DocumentationResourceShape a sh:NodeShape ;
+    sh:targetClass sflo:DocumentationResource ;
+    sh:not [ sh:class sflo:DocumentationResource ] ;
+    sh:message "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass" .

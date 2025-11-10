@@ -86,7 +86,7 @@ node:hasFlow a owl:ObjectProperty ;
 #    Data Properties
 #################################################################
 
-node:hasSlug a owl:DatatypeProperty ;
+node:slug a owl:DatatypeProperty ;
     rdfs:label "has slug" ;
     rdfs:comment "A concise, human-readable, and URL-friendly identifier for a node, suitable for use in filenames and other contexts where the full relativeIdentifier would be too verbose." ;
     schema:domainIncludes mesh:Node ;
@@ -146,7 +146,7 @@ node:HandleConfigShape a sh:NodeShape ;
        sh:message "Every Handle must have exactly one Metadata flow"
    ] ;
    sh:property [
-       sh:path node:hasSlug ;
+       sh:path node:slug ;
        sh:datatype <http://www.w3.org/2001/XMLSchema#string> ;
        sh:minCount 1 ;
        sh:maxCount 1 ;
