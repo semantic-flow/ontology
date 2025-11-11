@@ -1,0 +1,549 @@
+{
+  "@context": {
+    "@base": "https://semantic-flow.github.io/ontology/semantic-flow/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "schema": "https://schema.org/",
+    "vann": "http://purl.org/vocab/vann/"
+  },
+  "@graph": [
+    {
+      "@id": "/",
+      "@type": "owl:Ontology",
+      "dcterms:title": "Semantic Flow Ontology",
+      "dcterms:description": "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes.",
+      "dcterms:creator": { "@id": "https://djradon.github.io/ns/djradon/" },
+      "owl:versionInfo": "0.1.0",
+      "owl:versionIRI": { "@id": "https://semantic-flow.github.io/ontology/semantic-flow/_payload-flow/_default/sflo.ttl" },
+      "vann:preferredNamespacePrefix": "sflo",
+      "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow/"
+    },
+    {
+      "@id": "Resource/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Resource",
+      "rdfs:comment": "Abstract base class for all Semantic Flow resources. Provides fundamental identification and documentation affordances."
+    },
+    {
+      "@id": "FileResource/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "Resource/" },
+      "rdfs:label": "File Resource",
+      "rdfs:comment": "A resource that locates and corresponds directly to a file."
+    },
+    {
+      "@id": "NamingResource/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "Resource/" },
+      "rdfs:label": "Naming Resource",
+      "rdfs:comment": "A resource that establishes a name, optionally denoting a non-file thing. Naming resources' IRIs end with a slash and may or may not have a referent."
+    },
+    {
+      "@id": "hasResource/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "Resource/" },
+      "schema:rangeIncludes": { "@id": "Resource/" },
+      "rdfs:label": "has resource",
+      "rdfs:comment": "Abstract base property for associating resources."
+    },
+    {
+      "@id": "AssetTree/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        { "@id": "Component/" },
+        { "@id": "NamingResource/" }
+      ],
+      "rdfs:label": "AssetTree",
+      "rdfs:comment": "Asset trees contain collections of files and directories that are not MeshResources. Can be contained in any NamingResource."
+    },
+    {
+      "@id": "MeshNode/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "NamingResource/" },
+      "rdfs:label": "Mesh Node",
+      "rdfs:comment": "Structural units that organize and contain other resources. Nodes form the structure of the mesh."
+    },
+    {
+      "@id": "BareNode/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "MeshNode/" },
+      "rdfs:label": "Namespace",
+      "rdfs:comment": "Bare nodes - containers for organizing other mesh nodes. Node identifiers refer to the nodes themselves as organizational units."
+    },
+    {
+      "@id": "ReferenceNode/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "MeshNode/" },
+      "rdfs:label": "Reference",
+      "rdfs:comment": "Nodes that refer to some external 'thing' or concept other than themselves."
+    },
+    {
+      "@id": "PayloadNode/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "MeshNode/" },
+      "rdfs:label": "Data",
+      "rdfs:comment": "Nodes that contain and refer to 'payload data' via a payload flows."
+    },
+    {
+      "@id": "hasComponent/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasResource/" },
+      "rdfs:domain": { "@id": "MeshNode/" },
+      "rdfs:range": { "@id": "Component/" },
+      "rdfs:label": "has component",
+      "rdfs:comment": "Associates nodes with their supporting components."
+    },
+    {
+      "@id": "isHandleFor/",
+      "@type": "owl:ObjectProperty",
+      "owl:inverseOf": { "@id": "hasHandle/" },
+      "rdfs:domain": { "@id": "HandleAsComponent/" },
+      "rdfs:range": { "@id": "MeshNode/" },
+      "rdfs:label": "is handle for",
+      "rdfs:comment": "Indicates that this handle component provides identification and routing for a specific node."
+    },
+    {
+      "@id": "hasHandle/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasComponent/" },
+      "owl:inverseOf": { "@id": "isHandleFor/" },
+      "rdfs:domain": { "@id": "MeshNode/" },
+      "rdfs:range": { "@id": "HandleAsComponent/" },
+      "rdfs:label": "has handle",
+      "rdfs:comment": "Associates a mesh node with its persistent handle component."
+    },
+    {
+      "@id": "slug/",
+      "@type": "owl:AnnotationProperty",
+      "schema:domainIncludes": [
+        { "@id": "MeshNode/" },
+        { "@id": "Flow/" }
+      ],
+      "schema:rangeIncludes": { "@id": "xsd:string" },
+      "rdfs:label": "has slug",
+      "rdfs:comment": "A concise, human-readable, kebab-case identifier for a node or a flow, suitable for use in filenames and URLs."
+    },
+    {
+      "@id": "Component/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "Resource/" },
+      "rdfs:label": "Component",
+      "rdfs:comment": "Terminal resources that provide specific mesh functionality and support nodes."
+    },
+    {
+      "@id": "Handle/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "NamingResource/" },
+      "rdfs:label": "Handle",
+      "rdfs:comment": "Conceptual handle that refers to a node 'as a node' (as opposed to the thing/concept referred to by the parent node). This is the abstract handle concept."
+    },
+    {
+      "@id": "HandleAsComponent/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        { "@id": "Component/" },
+        { "@id": "Resource/" }
+      ],
+      "rdfs:label": "Handle As Component",
+      "rdfs:comment": "A handle considered as a mesh component in its own right, addressable via IRI and subject to mesh operations."
+    },
+    {
+      "@id": "DocumentationResource/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "FileResource/" },
+      "rdfs:label": "Documentation Resource",
+      "rdfs:comment": "Documentation files that provide human-readable information about resources."
+    },
+    {
+      "@id": "ResourcePage/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "DocumentationResource/" },
+      "rdfs:label": "Resource Page",
+      "rdfs:comment": "Human-readable index.html pages that provide dereferenceability for NamingResources."
+    },
+    {
+      "@id": "Changelog/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "DocumentationResource/" },
+      "rdfs:label": "Changelog",
+      "rdfs:comment": "Changelog files that document version history and changes for resources."
+    },
+    {
+      "@id": "Readme/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "DocumentationResource/" },
+      "rdfs:label": "Readme",
+      "rdfs:comment": "Readme files that provide introductory documentation and usage information."
+    },
+    {
+      "@id": "hasDocumentationResource/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "NamingResource/" },
+      "schema:rangeIncludes": { "@id": "DocumentationResource/" },
+      "rdfs:label": "has DocumentationResource",
+      "rdfs:comment": "Associates a resource with a documentation resource."
+    },
+    {
+      "@id": "hasResourcePage/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "NamingResource/" },
+      "schema:rangeIncludes": { "@id": "ResourcePage/" },
+      "rdfs:label": "has ResourcePage",
+      "rdfs:comment": "Associates a NamingResource with its index.html resource page file."
+    },
+    {
+      "@id": "hasReadme/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "NamingResource/" },
+      "schema:rangeIncludes": { "@id": "Readme/" },
+      "rdfs:label": "has Readme",
+      "rdfs:comment": "Associates a NamingResource with its README documentation file."
+    },
+    {
+      "@id": "hasChangelog/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "NamingResource/" },
+      "schema:rangeIncludes": { "@id": "Changelog/" },
+      "rdfs:label": "has Changelog",
+      "rdfs:comment": "Associates a NamingResource with its changelog documentation file."
+    },
+    {
+      "@id": "Flow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        { "@id": "dcat:DatasetSeries" },
+        { "@id": "Resource/" }
+      ],
+      "rdfs:label": "Flow",
+      "rdfs:comment": "Abstract evolvable datasets for node metadata, reference data, payload data, and configuration. Flows are DatasetSeries that are realized through flow snapshots representing specific states or versions."
+    },
+    {
+      "@id": "NodeMetadataFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "Flow/" },
+      "slug/": "_node-metadata-flow",
+      "rdfs:label": "Metadata Flow",
+      "rdfs:comment": "Flow containing metadata about the mesh node itself."
+    },
+    {
+      "@id": "ReferenceFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "Flow/" },
+      "slug/": "_reference-flow",
+      "rdfs:label": "Reference Flow",
+      "rdfs:comment": "Flow containing reference data about the thing or concept referred to by the mesh node."
+    },
+    {
+      "@id": "PayloadFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "Flow/" },
+      "slug/": "_payload-flow",
+      "rdfs:label": "Payload Flow",
+      "rdfs:comment": "Flow containing the dataset payload associated with the mesh node."
+    },
+    {
+      "@id": "NodeConfigFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "Flow/" },
+      "rdfs:label": "Node Config Flow",
+      "rdfs:comment": "Abstract flow for mesh node configuration data."
+    },
+    {
+      "@id": "InheritableNodeConfigFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "NodeConfigFlow/" },
+      "slug/": "_config-inheritable-flow",
+      "rdfs:label": "Inheritable Node Config Flow",
+      "rdfs:comment": "Node configuration flow whose settings can be inherited by child nodes."
+    },
+    {
+      "@id": "OperationalNodeConfigFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": { "@id": "NodeConfigFlow/" },
+      "slug/": "_config-operational-flow",
+      "rdfs:label": "Operational Node Config Flow",
+      "rdfs:comment": "Node configuration flow whose settings apply only to the specific node."
+    },
+    {
+      "@id": "hasFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasComponent/" },
+      "rdfs:domain": { "@id": "MeshNode/" },
+      "rdfs:range": { "@id": "Flow/" },
+      "rdfs:label": "has Flow",
+      "rdfs:comment": "Links mesh nodes to their flows (metadata, reference, data, config)."
+    },
+    {
+      "@id": "hasNodeMetadataFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasFlow/" },
+      "rdfs:domain": { "@id": "MeshNode/" },
+      "rdfs:range": { "@id": "NodeMetadataFlow/" },
+      "rdfs:label": "has NodeMetadataFlow",
+      "rdfs:comment": "Links mesh nodes to their metadata flow."
+    },
+    {
+      "@id": "hasReferenceFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasFlow/" },
+      "rdfs:domain": { "@id": "MeshNode/" },
+      "rdfs:range": { "@id": "ReferenceFlow/" },
+      "rdfs:label": "has ReferenceFlow",
+      "rdfs:comment": "Links mesh nodes to their reference flow."
+    },
+    {
+      "@id": "hasPayloadFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasFlow/" },
+      "rdfs:domain": { "@id": "MeshNode/" },
+      "rdfs:range": { "@id": "PayloadFlow/" },
+      "rdfs:label": "has PayloadFlow",
+      "rdfs:comment": "Links mesh nodes to their payload flow."
+    },
+    {
+      "@id": "hasInheritableNodeConfigFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasFlow/" },
+      "rdfs:domain": { "@id": "MeshNode/" },
+      "rdfs:range": { "@id": "InheritableNodeConfigFlow/" },
+      "rdfs:label": "has InheritableNodeConfigFlow",
+      "rdfs:comment": "Links mesh nodes to their inheritable node config flow."
+    },
+    {
+      "@id": "hasOperationalNodeConfigFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasFlow/" },
+      "rdfs:domain": { "@id": "MeshNode/" },
+      "rdfs:range": { "@id": "OperationalNodeConfigFlow/" },
+      "rdfs:label": "has OperationalNodeConfigFlow",
+      "rdfs:comment": "Links mesh nodes to their operational node config flow."
+    },
+    {
+      "@id": "Snapshot/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "NamingResource/" },
+        { "@id": "dcat:Dataset" }
+      ],
+      "rdfs:label": "Snapshot",
+      "rdfs:comment": "Snapshots represent distinct states of a node flow (dataset), and contain actual RDF data files (aka Distributions)."
+    },
+    {
+      "@id": "VersionSnapshot/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "Snapshot/" },
+      "rdfs:label": "VersionSnapshot",
+      "rdfs:comment": "Historical version snapshot of a node flow, representing a specific versioned snapshot."
+    },
+    {
+      "@id": "DefaultSnapshot/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "Snapshot/" },
+      "rdfs:label": "DefaultSnapshot",
+      "rdfs:comment": "The default snapshot of a node flow, representing the latest state."
+    },
+    {
+      "@id": "hasSnapshot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "prov:specializationOf" },
+      "schema:domainIncludes": { "@id": "Flow/" },
+      "schema:rangeIncludes": { "@id": "Snapshot/" },
+      "rdfs:label": "hasSnapshot",
+      "rdfs:comment": "Associates a Flow with its snapshots. This property enables version management within flows and helps implement the prov: model"
+    },
+    {
+      "@id": "hasDefaultSnapshot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasSnapshot/" },
+      "rdfs:domain": { "@id": "Flow/" },
+      "schema:rangeIncludes": { "@id": "DefaultSnapshot/" },
+      "rdfs:label": "hasDefaultSnapshot",
+      "rdfs:comment": "Associates a Flow with its default snapshot."
+    },
+    {
+      "@id": "hasWorkingSnapshot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasSnapshot/" },
+      "rdfs:label": "has working snapshot",
+      "rdfs:comment": "Links to the working snapshot of this flow.",
+      "rdfs:domain": { "@id": "Flow/" },
+      "schema:rangeIncludes": { "@id": "DefaultSnapshot/" }
+    },
+    {
+      "@id": "hasVersionSnapshot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasSnapshot/" },
+      "schema:domainIncludes": { "@id": "Flow/" },
+      "schema:rangeIncludes": { "@id": "VersionSnapshot/" },
+      "rdfs:label": "hasVersionSnapshot",
+      "rdfs:comment": "Associates a Flow with its version snapshots."
+    },
+    {
+      "@id": "hasNextSnapshot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "dcat:nextVersion" },
+      "rdfs:label": "has working snapshot",
+      "rdfs:comment": "Links to the working version snapshot of this snapshot.",
+      "schema:domainIncludes": { "@id": "VersionSnapshot/" },
+      "schema:rangeIncludes": { "@id": "VersionSnapshot/" }
+    },
+    {
+      "@id": "hasPreviousSnapshot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "dcat:previousVersion" },
+      "rdfs:label": "has previous snapshot",
+      "rdfs:comment": "Links to the previous version snapshot of this snapshot.",
+      "schema:domainIncludes": { "@id": "VersionSnapshot/" },
+      "schema:rangeIncludes": { "@id": "VersionSnapshot/" }
+    },
+    {
+      "@id": "VersioningState/",
+      "@type": "owl:Class",
+      "rdfs:label": "Versioning State",
+      "rdfs:comment": "Enumeration of possible versioning states for a flow.",
+      "owl:oneOf": {
+        "@list": [
+          { "@id": "VersioningState/versioned/" },
+          { "@id": "VersioningState/unversioned/" },
+          { "@id": "VersioningState/deversioned/" }
+        ]
+      }
+    },
+    {
+      "@id": "VersioningState/versioned/",
+      "@type": [
+        "owl:NamedIndividual",
+        "VersioningState/"
+      ],
+      "rdfs:label": "Versioned",
+      "rdfs:comment": "The flow maintains version snapshots with distinct version keys."
+    },
+    {
+      "@id": "VersioningState/unversioned/",
+      "@type": [
+        "owl:NamedIndividual",
+        "VersioningState/"
+      ],
+      "rdfs:label": "unversioned",
+      "rdfs:comment": "The flow does not maintain separate version snapshots; only working snapshots exist."
+    },
+    {
+      "@id": "VersioningState/deversioned/",
+      "@type": [
+        "owl:NamedIndividual",
+        "VersioningState/"
+      ],
+      "rdfs:label": "deversioned",
+      "rdfs:comment": "The flow previously maintained version snapshots but has been deversioned; historical versions may still exist."
+    },
+    {
+      "@id": "versioningState/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "versioning state",
+      "rdfs:comment": "The versioning state of a flow.",
+      "schema:domainIncludes": { "@id": "Flow/" },
+      "schema:rangeIncludes": { "@id": "VersioningState/" }
+    },
+    {
+      "@id": "versionKey/",
+      "@type": "owl:DatatypeProperty",
+      "schema:domainIncludes": { "@id": "Flow/" },
+      "schema:rangeIncludes": { "@id": "xsd:decimal" },
+      "rdfs:label": "version key",
+      "rdfs:comment": "A sortable numeric identifier for a flow's snapshots. The value encodes the UTC date and time of creation (weave) in compact decimal form (YYYYMMDD.HHMMSS or YYYYMMDD.HHMMSSmmm), enabling simple chronological (lexical AND numeric) comparison in SPARQL and across file-system hierarchies. Used as the identifier for folder-named snapshots and as a lightweight temporal ordering key when full RDF provenance data is unavailable.",
+      "rdfs:seeAlso": [
+        { "@id": "dcat:version" },
+        { "@id": "prov:generatedAtTime" }
+      ]
+    },
+    {
+      "@id": "hasOperationalConfigFlow/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "Handle/" },
+      "schema:rangeIncludes": { "@id": "OperationalNodeConfigFlow/" },
+      "rdfs:label": "opertaional config",
+      "rdfs:comment": "Links mesh nodes to their operational config flow."
+    },
+    {
+      "@id": "hasInheritableConfigFlow/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "Handle/" },
+      "schema:rangeIncludes": { "@id": "InheritableNodeConfigFlow/" },
+      "rdfs:label": "inheritable config",
+      "rdfs:comment": "Links mesh nodes to their operational config flow."
+    },
+    {
+      "@id": "hasMetadataFlow/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "Handle/" },
+      "schema:rangeIncludes": { "@id": "NodeMetadataFlow/" },
+      "rdfs:label": "metadata flow",
+      "rdfs:comment": "Links mesh nodes to their metadata flow."
+    },
+    {
+      "@id": "hasReferenceFlow/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "Handle/" },
+      "schema:rangeIncludes": { "@id": "Reference/" },
+      "rdfs:label": "reference flow",
+      "rdfs:comment": "Links mesh nodes to their reference flow."
+    },
+    {
+      "@id": "hasPayloadFlow/",
+      "@type": "owl:ObjectProperty",
+      "schema:domainIncludes": { "@id": "Handle/" },
+      "schema:rangeIncludes": { "@id": "Data/" },
+      "rdfs:label": "payload flow",
+      "rdfs:comment": "Links mesh nodes to their data flow."
+    },
+    {
+      "@id": "_:disjoint1",
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "FileResource/" },
+          { "@id": "NamingResource/" }
+        ]
+      }
+    },
+    {
+      "@id": "_:disjoint2",
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "BareNode/" },
+          { "@id": "ReferenceNode/" },
+          { "@id": "PayloadNode/" }
+        ]
+      }
+    },
+    {
+      "@id": "_:disjoint3",
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "HandleAsComponent/" },
+          { "@id": "DocumentationResource/" }
+        ]
+      }
+    },
+    {
+      "@id": "_:disjoint4",
+      "@type": "owl:AllDisjointClasses",
+      "owl:members": {
+        "@list": [
+          { "@id": "NodeMetadataFlow/" },
+          { "@id": "ReferenceFlow/" },
+          { "@id": "PayloadFlow/" },
+          { "@id": "InheritableNodeConfigFlow/" },
+          { "@id": "OperationalNodeConfigFlow/" }
+        ]
+      }
+    }
+  ]
+}

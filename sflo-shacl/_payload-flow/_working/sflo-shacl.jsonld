@@ -1,0 +1,95 @@
+{
+  "@context": {
+    "@base": "https://semantic-flow.github.io/ontology/sflo-shacl/",
+    "sflo": "https://semantic-flow.github.io/ontology/semantic-flow/",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "mesh": "https://semantic-flow.github.io/ontology/mesh/"
+  },
+  "@graph": [
+    {
+      "@id": "NamingResourceShape/",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "sflo:NamingResource/" },
+      "sh:nodeKind": { "@id": "sh:IRI" },
+      "sh:sparql": {
+        "sh:message": "NamingResource IRI must end with a slash (/).",
+        "sh:select": "SELECT ?this WHERE {\n                FILTER ( !STRENDS(STR(?this), \"/\") )\n            }"
+      }
+    },
+    {
+      "@id": "FileResourceShape/",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "sflo:FileResource/" },
+      "sh:nodeKind": { "@id": "sh:IRI" },
+      "sh:sparql": {
+        "sh:message": "FileResource IRI must not end with a slash (/).",
+        "sh:select": "SELECT ?this WHERE {\n                FILTER ( STRENDS(STR(?this), \"/\") )\n            }"
+      }
+    },
+    {
+      "@id": "MeshNodeShape/",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "sflo:MeshNode/" },
+      "sh:property": [
+        {
+          "sh:path": { "@id": "sflo:hasHandle/" },
+          "sh:class": { "@id": "sflo:HandleAsComponent/" },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "Every MeshNode must have exactly one HandleAsComponent"
+        },
+        {
+          "sh:path": { "@id": "sflo:slug/" },
+          "sh:datatype": { "@id": "xsd:string" },
+          "sh:minCount": 0,
+          "sh:maxCount": 1,
+          "sh:pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "sh:message": "Slug is optional. If provided, it must match kebab-case (lowercase letters, numbers, hyphens). If absent, the node's folder name is used for default distribution naming."
+        }
+      ]
+    },
+    {
+      "@id": "HandleAsComponentShape/",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "sflo:HandleAsComponent/" },
+      "sh:property": {
+        "sh:path": { "@id": "sflo:isHandleFor/" },
+        "sh:class": { "@id": "sflo:MeshNode/" },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:message": "Every HandleAsComponent must be handle for exactly one MeshNode"
+      }
+    },
+    {
+      "@id": "NamingResourceShape2/",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "mesh:FolderResource/" },
+      "sh:property": {
+        "sh:path": { "@id": "sflo:hasResourcePage/" },
+        "sh:class": { "@id": "sflo:ResourcePage/" },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:message": "Every NamingResource should have a ResourcePage"
+      }
+    },
+    {
+      "@id": "SnapshotShape/",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "sflo:Snapshot/" },
+      "sh:not": {
+        "sh:class": { "@id": "sflo:Snapshot/" }
+      },
+      "sh:message": "Snapshot is abstract - use VersionSnapshot or other concrete snapshot types"
+    },
+    {
+      "@id": "DocumentationResourceShape/",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": { "@id": "sflo:DocumentationResource/" },
+      "sh:not": {
+        "sh:class": { "@id": "sflo:DocumentationResource/" }
+      },
+      "sh:message": "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass"
+    }
+  ]
+}

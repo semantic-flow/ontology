@@ -1,5 +1,6 @@
 {
   "@context": {
+    "base": "https://semantic-flow.github.io/ontology/meta-flow/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -26,241 +27,234 @@
       "mesh:alternateNamespacePrefix": ["metaflow", "meta-flow", "mf"]
     },
     {
-      "@id": "meta:MetadataClass",
+      "@id": "MetadataClass/",
       "@type": "rdfs:Class",
       "rdfs:label": "Metadata Class",
       "rdfs:comment": "Classes that structure metadata information within meta-flow distributions."
     },
     {
-      "@id": "meta:ProvenanceClass",
+      "@id": "ProvenanceClass/",
       "@type": "rdfs:Class",
       "rdfs:label": "Provenance Class",
       "rdfs:comment": "Classes that structure provenance information within meta-flow distributions.",
-      "rdfs:subClassOf": { "@id": "meta:MetadataClass" }
+      "rdfs:subClassOf": { "@id": "MetadataClass/" }
     },
     {
-      "@id": "meta:ProvenanceContext",
+      "@id": "ProvenanceContext/",
       "@type": "rdfs:Class",
       "rdfs:label": "Provenance Context",
       "rdfs:comment": "A relator that captures complex authorship scenarios for mesh operations, binding together activities, agents, delegation chains, and agent roles. Uses prov:wasAttributedTo to identify the primary responsible agent.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
+      "rdfs:subClassOf": { "@id": "ProvenanceClass/" }
     },
     {
-      "@id": "meta:DelegationChain",
+      "@id": "DelegationChain/",
       "@type": "rdfs:Class",
       "rdfs:label": "Delegation Chain",
       "rdfs:comment": "A collection of delegation steps that form an authorization chain.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
+      "rdfs:subClassOf": { "@id": "ProvenanceClass/" }
     },
     {
-      "@id": "meta:DelegationStep",
+      "@id": "DelegationStep/",
       "@type": "rdfs:Class",
       "rdfs:label": "Delegation Step",
       "rdfs:comment": "An individual step in an authorization chain, showing one agent acting on behalf of another using prov:agent and prov:actedOnBehalfOf.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
+      "rdfs:subClassOf": { "@id": "ProvenanceClass/" }
     },
     {
-      "@id": "meta:AgentRoleCollection",
+      "@id": "AgentRoleCollection/",
       "@type": "rdfs:Class",
       "rdfs:label": "Agent Role Collection",
       "rdfs:comment": "A collection of agent role assignments for collaborative activities.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
+      "rdfs:subClassOf": { "@id": "ProvenanceClass/" }
     },
     {
-      "@id": "meta:AgentRole",
+      "@id": "AgentRole/",
       "@type": "rdfs:Class",
       "rdfs:label": "Agent Role",
       "rdfs:comment": "Describes the specific role an agent plays in a collaborative activity, using prov:agent to identify the agent.",
-      "rdfs:subClassOf": { "@id": "meta:ProvenanceClass" }
+      "rdfs:subClassOf": { "@id": "ProvenanceClass/" }
     },
     {
-      "@id": "meta:RoleType",
+      "@id": "RoleType/",
       "@type": "rdfs:Class",
       "rdfs:label": "Role Type",
       "rdfs:comment": "Types of roles agents can play in activities."
     },
     {
-      "@id": "meta:MeshActivity",
+      "@id": "MeshActivity/",
       "@type": "rdfs:Class",
       "rdfs:label": "Mesh Activity",
       "rdfs:comment": "Base class for all Semantic Flow mesh operations including weaving, grafting, and initialization activities.",
       "rdfs:subClassOf": { "@id": "prov:Activity" }
     },
     {
-      "@id": "meta:WeaveActivity",
+      "@id": "WeaveActivity/",
       "@type": "rdfs:Class",
       "rdfs:label": "Weave Activity",
       "rdfs:comment": "Base class for all Semantic Flow mesh weaving operations.",
-      "rdfs:subClassOf": { "@id": "meta:MeshActivity" }
+      "rdfs:subClassOf": { "@id": "MeshActivity/" }
     },
     {
-      "@id": "meta:NodeCreation",
+      "@id": "NodeCreation/",
       "@type": "rdfs:Class",
       "rdfs:label": "Node Creation",
       "rdfs:comment": "Activity for creating new nodes in mesh repositories.",
-      "rdfs:subClassOf": { "@id": "meta:MeshActivity" }
+      "rdfs:subClassOf": { "@id": "MeshActivity/" }
     },
     {
-      "@id": "meta:GraftActivity",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Graft Activity",
-      "rdfs:comment": "Specialized node creation for preparing new '_working' nodes and flows before weaving operations.",
-      "rdfs:subClassOf": { "@id": "meta:NodeCreation" }
-    },
-    {
-      "@id": "meta:RepoInitialization",
+      "@id": "RepoInitialization/",
       "@type": "rdfs:Class",
       "rdfs:label": "Repository Initialization",
       "rdfs:comment": "Activity for initializing new mesh repositories with their foundational structure.",
-      "rdfs:subClassOf": { "@id": "meta:MeshActivity" }
+      "rdfs:subClassOf": { "@id": "MeshActivity/" }
     },
     {
-      "@id": "meta:NodeInitialization",
+      "@id": "NodeInitialization/",
       "@type": "rdfs:Class",
       "rdfs:label": "Node Initialization",
       "rdfs:comment": "Activity for initializing individual nodes within repository initialization.",
-      "rdfs:subClassOf": { "@id": "meta:RepoInitialization" }
+      "rdfs:subClassOf": { "@id": "RepoInitialization/" }
     },
     {
-      "@id": "meta:ConfigWeave",
+      "@id": "ConfigWeave/",
       "@type": "rdfs:Class",
       "rdfs:label": "Config Weave",
       "rdfs:comment": "Weaving operation that updates configuration flows.",
-      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+      "rdfs:subClassOf": { "@id": "WeaveActivity/" }
     },
     {
-      "@id": "meta:ReferenceWeave",
+      "@id": "ReferenceWeave/",
       "@type": "rdfs:Class",
       "rdfs:label": "Reference Weave",
       "rdfs:comment": "Weaving operation that updates reference flows.",
-      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+      "rdfs:subClassOf": { "@id": "WeaveActivity/" }
     },
     {
-      "@id": "meta:DataWeave",
+      "@id": "DataWeave/",
       "@type": "rdfs:Class",
       "rdfs:label": "Data Weave",
       "rdfs:comment": "Weaving operation that updates data flows.",
-      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+      "rdfs:subClassOf": { "@id": "WeaveActivity/" }
     },
     {
-      "@id": "meta:MetaWeave",
+      "@id": "MetaWeave/",
       "@type": "rdfs:Class",
       "rdfs:label": "Meta Weave",
       "rdfs:comment": "Weaving operation that updates meta-flows (automatically triggered).",
-      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+      "rdfs:subClassOf": { "@id": "WeaveActivity/" }
     },
     {
-      "@id": "meta:NodeWeave",
+      "@id": "NodeWeave/",
       "@type": "rdfs:Class",
       "rdfs:label": "Node Weave",
       "rdfs:comment": "Weaving operation that updates all flows within a node.",
-      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+      "rdfs:subClassOf": { "@id": "WeaveActivity/" }
     },
     {
-      "@id": "meta:NodeTreeWeave",
+      "@id": "NodeTreeWeave/",
       "@type": "rdfs:Class",
       "rdfs:label": "Node Tree Weave",
       "rdfs:comment": "Weaving operation that recursively updates nodes and their contained nodes.",
-      "rdfs:subClassOf": { "@id": "meta:WeaveActivity" }
+      "rdfs:subClassOf": { "@id": "WeaveActivity/" }
     },
     {
-      "@id": "meta:dataExtraction",
-      "@type": "meta:RoleType",
+      "@id": "dataExtraction/",
+      "@type": "RoleType/",
       "rdfs:label": "data extraction",
       "rdfs:comment": "Responsible for extracting or gathering data."
     },
     {
-      "@id": "meta:qualityAssurance",
-      "@type": "meta:RoleType",
+      "@id": "qualityAssurance/",
+      "@type": "RoleType/",
       "rdfs:label": "quality assurance",
       "rdfs:comment": "Responsible for validating and ensuring quality."
     },
     {
-      "@id": "meta:finalApproval",
-      "@type": "meta:RoleType",
+      "@id": "finalApproval/",
+      "@type": "RoleType/",
       "rdfs:label": "final approval",
       "rdfs:comment": "Responsible for final review and approval."
     },
     {
-      "@id": "meta:coordination",
-      "@type": "meta:RoleType",
+      "@id": "coordination/",
+      "@type": "RoleType/",
       "rdfs:label": "coordination",
       "rdfs:comment": "Responsible for coordinating between other agents."
     },
     {
-      "@id": "meta:versioningState",
+      "@id": "versioningState/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "versioning state",
       "rdfs:comment": "The versioning state of a flow: 'versioned', 'unversioned', or 'deversioned'.",
-      "schema:domainIncludes": { "@id": "node:Flow" },
+      "schema:domainIncludes": { "@id": "node:Flow/" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
-      "@id": "meta:forActivity",
+      "@id": "forActivity/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "for activity",
       "rdfs:comment": "Links a provenance context to the activity it describes.",
-      "schema:domainIncludes": { "@id": "meta:ProvenanceContext" },
+      "schema:domainIncludes": { "@id": "ProvenanceContext/" },
       "schema:rangeIncludes": { "@id": "prov:Activity" }
     },
     {
-      "@id": "meta:forSnapshot",
+      "@id": "forSnapshot/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "for snapshot",
       "rdfs:comment": "Links a provenance context to the specific snapshot it describes.",
-      "schema:domainIncludes": { "@id": "meta:ProvenanceContext" },
-      "schema:rangeIncludes": { "@id": "flow:Snapshot" }
+      "schema:domainIncludes": { "@id": "ProvenanceContext/" },
+      "schema:rangeIncludes": { "@id": "flow:Snapshot/" }
     },
     {
-      "@id": "meta:delegationChain",
+      "@id": "delegationChain/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "delegation chain",
       "rdfs:comment": "Links to a collection of delegation steps showing the authorization chain.",
-      "schema:domainIncludes": { "@id": "meta:ProvenanceContext" },
-      "schema:rangeIncludes": { "@id": "meta:DelegationChain" }
+      "schema:domainIncludes": { "@id": "ProvenanceContext/" },
+      "schema:rangeIncludes": { "@id": "DelegationChain/" }
     },
     {
-      "@id": "meta:agentRoles",
+      "@id": "agentRoles/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "agent roles",
       "rdfs:comment": "Links to a collection of agent role assignments.",
-      "schema:domainIncludes": { "@id": "meta:ProvenanceContext" },
-      "schema:rangeIncludes": { "@id": "meta:AgentRoleCollection" }
+      "schema:domainIncludes": { "@id": "ProvenanceContext/" },
+      "schema:rangeIncludes": { "@id": "AgentRoleCollection/" }
     },
     {
-      "@id": "meta:hasStep",
+      "@id": "hasStep/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has step",
       "rdfs:comment": "Links a delegation chain to its individual steps.",
-      "schema:domainIncludes": { "@id": "meta:DelegationChain" },
-      "schema:rangeIncludes": { "@id": "meta:DelegationStep" }
+      "schema:domainIncludes": { "@id": "DelegationChain/" },
+      "schema:rangeIncludes": { "@id": "DelegationStep/" }
     },
     {
-      "@id": "meta:stepOrder",
+      "@id": "stepOrder/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "step order",
       "rdfs:comment": "The order of this step in the delegation chain (1, 2, 3, etc.).",
-      "schema:domainIncludes": { "@id": "meta:DelegationStep" },
+      "schema:domainIncludes": { "@id": "DelegationStep/" },
       "schema:rangeIncludes": { "@id": "xsd:integer" }
     },
     {
-      "@id": "meta:hasRole",
+      "@id": "hasRole/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has role",
       "rdfs:comment": "Links an agent role collection to individual role assignments.",
-      "schema:domainIncludes": { "@id": "meta:AgentRoleCollection" },
-      "schema:rangeIncludes": { "@id": "meta:AgentRole" }
+      "schema:domainIncludes": { "@id": "AgentRoleCollection/" },
+      "schema:rangeIncludes": { "@id": "AgentRole/" }
     },
     {
-      "@id": "meta:role",
+      "@id": "role/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "role",
       "rdfs:comment": "The specific role or function the agent performs.",
-      "schema:domainIncludes": { "@id": "meta:AgentRole" },
-      "schema:rangeIncludes": { "@id": "meta:RoleType" }
+      "schema:domainIncludes": { "@id": "AgentRole/" },
+      "schema:rangeIncludes": { "@id": "RoleType/" }
     },
     {
-      "@id": "meta:wasTriggeredBy",
+      "@id": "wasTriggeredBy/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "was triggered by",
       "rdfs:comment": "Links an automatic activity (like MetaWeave) to the activity that triggered it.",
@@ -268,10 +262,10 @@
       "schema:rangeIncludes": { "@id": "prov:Activity" }
     },
     {
-      "@id": "meta:FlowVersioningStateShape",
+      "@id": "FlowVersioningStateShape/",
       "@type": "sh:PropertyShape",
-      "sh:targetClass": { "@id": "node:Flow" },
-      "sh:path": { "@id": "meta:versioningState" },
+      "sh:targetClass": { "@id": "node:Flow/" },
+      "sh:path": { "@id": "versioningState/" },
       "sh:in": {
         "@list": [
           "versioned",
@@ -282,13 +276,13 @@
       "sh:message": "Versioning state must be 'versioned', 'unversioned', or 'deversioned'"
     },
     {
-      "@id": "meta:ProvenanceContextShape",
+      "@id": "ProvenanceContextShape/",
       "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "meta:ProvenanceContext" },
+      "sh:targetClass": { "@id": "ProvenanceContext/" },
       "sh:property": [
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "meta:forActivity" },
+          "sh:path": { "@id": "forActivity/" },
           "sh:class": { "@id": "prov:Activity" },
           "sh:minCount": 1,
           "sh:maxCount": 1,
@@ -296,8 +290,8 @@
         },
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "meta:forSnapshot" },
-          "sh:class": { "@id": "flow:Snapshot" },
+          "sh:path": { "@id": "forSnapshot/" },
+          "sh:class": { "@id": "flow:Snapshot/" },
           "sh:minCount": 1,
           "sh:maxCount": 1,
           "sh:message": "Provenance context must reference exactly one snapshot"
@@ -313,9 +307,9 @@
       ]
     },
     {
-      "@id": "meta:DelegationStepShape",
+      "@id": "DelegationStepShape/",
       "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "meta:DelegationStep" },
+      "sh:targetClass": { "@id": "DelegationStep/" },
       "sh:property": [
         {
           "@type": "sh:PropertyShape",
@@ -327,7 +321,7 @@
         },
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "meta:stepOrder" },
+          "sh:path": { "@id": "stepOrder/" },
           "sh:datatype": { "@id": "xsd:integer" },
           "sh:minInclusive": 1,
           "sh:message": "Step order must be a positive integer"
@@ -335,9 +329,9 @@
       ]
     },
     {
-      "@id": "meta:AgentRoleShape",
+      "@id": "AgentRoleShape/",
       "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "meta:AgentRole" },
+      "sh:targetClass": { "@id": "AgentRole/" },
       "sh:property": [
         {
           "@type": "sh:PropertyShape",
@@ -349,23 +343,23 @@
         },
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "meta:role" },
-          "sh:class": { "@id": "meta:RoleType" },
+          "sh:path": { "@id": "role/" },
+          "sh:class": { "@id": "RoleType/" },
           "sh:minCount": 1,
           "sh:maxCount": 1,
           "sh:message": "Agent role must specify exactly one role type"
         },
         {
-          "@id": "meta:DelegationStepConditionalShape",
+          "@id": "DelegationStepConditionalShape/",
           "@type": "sh:NodeShape",
-          "sh:targetClass": { "@id": "meta:DelegationStep" },
+          "sh:targetClass": { "@id": "DelegationStep/" },
           "sh:or": [
             {
               "@type": "sh:NodeShape",
               "sh:property": [
                 {
                   "@type": "sh:PropertyShape",
-                  "sh:path": { "@id": "meta:stepOrder" },
+                  "sh:path": { "@id": "stepOrder/" },
                   "sh:hasValue": 1
                 }
               ]
@@ -375,7 +369,7 @@
               "sh:property": [
                 {
                   "@type": "sh:PropertyShape",
-                  "sh:path": { "@id": "meta:stepOrder" },
+                  "sh:path": { "@id": "stepOrder/" },
                   "sh:minExclusive": 1
                 },
                 {
