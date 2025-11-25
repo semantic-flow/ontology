@@ -1,6 +1,6 @@
 {
   "@context": {
-    "@base": "https://semantic-flow.github.io/ontology/node-config/_payload-flow/_next/node-config-ontology.jsonld#",
+    "@base": "https://semantic-flow.github.io/ontology/sflo-config/_payload-flow/_next/sflo-config-ontology.jsonld#",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -9,7 +9,7 @@
     "dcterms": "http://purl.org/dc/terms/",
     "schema": "https://schema.org/",
     "formats": "http://www.w3.org/ns/formats/",
-    "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
+    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/",
     "sflo-host": "https://semantic-flow.github.io/ontology/flow-service/"
   },
   "@graph": [
@@ -20,8 +20,8 @@
       "dcterms:description": "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh nodes (operational config) and through inheritable config. Used by configuration files and sflo-host ontology for setting defaults.",
       "dcterms:creator": "Semantic Flow Project",
       "owl:versionInfo": "0.1.0",
-      "vann:preferredNamespacePrefix": "node-conf",
-      "vann:alternateNamespacePrefix": ["node-config"]
+      "vann:preferredNamespacePrefix": "sflo-conf",
+      "vann:alternateNamespacePrefix": ["sflo-config"]
     },
     {
       "@id": "ConfigurationClass/",

@@ -1,6 +1,6 @@
 {
   "@context": {
-    "base": "https://semantic-flow.github.io/ontology/meta-flow/",
+    "base": "https://semantic-flow.github.io/ontology/sflo-config/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -10,16 +10,13 @@
     "dcat": "http://www.w3.org/ns/dcat#",
     "prov": "http://www.w3.org/ns/prov#",
     "schema": "https://schema.org/",
-    "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
-    "mesh": "https://semantic-flow.github.io/ontology/mesh/",
-    "node": "https://semantic-flow.github.io/ontology/node/",
-    "flow": "https://semantic-flow.github.io/ontology/flow/"
+    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/"
   },
   "@graph": [
     {
       "@id": "_node_handle/",
       "@type": "sflo:Handle",
-      "distributionSlug": "node-config-ontology"
+      "distributionSlug": "sflo-config-ontology"
     }
   ]
 

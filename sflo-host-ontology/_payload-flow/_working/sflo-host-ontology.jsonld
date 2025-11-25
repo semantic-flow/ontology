@@ -10,7 +10,7 @@
     "schema": "https://schema.org/",
     "formats": "http://www.w3.org/ns/formats/",
     "conf": "https://semantic-flow.github.io/ontology/conf/",
-    "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
+    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/",
     "mesh": "https://semantic-flow.github.io/ontology/mesh/",
     "sflo-host": "https://semantic-flow.github.io/ontology/flow-service/"
   },
@@ -21,11 +21,7 @@
       "dcterms:title": "sflo-host Ontology",
       "dcterms:description": "Vocabulary for configuring the sflo-host application. Includes platform defaults.",
       "dcterms:creator": "Semantic Flow Project",
-      "owl:versionInfo": "1.0.0",
-      "mesh:preferredNamespacePrefix": "sflo-host",
-      "mesh:alternateNamespacePrefix": [
-        "sfhost"
-      ]
+      "owl:versionInfo": "1.0.0"
     },
     {
       "@id": "sflo-host:ServiceConfig",
@@ -331,19 +327,19 @@
       "sflo-host:port": 31415,
       "sflo-host:host": "localhost",
       "sflo-host:scheme": "http",
-      "node-conf:hasInheritableNodeConfig": {
+      "sflo-conf:hasInheritableNodeConfig": {
         "@id": "sflo-host:defaultInheritableNodeConfig",
-        "@type": "node-conf:InheritableNodeConfig",
+        "@type": "sflo-conf:InheritableNodeConfig",
         "rdfs:label": "Default Inheritable Node Configuration",
         "rdfs:comment": "Default configuration that is inherited by all nodes unless overridden.",
-        "node-conf:versioningEnabled": true,
+        "sflo-conf:versioningEnabled": true,
         "formats:media_type": [
           "application/trig",
           "application/ld+json"
         ],
-        "node-conf:generateUnifiedDataset": false,
-        "node-conf:generateAggregatedDataset": false,
-        "node-conf:nodeConfigInheritanceEnabled": true
+        "sflo-conf:generateUnifiedDataset": false,
+        "sflo-conf:generateAggregatedDataset": false,
+        "sflo-conf:nodeConfigInheritanceEnabled": true
       }
     }
   ]

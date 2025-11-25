@@ -32,7 +32,7 @@
     {
       "@id": "FileResource/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": { "@id": "Resource/" },
+      "rdfs:subClassOf": { "@id": "Component/" },
       "rdfs:label": "File Resource",
       "rdfs:comment": "A resource that locates and corresponds directly to a file."
     },
@@ -217,7 +217,7 @@
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
         { "@id": "dcat:DatasetSeries" },
-        { "@id": "Resource/" }
+        { "@id": "Component/" }
       ],
       "rdfs:label": "Flow",
       "rdfs:comment": "Abstract evolvable datasets for node metadata, reference data, payload data, and configuration. Flows are DatasetSeries that are realized through flow snapshots representing specific states or versions."
@@ -328,24 +328,29 @@
       "@type": "owl:Class",
       "rdfs:subClassOf": [
         { "@id": "NamingResource/" },
+        { "@id": "Component/" },
         { "@id": "dcat:Dataset" }
       ],
       "rdfs:label": "Snapshot",
       "rdfs:comment": "Snapshots represent distinct states of a node flow (dataset), and contain actual RDF data files (aka Distributions)."
     },
-    {
-      "@id": "VersionSnapshot/",
-      "@type": "owl:Class",
-      "rdfs:subClassOf": { "@id": "Snapshot/" },
-      "rdfs:label": "VersionSnapshot",
-      "rdfs:comment": "Historical version snapshot of a node flow, representing a specific versioned snapshot."
+    { "@id": "Distribution/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+          { "@id": "dcat:Distribution" },
+          { "@id": "FileResource/" },
+          { "@id": "Component/" }
+      ],
+      "rdfs:label": "Distribution",
+      "rdfs:comment": "A distribution (file) that contains the RDF data for a snapshot."
     },
-    {
-      "@id": "DefaultSnapshot/",
-      "@type": "owl:Class",
-      "rdfs:subClassOf": { "@id": "Snapshot/" },
-      "rdfs:label": "DefaultSnapshot",
-      "rdfs:comment": "The default snapshot of a node flow, representing the latest state."
+    { "@id": "hasDistribution/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "dcat:distribution" },
+      "schema:domainIncludes": { "@id": "Snapshot/" },
+      "schema:rangeIncludes": { "@id": "Distribution/" },
+      "rdfs:label": "has Distribution",
+      "rdfs:comment": "Associates a Snapshot with its data distribution files."
     },
     {
       "@id": "hasSnapshot/",
@@ -357,46 +362,19 @@
       "rdfs:comment": "Associates a Flow with its snapshots. This property enables version management within flows and helps implement the prov: model"
     },
     {
-      "@id": "hasDefaultSnapshot/",
+      "@id": "hasCurrentSnapshot/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": { "@id": "hasSnapshot/" },
       "rdfs:domain": { "@id": "Flow/" },
-      "schema:rangeIncludes": { "@id": "DefaultSnapshot/" },
-      "rdfs:label": "hasDefaultSnapshot",
-      "rdfs:comment": "Associates a Flow with its default snapshot."
+      "schema:rangeIncludes": { "@id": "Snapshot/" },
+      "rdfs:label": "hasCurrentSnapshot",
+      "rdfs:comment": "Associates a Flow with its current snapshot."
     },
     {
-      "@id": "hasWorkingSnapshot/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": { "@id": "hasSnapshot/" },
-      "rdfs:label": "has working snapshot",
-      "rdfs:comment": "Links to the working snapshot of this flow.",
-      "rdfs:domain": { "@id": "Flow/" },
-      "schema:rangeIncludes": { "@id": "DefaultSnapshot/" }
-    },
-    {
-      "@id": "hasVersionSnapshot/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": { "@id": "hasSnapshot/" },
-      "schema:domainIncludes": { "@id": "Flow/" },
-      "schema:rangeIncludes": { "@id": "VersionSnapshot/" },
-      "rdfs:label": "hasVersionSnapshot",
-      "rdfs:comment": "Associates a Flow with its version snapshots."
-    },
-    {
-      "@id": "hasNextSnapshot/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": { "@id": "dcat:nextVersion" },
-      "rdfs:label": "has working snapshot",
-      "rdfs:comment": "Links to the working version snapshot of this snapshot.",
-      "schema:domainIncludes": { "@id": "VersionSnapshot/" },
-      "schema:rangeIncludes": { "@id": "VersionSnapshot/" }
-    },
-    {
-      "@id": "hasPreviousSnapshot/",
+      "@id": "previousSnapshot/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": { "@id": "dcat:previousVersion" },
-      "rdfs:label": "has previous snapshot",
+      "rdfs:label": "previous snapshot",
       "rdfs:comment": "Links to the previous version snapshot of this snapshot.",
       "schema:domainIncludes": { "@id": "VersionSnapshot/" },
       "schema:rangeIncludes": { "@id": "VersionSnapshot/" }
@@ -450,16 +428,23 @@
       "schema:rangeIncludes": { "@id": "VersioningState/" }
     },
     {
-      "@id": "versionKey/",
+      "@id": "weaveLabel/",
       "@type": "owl:DatatypeProperty",
-      "schema:domainIncludes": { "@id": "Flow/" },
-      "schema:rangeIncludes": { "@id": "xsd:decimal" },
-      "rdfs:label": "version key",
-      "rdfs:comment": "A sortable numeric identifier for a flow's snapshots. The value encodes the UTC date and time of creation (weave) in compact decimal form (YYYYMMDD.HHMMSS or YYYYMMDD.HHMMSSmmm), enabling simple chronological (lexical AND numeric) comparison in SPARQL and across file-system hierarchies. Used as the identifier for folder-named snapshots and as a lightweight temporal ordering key when full RDF provenance data is unavailable.",
-      "rdfs:seeAlso": [
-        { "@id": "dcat:version" },
-        { "@id": "prov:generatedAtTime" }
-      ]
+      "schema:domainIncludes": [
+        { "@id": "Flow/" },
+        { "@id": "Snapshot/" }
+      ],
+      "schema:rangeIncludes": { "@id": "xsd:string" },
+      "rdfs:label": "weave label",
+      "rdfs:comment": "Human-readable label for a weave run (e.g., '2025-11-24_0142' or '2025-11-24_0142a'). All snapshots created by the same weave share the same weaveLabel. Not guaranteed to be globally unique across all meshes."
+    },
+    {
+      "@id": "sequenceNumber/",
+      "@type": "owl:DatatypeProperty",
+      "schema:domainIncludes": { "@id": "Snapshot/" },
+      "schema:rangeIncludes": { "@id": "xsd:integer" },
+      "rdfs:label": "sequence number",
+      "rdfs:comment": "Monotonic integer identifying this snapshot within its Flow. 1 for the first committed snapshot of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
     },
     {
       "@id": "hasOperationalConfigFlow/",
@@ -478,31 +463,7 @@
       "rdfs:comment": "Links mesh nodes to their operational config flow."
     },
     {
-      "@id": "hasMetadataFlow/",
-      "@type": "owl:ObjectProperty",
-      "schema:domainIncludes": { "@id": "Handle/" },
-      "schema:rangeIncludes": { "@id": "NodeMetadataFlow/" },
-      "rdfs:label": "metadata flow",
-      "rdfs:comment": "Links mesh nodes to their metadata flow."
-    },
-    {
-      "@id": "hasReferenceFlow/",
-      "@type": "owl:ObjectProperty",
-      "schema:domainIncludes": { "@id": "Handle/" },
-      "schema:rangeIncludes": { "@id": "Reference/" },
-      "rdfs:label": "reference flow",
-      "rdfs:comment": "Links mesh nodes to their reference flow."
-    },
-    {
-      "@id": "hasPayloadFlow/",
-      "@type": "owl:ObjectProperty",
-      "schema:domainIncludes": { "@id": "Handle/" },
-      "schema:rangeIncludes": { "@id": "Data/" },
-      "rdfs:label": "payload flow",
-      "rdfs:comment": "Links mesh nodes to their data flow."
-    },
-    {
-      "@id": "_:disjoint1",
+      "@id": "disjoint/FileVsNamingResources",
       "@type": "owl:AllDisjointClasses",
       "owl:members": {
         "@list": [
@@ -512,7 +473,7 @@
       }
     },
     {
-      "@id": "_:disjoint2",
+      "@id": "disjoint/NodeStructuralRoles",
       "@type": "owl:AllDisjointClasses",
       "owl:members": {
         "@list": [
@@ -523,17 +484,21 @@
       }
     },
     {
-      "@id": "_:disjoint3",
+      "@id": "disjoint/ComponentResources",
       "@type": "owl:AllDisjointClasses",
       "owl:members": {
         "@list": [
           { "@id": "HandleAsComponent/" },
-          { "@id": "DocumentationResource/" }
+          { "@id": "DocumentationResource/" },
+          { "@id": "AssetTree/"},
+          { "@id": "Flow/" },
+          { "@id": "Snapshot/" },
+          { "@id": "Distribution/" }
         ]
       }
     },
     {
-      "@id": "_:disjoint4",
+      "@id": "disjoint/FlowTypes",
       "@type": "owl:AllDisjointClasses",
       "owl:members": {
         "@list": [

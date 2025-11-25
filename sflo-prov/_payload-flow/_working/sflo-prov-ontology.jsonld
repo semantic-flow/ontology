@@ -1,6 +1,6 @@
 {
   "@context": {
-    "base": "https://semantic-flow.github.io/ontology/meta-flow/",
+    "base": "https://semantic-flow.github.io/ontology/sflo-prov/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -10,7 +10,7 @@
     "dcat": "http://www.w3.org/ns/dcat#",
     "prov": "http://www.w3.org/ns/prov#",
     "schema": "https://schema.org/",
-    "meta": "https://semantic-flow.github.io/ontology/meta-flow/",
+    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/",
     "mesh": "https://semantic-flow.github.io/ontology/mesh/",
     "node": "https://semantic-flow.github.io/ontology/node/",
     "flow": "https://semantic-flow.github.io/ontology/flow/"
@@ -20,7 +20,7 @@
       "@id": "meta:",
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow Metadata-Flow Ontology",
-      "dcterms:description": "Comprehensive provenance and metadata schema for nodes, their flow datasets, and weaving operations. Defines properties for tracking dataset series information, versioning states, provenance contexts, delegation chains, agent roles, and weave activities. Captures complex authorship scenarios and collaborative activities within the Semantic Flow mesh ecosystem. The recommended prefix is 'meta' (alternatives: 'metaflow', 'meta-flow', 'mf').",
+      "dcterms:description": "Comprehensive provenance and metadata schema for nodes, their flow datasets, and weaving operations. Defines properties for tracking dataset series information, provenance contexts, delegation chains, agent roles, and weave activities. Captures complex authorship scenarios and collaborative activities within the Semantic Flow mesh ecosystem. The recommended prefix is 'meta' (alternatives: 'metaflow', 'meta-flow', 'mf').",
       "dcterms:creator": "Semantic Flow Project",
       "owl:versionInfo": "0.2.0",
       "mesh:preferredNamespacePrefix": "meta",
@@ -130,10 +130,10 @@
       "rdfs:subClassOf": { "@id": "WeaveActivity/" }
     },
     {
-      "@id": "DataWeave/",
+      "@id": "PayloadWeave/",
       "@type": "rdfs:Class",
-      "rdfs:label": "Data Weave",
-      "rdfs:comment": "Weaving operation that updates data flows.",
+      "rdfs:label": "Payload Weave",
+      "rdfs:comment": "Weaving operation that updates payload data flows.",
       "rdfs:subClassOf": { "@id": "WeaveActivity/" }
     },
     {
@@ -260,20 +260,6 @@
       "rdfs:comment": "Links an automatic activity (like MetaWeave) to the activity that triggered it.",
       "schema:domainIncludes": { "@id": "prov:Activity" },
       "schema:rangeIncludes": { "@id": "prov:Activity" }
-    },
-    {
-      "@id": "FlowVersioningStateShape/",
-      "@type": "sh:PropertyShape",
-      "sh:targetClass": { "@id": "node:Flow/" },
-      "sh:path": { "@id": "versioningState/" },
-      "sh:in": {
-        "@list": [
-          "versioned",
-          "unversioned",
-          "deversioned"
-        ]
-      },
-      "sh:message": "Versioning state must be 'versioned', 'unversioned', or 'deversioned'"
     },
     {
       "@id": "ProvenanceContextShape/",
