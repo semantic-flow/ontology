@@ -306,33 +306,65 @@
       "rdfs:comment": "Links mesh nodes to their payload flow."
     },
     {
-      "@id": "hasInheritableNodeConfigFlow/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": { "@id": "hasFlow/" },
-      "rdfs:domain": { "@id": "MeshNode/" },
-      "rdfs:range": { "@id": "InheritableNodeConfigFlow/" },
-      "rdfs:label": "has InheritableNodeConfigFlow",
-      "rdfs:comment": "Links mesh nodes to their inheritable node config flow."
-    },
-    {
-      "@id": "hasOperationalNodeConfigFlow/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": { "@id": "hasFlow/" },
-      "rdfs:domain": { "@id": "MeshNode/" },
-      "rdfs:range": { "@id": "OperationalNodeConfigFlow/" },
-      "rdfs:label": "has OperationalNodeConfigFlow",
-      "rdfs:comment": "Links mesh nodes to their operational node config flow."
+      "@id": "FlowShot/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        { "@id": "NamingResource/" },
+        { "@id": "dcat:Dataset" }
+      ],
+      "rdfs:label": "Flow Shot",
+      "rdfs:comment": "One concrete dataset instance belonging to a Flow: a committed snapshot, the default shot under '_default/', or the mutable working shot under '_working/'. A FlowShot represents the Flow's data as a whole at a particular stage, not a subset of it."
     },
     {
       "@id": "Snapshot/",
       "@type": "owl:Class",
-      "rdfs:subClassOf": [
-        { "@id": "NamingResource/" },
-        { "@id": "Component/" },
-        { "@id": "dcat:Dataset" }
-      ],
+      "rdfs:subClassOf": { "@id": "FlowShot/" },
       "rdfs:label": "Snapshot",
-      "rdfs:comment": "Snapshots represent distinct states of a node flow (dataset), and contain actual RDF data files (aka Distributions)."
+      "rdfs:comment": "Immutable, committed flow shot (dataset state), typically materialized as a timestamped weave directory. Versioned flows have one Snapshot per committed weave; unversioned flows may have none."
+    },
+    {
+      "@id": "DefaultShot/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "FlowShot/" },
+      "rdfs:label": "Default Shot",
+      "rdfs:comment": "The Flow's default dataset shot under the '_default/' directory. For versioned flows, its content mirrors the latest Snapshot. For unversioned flows, it is the only authoritative dataset state. For deversioned flows, it is the current dataset state after the last weave."
+    },
+    {
+      "@id": "WorkingShot/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "FlowShot/" },
+      "rdfs:label": "Working Shot",
+      "rdfs:comment": "Mutable staging shot for a Flow, mapped to the '_working/' directory. Used for edits before weave. Not a committed dataset and normally not exposed in version history or as-of queries."
+    },
+    {
+      "@id": "hasFlowShot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasComponent/" },
+      "rdfs:domain": { "@id": "Flow/" },
+      "rdfs:range": { "@id": "FlowShot/" },
+      "rdfs:label": "has FlowShot",
+      "rdfs:comment": "Associates a Flow with one of its shots (default, snapshot, or working)."
+    },
+    {
+      "@id": "defaultShot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": { "@id": "hasFlowShot/" },
+      "rdfs:domain": { "@id": "Flow/" },
+      "rdfs:range": { "@id": "DefaultShot/" },
+      "rdfs:label": "default shot",
+      "rdfs:comment": "Links a Flow to its default shot under '_default/'. Each Flow must have exactly one DefaultShot."
+    },
+    {
+      "@id": "hasSnapshot/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": [
+        { "@id": "hasFlowShot/" },
+        { "@id": "prov:specializationOf" }
+      ],
+      "rdfs:domain": { "@id": "Flow/" },
+      "rdfs:range": { "@id": "Snapshot/" },
+      "rdfs:label": "has Snapshot",
+      "rdfs:comment": "Associates a Flow with one of its committed snapshot shots and specializes the Flow as a DatasetSeries into this particular Snapshot dataset."
     },
     { "@id": "Distribution/",
       "@type": "rdfs:Class",
@@ -342,42 +374,36 @@
           { "@id": "Component/" }
       ],
       "rdfs:label": "Distribution",
-      "rdfs:comment": "A distribution (file) that contains the RDF data for a snapshot."
+      "rdfs:comment": "A distribution (file) that contains the RDF data for a FlowShot (snapshot, default shot, or working shot)."
     },
     { "@id": "hasDistribution/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": { "@id": "dcat:distribution" },
-      "schema:domainIncludes": { "@id": "Snapshot/" },
+      "schema:domainIncludes": { "@id": "FlowShot/" },
       "schema:rangeIncludes": { "@id": "Distribution/" },
       "rdfs:label": "has Distribution",
-      "rdfs:comment": "Associates a Snapshot with its data distribution files."
+      "rdfs:comment": "Associates a FlowShot with its data distribution files."
     },
     {
-      "@id": "hasSnapshot/",
+      "@id": "hasCurrentShot/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": { "@id": "prov:specializationOf" },
-      "schema:domainIncludes": { "@id": "Flow/" },
-      "schema:rangeIncludes": { "@id": "Snapshot/" },
-      "rdfs:label": "hasSnapshot",
-      "rdfs:comment": "Associates a Flow with its snapshots. This property enables version management within flows and helps implement the prov: model"
-    },
-    {
-      "@id": "hasCurrentSnapshot/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": { "@id": "hasSnapshot/" },
+      "rdfs:subPropertyOf": { "@id": "hasFlowShot/" },
       "rdfs:domain": { "@id": "Flow/" },
-      "schema:rangeIncludes": { "@id": "Snapshot/" },
-      "rdfs:label": "hasCurrentSnapshot",
-      "rdfs:comment": "Associates a Flow with its current snapshot."
+      "schema:rangeIncludes": [ 
+        { "@id": "Snapshot/" },
+        { "@id": "DefaultShot/" }
+      ],
+      "rdfs:label": "hasCurrentShot",
+      "rdfs:comment": "Associates a Flow with its current FlowShot."
     },
     {
       "@id": "previousSnapshot/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": { "@id": "dcat:previousVersion" },
       "rdfs:label": "previous snapshot",
-      "rdfs:comment": "Links to the previous version snapshot of this snapshot.",
-      "schema:domainIncludes": { "@id": "VersionSnapshot/" },
-      "schema:rangeIncludes": { "@id": "VersionSnapshot/" }
+      "rdfs:comment": "Links to the immediately-preceeding snapshot of this FlowShot.",
+      "schema:domainIncludes": { "@id": "FlowShot/" },
+      "schema:rangeIncludes": { "@id": "Snapshot/" }
     },
     {
       "@id": "VersioningState/",
@@ -408,7 +434,7 @@
         "VersioningState/"
       ],
       "rdfs:label": "unversioned",
-      "rdfs:comment": "The flow does not maintain separate version snapshots; only working snapshots exist."
+      "rdfs:comment": "The flow does not have any Snapshots; only a WorkingShot and DefaultShot exist."
     },
     {
       "@id": "VersioningState/deversioned/",
@@ -493,6 +519,8 @@
           { "@id": "AssetTree/"},
           { "@id": "Flow/" },
           { "@id": "Snapshot/" },
+          { "@id": "DefaultShot/" },
+          { "@id": "WorkingShot/" },
           { "@id": "Distribution/" }
         ]
       }
