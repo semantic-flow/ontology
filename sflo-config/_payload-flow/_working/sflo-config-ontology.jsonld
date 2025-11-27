@@ -1,6 +1,6 @@
 {
   "@context": {
-    "@base": "https://semantic-flow.github.io/ontology/sflo-config/_payload-flow/_next/sflo-config-ontology.jsonld#",
+    "@base": "https://semantic-flow.github.io/ontology/sflo-config/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -9,8 +9,7 @@
     "dcterms": "http://purl.org/dc/terms/",
     "schema": "https://schema.org/",
     "formats": "http://www.w3.org/ns/formats/",
-    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/",
-    "sflo-host": "https://semantic-flow.github.io/ontology/flow-service/"
+    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/"
   },
   "@graph": [
     {
@@ -51,6 +50,20 @@
       "rdfs:subClassOf": { "@id": "AbstractNodeConfig/" }
     },
     {
+      "@id": "PlatformConfig/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Platform Configuration",
+      "rdfs:comment": "Platform-wide default configuration including inheritable node configuration defaults. Provides base defaults for all applications and nodes in the Semantic Flow platform.",
+      "rdfs:subClassOf": { "@id": "ConfigurationClass/" }
+    },
+    {
+      "@id": "ApplicationConfig/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Application Configuration",
+      "rdfs:comment": "Application/service-level configuration that can override platform defaults and provide inheritable configuration for nodes within that application instance.",
+      "rdfs:subClassOf": { "@id": "ConfigurationClass/" }
+    },
+    {
       "@id": "TemplateMappings/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "ConfigurationClass/" },
@@ -87,8 +100,8 @@
       "rdfs:comment": "Links a node, service, or platform to configuration that can be inherited by child nodes.",
       "schema:domainIncludes": [
         { "@id": "sflo:Handle/" },
-        { "@id": "sflo-host:ServiceConfig/" },
-        { "@id": "sflo-host:PlatformServiceConfig/" }
+        { "@id": "ApplicationConfig/" },
+        { "@id": "PlatformConfig/" }
       ],
       "schema:rangeIncludes": { "@id": "InheritableNodeConfig/" }
     },
@@ -229,6 +242,26 @@
           "sh:message": "Stylesheet path must be a relative path ending in .css, .scss, or .sass"
         }
       ]
+    },
+    {
+      "@id": "defaultPlatformConfig",
+      "@type": "PlatformConfig/",
+      "rdfs:label": "Default Platform Configuration",
+      "rdfs:comment": "The default configuration for the Semantic Flow platform. Provides sensible defaults for all applications and nodes.",
+      "hasInheritableNodeConfig": {
+        "@id": "defaultInheritableNodeConfig",
+        "@type": "InheritableNodeConfig/",
+        "rdfs:label": "Default Inheritable Node Configuration",
+        "rdfs:comment": "Default configuration that is inherited by all nodes unless overridden.",
+        "versioningEnabled": true,
+        "formats:media_type": [
+          "application/trig",
+          "application/ld+json"
+        ],
+        "generateUnifiedDataset": false,
+        "generateAggregatedDataset": false,
+        "nodeConfigInheritanceEnabled": true
+      }
     }
   ]
 }

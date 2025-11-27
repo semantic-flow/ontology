@@ -462,7 +462,7 @@
       ],
       "schema:rangeIncludes": { "@id": "xsd:string" },
       "rdfs:label": "weave label",
-      "rdfs:comment": "Human-readable label for a weave run (e.g., '2025-11-24_0142' or '2025-11-24_0142a'). All snapshots created by the same weave share the same weaveLabel. Not guaranteed to be globally unique across all meshes."
+      "rdfs:comment": "Human-readable label for a weave run (e.g., '2025-11-24_0142_07' or '2025-11-24_0142_15'). Format is YYYY-MM-DD_HHMM_SS with second-level precision. All snapshots created by the same weave share the same weaveLabel. Not guaranteed to be globally unique across all meshes."
     },
     {
       "@id": "sequenceNumber/",

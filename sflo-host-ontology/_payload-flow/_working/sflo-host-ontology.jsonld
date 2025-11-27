@@ -1,5 +1,6 @@
 {
   "@context": {
+    "@base": "https://semantic-flow.github.io/ontology/sflo-host/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -9,32 +10,25 @@
     "prov": "http://www.w3.org/ns/prov#",
     "schema": "https://schema.org/",
     "formats": "http://www.w3.org/ns/formats/",
-    "conf": "https://semantic-flow.github.io/ontology/conf/",
-    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/",
-    "mesh": "https://semantic-flow.github.io/ontology/mesh/",
-    "sflo-host": "https://semantic-flow.github.io/ontology/flow-service/"
+    "sflo-config": "https://semantic-flow.github.io/ontology/sflo-config/",
+    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/"
   },
   "@graph": [
     {
       "@id": "sflo-host:",
       "@type": "owl:Ontology",
       "dcterms:title": "sflo-host Ontology",
-      "dcterms:description": "Vocabulary for configuring the sflo-host application. Includes platform defaults.",
+      "dcterms:description": "Vocabulary for configuring the sflo-host application. Extends sflo-config ontology with application-specific properties.",
       "dcterms:creator": "Semantic Flow Project",
-      "owl:versionInfo": "1.0.0"
+      "owl:versionInfo": "1.0.0",
+      "owl:imports": { "@id": "https://semantic-flow.github.io/ontology/sflo-config/" }
     },
     {
-      "@id": "sflo-host:ServiceConfig",
+      "@id": "sflo-host:HostServiceConfig",
       "@type": "rdfs:Class",
-      "rdfs:label": "Service Configuration",
-      "rdfs:comment": "Root configuration class for flow-service instance"
-    },
-    {
-      "@id": "sflo-host:PlatformServiceConfig",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Platform Service Configuration",
-      "rdfs:comment": "Platform-wide default configuration including both service defaults and inheritable node configuration defaults. Extends ServiceConfig to inherit all service properties.",
-      "rdfs:subClassOf": { "@id": "sflo-host:ServiceConfig" }
+      "rdfs:label": "Host Service Configuration",
+      "rdfs:comment": "Configuration class for sflo-host application instance. Extends ApplicationConfig with host-specific properties like port, host, scheme, and logging.",
+      "rdfs:subClassOf": { "@id": "sflo-config:ApplicationConfig/" }
     },
     {
       "@id": "sflo-host:LoggingConfig",
@@ -52,7 +46,7 @@
       "@id": "sflo-host:ContainedServicesConfig",
       "@type": "rdfs:Class",
       "rdfs:label": "Contained Services Configuration",
-      "rdfs:comment": "Configuration for services contained within flow-service"
+      "rdfs:comment": "Configuration for services contained within sflo-host"
     },
     {
       "@id": "sflo-host:MeshPath",
@@ -65,7 +59,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "port",
       "rdfs:comment": "TCP port for the service to listen on",
-      "schema:domainIncludes": { "@id": "sflo-host:ServiceConfig" },
+      "schema:domainIncludes": { "@id": "sflo-host:HostServiceConfig" },
       "schema:rangeIncludes": { "@id": "xsd:integer" }
     },
     {
@@ -73,7 +67,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "host",
       "rdfs:comment": "Host address for the service to bind to",
-      "schema:domainIncludes": { "@id": "sflo-host:ServiceConfig" },
+      "schema:domainIncludes": { "@id": "sflo-host:HostServiceConfig" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
@@ -81,7 +75,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "scheme",
       "rdfs:comment": "URL scheme for the service (http or https)",
-      "schema:domainIncludes": { "@id": "sflo-host:ServiceConfig" },
+      "schema:domainIncludes": { "@id": "sflo-host:HostServiceConfig" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
@@ -89,7 +83,7 @@
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has logging configuration",
       "rdfs:comment": "Logging configuration for the service",
-      "schema:domainIncludes": { "@id": "sflo-host:ServiceConfig" },
+      "schema:domainIncludes": { "@id": "sflo-host:HostServiceConfig" },
       "schema:rangeIncludes": { "@id": "sflo-host:LoggingConfig" }
     },
     {
@@ -184,8 +178,8 @@
       "@id": "sflo-host:hasContainedServices",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has contained services",
-      "rdfs:comment": "Configuration for services contained within flow-service",
-      "schema:domainIncludes": { "@id": "sflo-host:ServiceConfig" },
+      "rdfs:comment": "Configuration for services contained within sflo-host",
+      "schema:domainIncludes": { "@id": "sflo-host:HostServiceConfig" },
       "schema:rangeIncludes": { "@id": "sflo-host:ContainedServicesConfig" }
     },
     {
@@ -233,7 +227,7 @@
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "mesh paths",
       "rdfs:comment": "Array of local file system paths to mesh directories",
-      "schema:domainIncludes": { "@id": "sflo-host:ServiceConfig" },
+      "schema:domainIncludes": { "@id": "sflo-host:HostServiceConfig" },
       "schema:rangeIncludes": { "@id": "xsd:string" }
     },
     {
@@ -250,9 +244,9 @@
       }
     },
     {
-      "@id": "sflo-host:ServiceConfigShape",
+      "@id": "sflo-host:HostServiceConfigShape",
       "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo-host:ServiceConfig" },
+      "sh:targetClass": { "@id": "sflo-host:HostServiceConfig" },
       "sh:property": [
         {
           "@type": "sh:PropertyShape",
@@ -318,29 +312,6 @@
           "sh:message": "Log rotation interval must be one of: daily, weekly, monthly, size-based"
         }
       ]
-    },
-    {
-      "@id": "sflo-host:defaultPlatformServiceConfig",
-      "@type": "sflo-host:PlatformServiceConfig",
-      "rdfs:label": "Default Platform Service Configuration",
-      "rdfs:comment": "The default configuration for the Semantic Flow platform. Provides sensible defaults for all services and nodes.",
-      "sflo-host:port": 31415,
-      "sflo-host:host": "localhost",
-      "sflo-host:scheme": "http",
-      "sflo-conf:hasInheritableNodeConfig": {
-        "@id": "sflo-host:defaultInheritableNodeConfig",
-        "@type": "sflo-conf:InheritableNodeConfig",
-        "rdfs:label": "Default Inheritable Node Configuration",
-        "rdfs:comment": "Default configuration that is inherited by all nodes unless overridden.",
-        "sflo-conf:versioningEnabled": true,
-        "formats:media_type": [
-          "application/trig",
-          "application/ld+json"
-        ],
-        "sflo-conf:generateUnifiedDataset": false,
-        "sflo-conf:generateAggregatedDataset": false,
-        "sflo-conf:nodeConfigInheritanceEnabled": true
-      }
     }
   ]
 }
