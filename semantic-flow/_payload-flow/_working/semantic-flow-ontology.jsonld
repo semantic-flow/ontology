@@ -19,7 +19,7 @@
       "dcterms:description": "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes.",
       "dcterms:creator": { "@id": "https://djradon.github.io/ns/djradon/" },
       "owl:versionInfo": "0.1.0",
-      "owl:versionIRI": { "@id": "https://semantic-flow.github.io/ontology/semantic-flow/_payload-flow/_default/sflo.ttl" },
+      "owl:versionIRI": { "@id": "https://semantic-flow.github.io/ontology/semantic-flow/_payload/_default/sflo.ttl" },
       "vann:preferredNamespacePrefix": "sflo",
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow/"
     },
@@ -226,7 +226,7 @@
       "@id": "NodeMetadataFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "Flow/" },
-      "slug/": "_node-metadata-flow",
+      "slug/": "_meta",
       "rdfs:label": "Metadata Flow",
       "rdfs:comment": "Flow containing metadata about the mesh node itself."
     },
@@ -234,7 +234,7 @@
       "@id": "ReferenceFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "Flow/" },
-      "slug/": "_reference-flow",
+      "slug/": "_ref",
       "rdfs:label": "Reference Flow",
       "rdfs:comment": "Flow containing reference data about the thing or concept referred to by the mesh node."
     },
@@ -242,7 +242,7 @@
       "@id": "PayloadFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "Flow/" },
-      "slug/": "_payload-flow",
+      "slug/": "_payload",
       "rdfs:label": "Payload Flow",
       "rdfs:comment": "Flow containing the dataset payload associated with the mesh node."
     },
@@ -257,7 +257,7 @@
       "@id": "InheritableNodeConfigFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "NodeConfigFlow/" },
-      "slug/": "_config-inheritable-flow",
+      "slug/": "_cfg-inh",
       "rdfs:label": "Inheritable Node Config Flow",
       "rdfs:comment": "Node configuration flow whose settings can be inherited by child nodes."
     },
@@ -265,7 +265,7 @@
       "@id": "OperationalNodeConfigFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "NodeConfigFlow/" },
-      "slug/": "_config-operational-flow",
+      "slug/": "_cfg-op",
       "rdfs:label": "Operational Node Config Flow",
       "rdfs:comment": "Node configuration flow whose settings apply only to the specific node."
     },
