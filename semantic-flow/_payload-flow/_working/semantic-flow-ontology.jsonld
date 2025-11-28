@@ -121,12 +121,11 @@
       "@id": "slug/",
       "@type": "owl:AnnotationProperty",
       "schema:domainIncludes": [
-        { "@id": "MeshNode/" },
         { "@id": "Flow/" }
       ],
       "schema:rangeIncludes": { "@id": "xsd:string" },
       "rdfs:label": "has slug",
-      "rdfs:comment": "A concise, human-readable, kebab-case identifier for a node or a flow, suitable for use in filenames and URLs."
+      "rdfs:comment": "A concise, human-readable, kebab-case identifier for a flow, suitable for use in filenames and URLs."
     },
     {
       "@id": "Component/",

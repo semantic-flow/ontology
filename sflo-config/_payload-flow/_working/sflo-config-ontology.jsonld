@@ -78,14 +78,6 @@
       "rdfs:comment": "Template configuration mapping for resource page generation within node configurations."
     },
     {
-      "@id": "distributionSlug/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "distribution slug",
-      "rdfs:comment": "Kebab-case stem used to name distributions for this MeshNode. If absent, default is the last path segment of the node's namespace IRI.",
-      "schema:domainIncludes": { "@id": "sflo:MeshNode/" },
-      "schema:rangeIncludes": { "@id": "xsd:string" }
-    },
-    {
       "@id": "hasOperationalNodeConfig/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has operational node config",

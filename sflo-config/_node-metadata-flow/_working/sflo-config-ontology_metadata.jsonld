@@ -16,7 +16,6 @@
     {
       "@id": "_node_handle/",
       "@type": "sflo:Handle",
-      "distributionSlug": "sflo-config-ontology"
     }
   ]
 

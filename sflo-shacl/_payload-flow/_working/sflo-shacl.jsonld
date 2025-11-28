@@ -38,14 +38,6 @@
           "sh:minCount": 1,
           "sh:maxCount": 1,
           "sh:message": "Every MeshNode must have exactly one HandleAsComponent"
-        },
-        {
-          "sh:path": { "@id": "sflo:slug/" },
-          "sh:datatype": { "@id": "xsd:string" },
-          "sh:minCount": 0,
-          "sh:maxCount": 1,
-          "sh:pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
-          "sh:message": "Slug is optional. If provided, it must match kebab-case (lowercase letters, numbers, hyphens). If absent, the node's folder name is used for default distribution naming."
         }
       ]
     },
