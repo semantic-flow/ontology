@@ -425,7 +425,7 @@
         "VersioningState/"
       ],
       "rdfs:label": "Versioned",
-      "rdfs:comment": "The flow maintains version snapshots with distinct version keys."
+      "rdfs:comment": "The flow maintains snapshots with distinct version keys."
     },
     {
       "@id": "VersioningState/unversioned/",
@@ -443,7 +443,7 @@
         "VersioningState/"
       ],
       "rdfs:label": "deversioned",
-      "rdfs:comment": "The flow previously maintained version snapshots but has been deversioned; historical versions may still exist."
+      "rdfs:comment": "The flow previously maintained snapshots but has been deversioned; historical versions may still exist."
     },
     {
       "@id": "versioningState/",

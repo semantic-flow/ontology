@@ -98,22 +98,8 @@
       "@id": "NodeCreation/",
       "@type": "rdfs:Class",
       "rdfs:label": "Node Creation",
-      "rdfs:comment": "Activity for creating new nodes in mesh repositories.",
+      "rdfs:comment": "Activity for creating new nodes on the filesystem.",
       "rdfs:subClassOf": { "@id": "MeshActivity/" }
-    },
-    {
-      "@id": "RepoInitialization/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Repository Initialization",
-      "rdfs:comment": "Activity for initializing new mesh repositories with their foundational structure.",
-      "rdfs:subClassOf": { "@id": "MeshActivity/" }
-    },
-    {
-      "@id": "NodeInitialization/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Node Initialization",
-      "rdfs:comment": "Activity for initializing individual nodes within repository initialization.",
-      "rdfs:subClassOf": { "@id": "RepoInitialization/" }
     },
     {
       "@id": "ConfigWeave/",
