@@ -186,6 +186,19 @@
       "schema:rangeIncludes": { "@id": "sflo:Handle/" }
     },
     {
+      "@id": "defaultProvenanceTemplate/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "default provenance template",
+      "rdfs:comment": "Default sflo-prov:ProvenanceTemplate to use for meta-flow and weave provenance when no more specific provenance is supplied.",
+      "schema:domainIncludes": [
+        { "@id": "PlatformConfig/" },
+        { "@id": "ApplicationConfig/" },
+        { "@id": "InheritableNodeConfig/" },
+        { "@id": "OperationalNodeConfig/" }
+      ],
+      "schema:rangeIncludes": { "@id": "sflo-prov:ProvenanceContext/" }
+    },
+    {
       "@id": "DistributionFormatShape/",
       "@type": "sh:NodeShape",
       "sh:targetObjectsOf": { "@id": "formats:media_type" },

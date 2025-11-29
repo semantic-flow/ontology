@@ -66,7 +66,7 @@
       "@type": "rdfs:Class",
       "rdfs:subClassOf": { "@id": "NamingResource/" },
       "rdfs:label": "Mesh Node",
-      "rdfs:comment": "Structural units that organize and contain other resources. Nodes form the structure of the mesh."
+      "rdfs:comment": "Structural units that provide identifiers for things, may act as namespace segments to organize/contain other resources, may contain reference data about their referents, and may have a payload dataset. MeshNodes form the structure of the mesh."
     },
     {
       "@id": "BareNode/",
