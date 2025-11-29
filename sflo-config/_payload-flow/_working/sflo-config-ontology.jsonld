@@ -9,7 +9,7 @@
     "dcterms": "http://purl.org/dc/terms/",
     "schema": "https://schema.org/",
     "formats": "http://www.w3.org/ns/formats/",
-    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/"
+    "sflo-meta": "https://semantic-flow.github.io/ontology/sflo-meta/"
   },
   "@graph": [
     {
@@ -20,7 +20,9 @@
       "dcterms:creator": "Semantic Flow Project",
       "owl:versionInfo": "0.1.0",
       "vann:preferredNamespacePrefix": "sflo-conf",
-      "vann:alternateNamespacePrefix": ["sflo-config"]
+      "vann:alternateNamespacePrefix": [
+        "sflo-config"
+      ]
     },
     {
       "@id": "ConfigurationClass/",
@@ -33,47 +35,61 @@
       "@type": "rdfs:Class",
       "rdfs:label": "Abstract Node Configuration",
       "rdfs:comment": "Abstract base class for node configuration types. Defines the common structure for both operational and inheritable node configurations.",
-      "rdfs:subClassOf": { "@id": "ConfigurationClass/" }
+      "rdfs:subClassOf": {
+        "@id": "ConfigurationClass/"
+      }
     },
     {
       "@id": "OperationalNodeConfig/",
       "@type": "rdfs:Class",
       "rdfs:label": "Operational Node Configuration",
       "rdfs:comment": "The actual operational configuration for a specific node. Controls how this node behaves (versioning, distribution formats, etc.). Does not participate in inheritance chain.",
-      "rdfs:subClassOf": { "@id": "AbstractNodeConfig/" }
+      "rdfs:subClassOf": {
+        "@id": "AbstractNodeConfig/"
+      }
     },
     {
       "@id": "InheritableNodeConfig/",
       "@type": "rdfs:Class",
       "rdfs:label": "Inheritable Node Configuration",
       "rdfs:comment": "Configuration that can be passed down to child nodes. Used by nodes, services, and platform to provide default configuration for contained nodes.",
-      "rdfs:subClassOf": { "@id": "AbstractNodeConfig/" }
+      "rdfs:subClassOf": {
+        "@id": "AbstractNodeConfig/"
+      }
     },
     {
       "@id": "PlatformConfig/",
       "@type": "rdfs:Class",
       "rdfs:label": "Platform Configuration",
       "rdfs:comment": "Platform-wide default configuration including inheritable node configuration defaults. Provides base defaults for all applications and nodes in the Semantic Flow platform.",
-      "rdfs:subClassOf": { "@id": "ConfigurationClass/" }
+      "rdfs:subClassOf": {
+        "@id": "ConfigurationClass/"
+      }
     },
     {
       "@id": "ApplicationConfig/",
       "@type": "rdfs:Class",
       "rdfs:label": "Application Configuration",
       "rdfs:comment": "Application/service-level configuration that can override platform defaults and provide inheritable configuration for nodes within that application instance.",
-      "rdfs:subClassOf": { "@id": "ConfigurationClass/" }
+      "rdfs:subClassOf": {
+        "@id": "ConfigurationClass/"
+      }
     },
     {
       "@id": "TemplateMappings/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": { "@id": "ConfigurationClass/" },
+      "rdfs:subClassOf": {
+        "@id": "ConfigurationClass/"
+      },
       "rdfs:label": "Template Mappings",
       "rdfs:comment": "Collection of template mappings."
     },
     {
       "@id": "TemplateMapping/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": { "@id": "ConfigurationClass/" },
+      "rdfs:subClassOf": {
+        "@id": "ConfigurationClass/"
+      },
       "rdfs:label": "Template Mapping",
       "rdfs:comment": "Template configuration mapping for resource page generation within node configurations."
     },
@@ -82,8 +98,12 @@
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has operational node config",
       "rdfs:comment": "Links a node to its operational configuration that controls how the node behaves.",
-      "schema:domainIncludes": { "@id": "sflo:Handle/" },
-      "schema:rangeIncludes": { "@id": "OperationalNodeConfig/" }
+      "schema:domainIncludes": {
+        "@id": "sflo:Handle/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "OperationalNodeConfig/"
+      }
     },
     {
       "@id": "hasInheritableNodeConfig/",
@@ -91,120 +111,186 @@
       "rdfs:label": "has inheritable node config",
       "rdfs:comment": "Links a node, service, or platform to configuration that can be inherited by child nodes.",
       "schema:domainIncludes": [
-        { "@id": "sflo:Handle/" },
-        { "@id": "ApplicationConfig/" },
-        { "@id": "PlatformConfig/" }
+        {
+          "@id": "sflo:Handle/"
+        },
+        {
+          "@id": "ApplicationConfig/"
+        },
+        {
+          "@id": "PlatformConfig/"
+        }
       ],
-      "schema:rangeIncludes": { "@id": "InheritableNodeConfig/" }
+      "schema:rangeIncludes": {
+        "@id": "InheritableNodeConfig/"
+      }
     },
     {
       "@id": "versioningEnabled/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "versioning enabled",
       "rdfs:comment": "Whether versioning is enabled for this flow.",
-      "schema:domainIncludes": { "@id": "AbstractNodeConfig/" },
-      "schema:rangeIncludes": { "@id": "xsd:boolean" }
+      "schema:domainIncludes": {
+        "@id": "AbstractNodeConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
     },
     {
       "@id": "nodeConfigInheritanceEnabled/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "node config inheritance enabled",
       "rdfs:comment": "Whether this node inherits configuration from parent nodes",
-      "schema:domainIncludes": { "@id": "OperationalNodeConfig/" },
-      "schema:rangeIncludes": { "@id": "xsd:boolean" }
+      "schema:domainIncludes": {
+        "@id": "OperationalNodeConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
     },
     {
       "@id": "inheritableConfigPropagationEnabled/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "inheritable config propagation enabled",
       "rdfs:comment": "Whether this node's InheritableNodeConfig should be available to child nodes. Default is true.",
-      "schema:domainIncludes": { "@id": "sflo:Handle/" },
-      "schema:rangeIncludes": { "@id": "xsd:boolean" }
+      "schema:domainIncludes": {
+        "@id": "sflo:Handle/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
     },
     {
       "@id": "hasTemplateMappings/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has template mappings",
       "rdfs:comment": "Collection of template mappings for resource page generation",
-      "schema:domainIncludes": { "@id": "AbstractNodeConfig/" },
-      "schema:rangeIncludes": { "@id": "TemplateMappings/" }
+      "schema:domainIncludes": {
+        "@id": "AbstractNodeConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "TemplateMappings/"
+      }
     },
     {
       "@id": "hasTemplateMapping/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has template mapping",
       "rdfs:comment": "Individual template mapping within a collection",
-      "schema:domainIncludes": { "@id": "TemplateMappings/" },
-      "schema:rangeIncludes": { "@id": "TemplateMapping/" }
+      "schema:domainIncludes": {
+        "@id": "TemplateMappings/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "TemplateMapping/"
+      }
     },
     {
       "@id": "hasResourcePageTemplate/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "has resource page template",
       "rdfs:comment": "Template file path for resource pages",
-      "schema:domainIncludes": { "@id": "TemplateMapping/" },
-      "schema:rangeIncludes": { "@id": "xsd:string" }
+      "schema:domainIncludes": {
+        "@id": "TemplateMapping/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:string"
+      }
     },
     {
       "@id": "generateUnifiedDataset/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate unified dataset",
       "rdfs:comment": "Whether to generate unified dataset components",
-      "schema:domainIncludes": { "@id": "AbstractNodeConfig/" },
-      "schema:rangeIncludes": { "@id": "xsd:boolean" }
+      "schema:domainIncludes": {
+        "@id": "AbstractNodeConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
     },
     {
       "@id": "generateAggregatedDataset/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate aggregated dataset",
       "rdfs:comment": "Whether to generate aggregated dataset components",
-      "schema:domainIncludes": { "@id": "AbstractNodeConfig/" },
-      "schema:rangeIncludes": { "@id": "xsd:boolean" }
+      "schema:domainIncludes": {
+        "@id": "AbstractNodeConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
     },
     {
       "@id": "generateResourcePages/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate resource pages",
       "rdfs:comment": "Whether to (re-)generate HTML resource pages during weave",
-      "schema:domainIncludes": { "@id": "sflo:FolderResource/" },
-      "schema:rangeIncludes": { "@id": "xsd:boolean" }
+      "schema:domainIncludes": {
+        "@id": "sflo:FolderResource/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
     },
     {
       "@id": "stylesheetPath/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "stylesheet path",
       "rdfs:comment": "Path to CSS stylesheet for generated pages",
-      "schema:domainIncludes": { "@id": "AbstractNodeConfig/" },
-      "schema:rangeIncludes": { "@id": "xsd:string" }
+      "schema:domainIncludes": {
+        "@id": "AbstractNodeConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:string"
+      }
     },
     {
       "@id": "containsNode/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "contains node",
       "rdfs:comment": "Indicates that this node contains another node.",
-      "schema:domainIncludes": { "@id": "sflo:Handle/" },
-      "schema:rangeIncludes": { "@id": "sflo:Handle/" }
+      "schema:domainIncludes": {
+        "@id": "sflo:Handle/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "sflo:Handle/"
+      }
     },
     {
       "@id": "defaultProvenanceTemplate/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "default provenance template",
-      "rdfs:comment": "Default sflo-prov:ProvenanceTemplate to use for meta-flow and weave provenance when no more specific provenance is supplied.",
+      "rdfs:comment": "Default sflo-meta:ProvenanceTemplate to use for meta-flow and weave provenance when no more specific provenance is supplied.",
       "schema:domainIncludes": [
-        { "@id": "PlatformConfig/" },
-        { "@id": "ApplicationConfig/" },
-        { "@id": "InheritableNodeConfig/" },
-        { "@id": "OperationalNodeConfig/" }
+        {
+          "@id": "PlatformConfig/"
+        },
+        {
+          "@id": "ApplicationConfig/"
+        },
+        {
+          "@id": "InheritableNodeConfig/"
+        },
+        {
+          "@id": "OperationalNodeConfig/"
+        }
       ],
-      "schema:rangeIncludes": { "@id": "sflo-prov:ProvenanceContext/" }
+      "schema:rangeIncludes": {
+        "@id": "sflo-meta:ProvenanceTemplate/"
+      }
     },
     {
       "@id": "DistributionFormatShape/",
       "@type": "sh:NodeShape",
-      "sh:targetObjectsOf": { "@id": "formats:media_type" },
+      "sh:targetObjectsOf": {
+        "@id": "formats:media_type"
+      },
       "sh:property": {
         "@type": "sh:PropertyShape",
-        "sh:path": { "@id": "rdf:value" },
+        "sh:path": {
+          "@id": "rdf:value"
+        },
         "sh:in": {
           "@list": [
             "application/trig",
@@ -221,10 +307,14 @@
     {
       "@id": "TemplatePathShape/",
       "@type": "sh:NodeShape",
-      "sh:targetObjectsOf": { "@id": "hasResourcePageTemplate/" },
+      "sh:targetObjectsOf": {
+        "@id": "hasResourcePageTemplate/"
+      },
       "sh:property": {
         "@type": "sh:PropertyShape",
-        "sh:path": { "@id": "rdf:value" },
+        "sh:path": {
+          "@id": "rdf:value"
+        },
         "sh:pattern": "^[^/].*\\.(html|htm|hbs|mustache)$",
         "sh:message": "Template path must be a relative path ending in .html, .htm, .hbs, or .mustache"
       }
@@ -232,17 +322,23 @@
     {
       "@id": "NodeShape/",
       "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:Handle/" },
+      "sh:targetClass": {
+        "@id": "sflo:Handle/"
+      },
       "sh:property": [
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "formats:media_type" },
+          "sh:path": {
+            "@id": "formats:media_type"
+          },
           "sh:minCount": 1,
           "sh:message": "At least one distribution format must be specified"
         },
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "stylesheetPath/" },
+          "sh:path": {
+            "@id": "stylesheetPath/"
+          },
           "sh:pattern": "^[^/].*\\.(css|scss|sass)$",
           "sh:message": "Stylesheet path must be a relative path ending in .css, .scss, or .sass"
         }
@@ -270,7 +366,6 @@
     }
   ]
 }
-
 /*
 
 ## TODO

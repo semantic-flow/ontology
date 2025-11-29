@@ -10,13 +10,12 @@
     "dcat": "http://www.w3.org/ns/dcat#",
     "prov": "http://www.w3.org/ns/prov#",
     "schema": "https://schema.org/",
-    "sflo-prov": "https://semantic-flow.github.io/ontology/sflo-prov/"
+    "sflo-meta": "https://semantic-flow.github.io/ontology/sflo-meta/"
   },
   "@graph": [
     {
       "@id": "_node_handle/",
-      "@type": "sflo:Handle",
+      "@type": "sflo:Handle"
     }
   ]
-
-}   
+}
