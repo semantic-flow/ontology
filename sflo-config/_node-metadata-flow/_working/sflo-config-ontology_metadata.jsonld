@@ -14,7 +14,7 @@
   },
   "@graph": [
     {
-      "@id": "_node_handle/",
+      "@id": "_knop_handle/",
       "@type": "sflo:Handle"
     }
   ]

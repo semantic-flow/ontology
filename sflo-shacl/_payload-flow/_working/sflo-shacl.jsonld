@@ -9,9 +9,13 @@
   "@graph": [
     {
       "@id": "NamingResourceShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:NamingResource/" },
-      "sh:nodeKind": { "@id": "sh:IRI" },
+      "@type": "sh:KnopShape",
+      "sh:targetClass": {
+        "@id": "sflo:NamingResource/"
+      },
+      "sh:knopKind": {
+        "@id": "sh:IRI"
+      },
       "sh:sparql": {
         "sh:message": "NamingResource IRI must end with a slash (/).",
         "sh:select": "SELECT ?this WHERE {\n                FILTER ( !STRENDS(STR(?this), \"/\") )\n            }"
@@ -19,78 +23,108 @@
     },
     {
       "@id": "FileResourceShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:FileResource/" },
-      "sh:nodeKind": { "@id": "sh:IRI" },
+      "@type": "sh:KnopShape",
+      "sh:targetClass": {
+        "@id": "sflo:FileResource/"
+      },
+      "sh:knopKind": {
+        "@id": "sh:IRI"
+      },
       "sh:sparql": {
         "sh:message": "FileResource IRI must not end with a slash (/).",
         "sh:select": "SELECT ?this WHERE {\n                FILTER ( STRENDS(STR(?this), \"/\") )\n            }"
       }
     },
     {
-      "@id": "MeshNodeShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:MeshNode/" },
+      "@id": "MeshKnopShape/",
+      "@type": "sh:KnopShape",
+      "sh:targetClass": {
+        "@id": "sflo:MeshKnop/"
+      },
       "sh:property": [
         {
-          "sh:path": { "@id": "sflo:hasHandle/" },
-          "sh:class": { "@id": "sflo:HandleAsComponent/" },
+          "sh:path": {
+            "@id": "sflo:hasHandle/"
+          },
+          "sh:class": {
+            "@id": "sflo:HandleAsComponent/"
+          },
           "sh:minCount": 1,
           "sh:maxCount": 1,
-          "sh:message": "Every MeshNode must have exactly one HandleAsComponent"
+          "sh:message": "Every MeshKnop must have exactly one HandleAsComponent"
         }
       ]
     },
     {
       "@id": "HandleAsComponentShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:HandleAsComponent/" },
+      "@type": "sh:KnopShape",
+      "sh:targetClass": {
+        "@id": "sflo:HandleAsComponent/"
+      },
       "sh:property": {
-        "sh:path": { "@id": "sflo:isHandleFor/" },
-        "sh:class": { "@id": "sflo:MeshNode/" },
+        "sh:path": {
+          "@id": "sflo:isHandleFor/"
+        },
+        "sh:class": {
+          "@id": "sflo:MeshKnop/"
+        },
         "sh:minCount": 1,
         "sh:maxCount": 1,
-        "sh:message": "Every HandleAsComponent must be handle for exactly one MeshNode"
+        "sh:message": "Every HandleAsComponent must be handle for exactly one MeshKnop"
       }
     },
     {
       "@id": "NamingResourceShape2/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:FolderResource/" },
+      "@type": "sh:KnopShape",
+      "sh:targetClass": {
+        "@id": "sflo:FolderResource/"
+      },
       "sh:property": {
-        "sh:path": { "@id": "sflo:hasResourcePage/" },
-        "sh:class": { "@id": "sflo:ResourcePage/" },
+        "sh:path": {
+          "@id": "sflo:hasResourcePage/"
+        },
+        "sh:class": {
+          "@id": "sflo:ResourcePage/"
+        },
         "sh:minCount": 1,
         "sh:maxCount": 1,
         "sh:message": "Every NamingResource should have a ResourcePage"
       }
     },
     {
-      "@id": "SnapshotShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:Snapshot/" },
-      "sh:not": {
-        "sh:class": { "@id": "sflo:Snapshot/" }
+      "@id": "VersionShape/",
+      "@type": "sh:KnopShape",
+      "sh:targetClass": {
+        "@id": "sflo:Version/"
       },
-      "sh:message": "Snapshot is abstract - use VersionSnapshot or other concrete snapshot types"
+      "sh:not": {
+        "sh:class": {
+          "@id": "sflo:Version/"
+        }
+      },
+      "sh:message": "Version is abstract - use VersionVersion or other concrete version types"
     },
     {
       "@id": "DocumentationResourceShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:DocumentationResource/" },
+      "@type": "sh:KnopShape",
+      "sh:targetClass": {
+        "@id": "sflo:DocumentationResource/"
+      },
       "sh:not": {
-        "sh:class": { "@id": "sflo:DocumentationResource/" }
+        "sh:class": {
+          "@id": "sflo:DocumentationResource/"
+        }
       },
       "sh:message": "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass"
     },
     {
-      "@id": "sflo:PayloadNodeIsDatasetShape",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": "sflo:PayloadNode",
+      "@id": "sflo:PayloadKnopIsDatasetShape",
+      "@type": "sh:KnopShape",
+      "sh:targetClass": "sflo:PayloadKnop",
       "sh:property": {
         "sh:path": "rdf:type",
         "sh:hasValue": "dcat:Dataset",
-        "sh:message": "Payload nodes MUST be typed as dcat:Dataset in their reference data. TODO: verify if this works as intended"
+        "sh:message": "Payload knops MUST be typed as dcat:Dataset in their reference data. TODO: verify if this works as intended"
       }
     }
   ]

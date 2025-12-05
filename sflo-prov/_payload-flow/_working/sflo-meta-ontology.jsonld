@@ -16,7 +16,7 @@
       "@id": "",
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow Metadata Ontology",
-      "dcterms:description": "Comprehensive provenance and metadata schema for nodes, their flow datasets, and weaving operations. Defines properties for tracking dataset series information, provenance contexts, delegation chains, agent roles, and weave activities. Captures complex authorship scenarios and collaborative activities within the Semantic Flow mesh ecosystem. The recommended prefix is 'meta' (alternatives: 'metaflow', 'meta-flow', 'mf').",
+      "dcterms:description": "Comprehensive provenance and metadata schema for knops, their flow datasets, and weaving operations. Defines properties for tracking dataset series information, provenance contexts, delegation chains, agent roles, and weave activities. Captures complex authorship scenarios and collaborative activities within the Semantic Flow mesh ecosystem. The recommended prefix is 'meta' (alternatives: 'metaflow', 'meta-flow', 'mf').",
       "dcterms:creator": "Semantic Flow Project",
       "owl:versionInfo": "0.2.0",
       "mesh:preferredNamespacePrefix": "meta",
@@ -37,7 +37,7 @@
       "@id": "ProvenanceTemplate/",
       "@type": "rdfs:Class",
       "rdfs:label": "Provenance Template",
-      "rdfs:comment": "Template for constructing ProvenanceContext instances at weave/meta time. May pre-bind role types, agent placeholders, or activity classes, but does not itself require a specific snapshot or activity.",
+      "rdfs:comment": "Template for constructing ProvenanceContext instances at weave/meta time. May pre-bind role types, agent placeholders, or activity classes, but does not itself require a specific version or activity.",
       "rdfs:subClassOf": {
         "@id": "ProvenanceClass/"
       }
@@ -112,64 +112,28 @@
       }
     },
     {
-      "@id": "NodeCreation/",
+      "@id": "KnopCreation/",
       "@type": "rdfs:Class",
-      "rdfs:label": "Node Creation",
-      "rdfs:comment": "Activity for creating new nodes on the filesystem.",
+      "rdfs:label": "Knop Creation",
+      "rdfs:comment": "Activity for creating new knops on the filesystem.",
       "rdfs:subClassOf": {
         "@id": "MeshActivity/"
       }
     },
     {
-      "@id": "ConfigWeave/",
+      "@id": "KnopWeave/",
       "@type": "rdfs:Class",
-      "rdfs:label": "Config Weave",
-      "rdfs:comment": "Weaving operation that updates configuration flows.",
+      "rdfs:label": "Knop Weave",
+      "rdfs:comment": "Weaving operation that updates all flows within a knop.",
       "rdfs:subClassOf": {
         "@id": "WeaveActivity/"
       }
     },
     {
-      "@id": "ReferenceWeave/",
+      "@id": "MeshWeave/",
       "@type": "rdfs:Class",
-      "rdfs:label": "Reference Weave",
-      "rdfs:comment": "Weaving operation that updates reference flows.",
-      "rdfs:subClassOf": {
-        "@id": "WeaveActivity/"
-      }
-    },
-    {
-      "@id": "PayloadWeave/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Payload Weave",
-      "rdfs:comment": "Weaving operation that updates payload data flows.",
-      "rdfs:subClassOf": {
-        "@id": "WeaveActivity/"
-      }
-    },
-    {
-      "@id": "MetaWeave/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Meta Weave",
-      "rdfs:comment": "Weaving operation that updates meta-flows (automatically triggered). TODO: is this needed? every weave updates meta-flow info",
-      "rdfs:subClassOf": {
-        "@id": "WeaveActivity/"
-      }
-    },
-    {
-      "@id": "NodeWeave/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Node Weave",
-      "rdfs:comment": "Weaving operation that updates all flows within a node.",
-      "rdfs:subClassOf": {
-        "@id": "WeaveActivity/"
-      }
-    },
-    {
-      "@id": "NodeTreeWeave/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Node Tree Weave",
-      "rdfs:comment": "Weaving operation that recursively updates nodes and their contained nodes.",
+      "rdfs:label": "Knop Tree Weave",
+      "rdfs:comment": "Weaving operation that recursively updates knops and their contained knops.",
       "rdfs:subClassOf": {
         "@id": "WeaveActivity/"
       }
@@ -211,15 +175,15 @@
       }
     },
     {
-      "@id": "forSnapshot/",
+      "@id": "forVersion/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "for snapshot",
-      "rdfs:comment": "Links a provenance context to the specific snapshot it describes.",
+      "rdfs:label": "for version",
+      "rdfs:comment": "Links a provenance context to the specific version it describes.",
       "schema:domainIncludes": {
         "@id": "ProvenanceContext/"
       },
       "schema:rangeIncludes": {
-        "@id": "flow:Snapshot/"
+        "@id": "flow:Version/"
       }
     },
     {
@@ -308,7 +272,7 @@
     },
     {
       "@id": "ProvenanceContextShape/",
-      "@type": "sh:NodeShape",
+      "@type": "sh:KnopShape",
       "sh:targetClass": {
         "@id": "ProvenanceContext/"
       },
@@ -328,14 +292,14 @@
         {
           "@type": "sh:PropertyShape",
           "sh:path": {
-            "@id": "forSnapshot/"
+            "@id": "forVersion/"
           },
           "sh:class": {
-            "@id": "flow:Snapshot/"
+            "@id": "flow:Version/"
           },
           "sh:minCount": 1,
           "sh:maxCount": 1,
-          "sh:message": "Provenance context must reference exactly one snapshot"
+          "sh:message": "Provenance context must reference exactly one version"
         },
         {
           "@type": "sh:PropertyShape",
@@ -353,7 +317,7 @@
     },
     {
       "@id": "DelegationStepShape/",
-      "@type": "sh:NodeShape",
+      "@type": "sh:KnopShape",
       "sh:targetClass": {
         "@id": "DelegationStep/"
       },
@@ -385,7 +349,7 @@
     },
     {
       "@id": "AgentRoleShape/",
-      "@type": "sh:NodeShape",
+      "@type": "sh:KnopShape",
       "sh:targetClass": {
         "@id": "AgentRole/"
       },
@@ -416,13 +380,13 @@
         },
         {
           "@id": "DelegationStepConditionalShape/",
-          "@type": "sh:NodeShape",
+          "@type": "sh:KnopShape",
           "sh:targetClass": {
             "@id": "DelegationStep/"
           },
           "sh:or": [
             {
-              "@type": "sh:NodeShape",
+              "@type": "sh:KnopShape",
               "sh:property": [
                 {
                   "@type": "sh:PropertyShape",
@@ -434,7 +398,7 @@
               ]
             },
             {
-              "@type": "sh:NodeShape",
+              "@type": "sh:KnopShape",
               "sh:property": [
                 {
                   "@type": "sh:PropertyShape",

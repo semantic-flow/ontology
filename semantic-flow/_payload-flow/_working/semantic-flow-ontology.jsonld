@@ -78,40 +78,40 @@
       "rdfs:comment": "Asset trees contain collections of files and directories that are not MeshResources. Can be contained in any NamingResource."
     },
     {
-      "@id": "MeshNode/",
+      "@id": "MeshKnop/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
         "@id": "NamingResource/"
       },
-      "rdfs:label": "Mesh Node",
-      "rdfs:comment": "Structural units that provide identifiers for things, may act as namespace segments to organize/contain other resources, may contain reference data about their referents, and may have a payload dataset. MeshNodes form the structure of the mesh."
+      "rdfs:label": "Mesh Knop",
+      "rdfs:comment": "Structural units that provide identifiers for things, may act as namespace segments to organize/contain other resources, may contain reference data about their referents, and may have a payload dataset. MeshKnops form the structure of the mesh."
     },
     {
-      "@id": "BareNode/",
+      "@id": "BareKnop/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
-        "@id": "MeshNode/"
+        "@id": "MeshKnop/"
       },
       "rdfs:label": "Namespace",
-      "rdfs:comment": "Bare nodes - containers for organizing other mesh nodes. Node identifiers refer to the nodes themselves as organizational units."
+      "rdfs:comment": "Bare knops - containers for organizing other mesh knops. Knop identifiers refer to the knops themselves as organizational units."
     },
     {
-      "@id": "ReferenceNode/",
+      "@id": "ReferenceKnop/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
-        "@id": "MeshNode/"
+        "@id": "MeshKnop/"
       },
       "rdfs:label": "Reference",
-      "rdfs:comment": "Nodes that refer to some external 'thing' or concept other than themselves."
+      "rdfs:comment": "Knops that refer to some external 'thing' or concept other than themselves."
     },
     {
-      "@id": "PayloadNode/",
+      "@id": "PayloadKnop/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
-        "@id": "MeshNode/"
+        "@id": "MeshKnop/"
       },
       "rdfs:label": "Data",
-      "rdfs:comment": "Nodes that contain and refer to 'payload data' via a payload flows."
+      "rdfs:comment": "Knops that contain and refer to 'payload data' via a payload flows."
     },
     {
       "@id": "hasComponent/",
@@ -120,13 +120,13 @@
         "@id": "hasResource/"
       },
       "rdfs:domain": {
-        "@id": "MeshNode/"
+        "@id": "MeshKnop/"
       },
       "rdfs:range": {
         "@id": "Component/"
       },
       "rdfs:label": "has component",
-      "rdfs:comment": "Associates nodes with their supporting components."
+      "rdfs:comment": "Associates knops with their supporting components."
     },
     {
       "@id": "isHandleFor/",
@@ -138,10 +138,10 @@
         "@id": "HandleAsComponent/"
       },
       "rdfs:range": {
-        "@id": "NodeHandle/"
+        "@id": "KnopHandle/"
       },
       "rdfs:label": "is handle for",
-      "rdfs:comment": "Indicates that this handle component provides identification and routing for a specific node."
+      "rdfs:comment": "Indicates that this handle component provides identification and routing for a specific knop."
     },
     {
       "@id": "hasHandle/",
@@ -153,13 +153,13 @@
         "@id": "isHandleFor/"
       },
       "rdfs:domain": {
-        "@id": "NodeHandle/"
+        "@id": "KnopHandle/"
       },
       "rdfs:range": {
         "@id": "HandleAsComponent/"
       },
       "rdfs:label": "has handle",
-      "rdfs:comment": "Associates a mesh node (via its handle) with its persistent handle component."
+      "rdfs:comment": "Associates a mesh knop (via its handle) with its persistent handle component."
     },
     {
       "@id": "slug/",
@@ -182,16 +182,16 @@
         "@id": "Resource/"
       },
       "rdfs:label": "Component",
-      "rdfs:comment": "Terminal resources that provide specific mesh functionality and support nodes."
+      "rdfs:comment": "Terminal resources that provide specific mesh functionality and support knops."
     },
     {
-      "@id": "NodeHandle/",
+      "@id": "KnopHandle/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
         "@id": "NamingResource/"
       },
       "rdfs:label": "Handle",
-      "rdfs:comment": "Conceptual handle that refers to a node 'as a node' (as opposed to the thing/concept referred to by the parent node). This is the abstract handle concept."
+      "rdfs:comment": "Conceptual handle that refers to a knop 'as a knop' (as opposed to the thing/concept referred to by the parent knop). This is the abstract handle concept."
     },
     {
       "@id": "HandleAsComponent/",
@@ -303,17 +303,17 @@
         }
       ],
       "rdfs:label": "Flow",
-      "rdfs:comment": "Abstract evolvable datasets for node metadata, reference data, payload data, and configuration. Flows are DatasetSeries that are realized through flow snapshots representing specific states or versions."
+      "rdfs:comment": "Abstract evolvable datasets for knop metadata, reference data, payload data, and configuration. Flows are DatasetSeries that are realized through flow versions representing specific states or versions."
     },
     {
-      "@id": "NodeMetadataFlow/",
+      "@id": "KnopMetadataFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
         "@id": "Flow/"
       },
       "slug/": "_meta",
       "rdfs:label": "Metadata Flow",
-      "rdfs:comment": "Flow containing metadata about the mesh node itself."
+      "rdfs:comment": "Flow containing metadata about the mesh knop itself."
     },
     {
       "@id": "ReferenceFlow/",
@@ -323,7 +323,7 @@
       },
       "slug/": "_ref",
       "rdfs:label": "Reference Flow",
-      "rdfs:comment": "Flow containing reference data about the thing or concept referred to by the mesh node."
+      "rdfs:comment": "Flow containing reference data about the thing or concept referred to by the mesh knop."
     },
     {
       "@id": "PayloadFlow/",
@@ -333,36 +333,36 @@
       },
       "slug/": "_payload",
       "rdfs:label": "Payload Flow",
-      "rdfs:comment": "Flow containing the dataset payload associated with the mesh node."
+      "rdfs:comment": "Flow containing the dataset payload associated with the mesh knop."
     },
     {
-      "@id": "NodeConfigFlow/",
+      "@id": "KnopConfigFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
         "@id": "Flow/"
       },
-      "rdfs:label": "Node Config Flow",
-      "rdfs:comment": "Abstract flow for mesh node configuration data."
+      "rdfs:label": "knop config Flow",
+      "rdfs:comment": "Abstract flow for mesh knop configuration data."
     },
     {
-      "@id": "InheritableNodeConfigFlow/",
+      "@id": "InheritableKnopConfigFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
-        "@id": "NodeConfigFlow/"
+        "@id": "KnopConfigFlow/"
       },
       "slug/": "_cfg-inh",
-      "rdfs:label": "Inheritable Node Config Flow",
-      "rdfs:comment": "Node configuration flow whose settings can be inherited by child nodes."
+      "rdfs:label": "Inheritable knop config Flow",
+      "rdfs:comment": "knop configuration flow whose settings can be inherited by child knops."
     },
     {
-      "@id": "OperationalNodeConfigFlow/",
+      "@id": "OperationalKnopConfigFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
-        "@id": "NodeConfigFlow/"
+        "@id": "KnopConfigFlow/"
       },
       "slug/": "_cfg-op",
-      "rdfs:label": "Operational Node Config Flow",
-      "rdfs:comment": "Node configuration flow whose settings apply only to the specific node."
+      "rdfs:label": "Operational knop config Flow",
+      "rdfs:comment": "knop configuration flow whose settings apply only to the specific knop."
     },
     {
       "@id": "hasFlow/",
@@ -371,28 +371,28 @@
         "@id": "hasComponent/"
       },
       "rdfs:domain": {
-        "@id": "MeshNode/"
+        "@id": "MeshKnop/"
       },
       "rdfs:range": {
         "@id": "Flow/"
       },
       "rdfs:label": "has Flow",
-      "rdfs:comment": "Links mesh nodes to their flows (metadata, reference, data, config)."
+      "rdfs:comment": "Links mesh knops to their flows (metadata, reference, data, config)."
     },
     {
-      "@id": "hasNodeMetadataFlow/",
+      "@id": "hasKnopMetadataFlow/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": {
         "@id": "hasFlow/"
       },
       "rdfs:domain": {
-        "@id": "MeshNode/"
+        "@id": "MeshKnop/"
       },
       "rdfs:range": {
-        "@id": "NodeMetadataFlow/"
+        "@id": "KnopMetadataFlow/"
       },
-      "rdfs:label": "has NodeMetadataFlow",
-      "rdfs:comment": "Links mesh nodes to their metadata flow."
+      "rdfs:label": "has KnopMetadataFlow",
+      "rdfs:comment": "Links mesh knops to their metadata flow."
     },
     {
       "@id": "hasReferenceFlow/",
@@ -401,13 +401,13 @@
         "@id": "hasFlow/"
       },
       "rdfs:domain": {
-        "@id": "MeshNode/"
+        "@id": "MeshKnop/"
       },
       "rdfs:range": {
         "@id": "ReferenceFlow/"
       },
       "rdfs:label": "has ReferenceFlow",
-      "rdfs:comment": "Links mesh nodes to their reference flow."
+      "rdfs:comment": "Links mesh knops to their reference flow."
     },
     {
       "@id": "hasPayloadFlow/",
@@ -416,16 +416,16 @@
         "@id": "hasFlow/"
       },
       "rdfs:domain": {
-        "@id": "MeshNode/"
+        "@id": "MeshKnop/"
       },
       "rdfs:range": {
         "@id": "PayloadFlow/"
       },
       "rdfs:label": "has PayloadFlow",
-      "rdfs:comment": "Links mesh nodes to their payload flow."
+      "rdfs:comment": "Links mesh knops to their payload flow."
     },
     {
-      "@id": "FlowShot/",
+      "@id": "FlowSlice/",
       "@type": "owl:Class",
       "rdfs:subClassOf": [
         {
@@ -435,38 +435,38 @@
           "@id": "dcat:Dataset"
         }
       ],
-      "rdfs:label": "Flow Shot",
-      "rdfs:comment": "One concrete dataset instance belonging to a Flow: a committed snapshot, the default shot under '_default/', or the mutable working shot under '_working/'. A FlowShot represents the Flow's data as a whole at a particular stage, not a subset of it."
+      "rdfs:label": "Flow Slice",
+      "rdfs:comment": "One concrete dataset instance belonging to a Flow: a committed version, the default slice under '_default/', or the mutable working slice under '_working/'. A FlowSlice represents the Flow's data as a whole at a particular stage, not a subset of it."
     },
     {
-      "@id": "Snapshot/",
+      "@id": "Version/",
       "@type": "owl:Class",
       "rdfs:subClassOf": {
-        "@id": "FlowShot/"
+        "@id": "FlowSlice/"
       },
-      "rdfs:label": "Snapshot",
-      "rdfs:comment": "Immutable, committed flow shot (dataset state), typically materialized as a timestamped weave directory. Versioned flows have one Snapshot per committed weave; unversioned flows may have none."
+      "rdfs:label": "Version",
+      "rdfs:comment": "Immutable, committed flow slice (dataset state), typically materialized as a timestamped weave directory. Versioned flows have one Version per committed weave; unversioned flows may have none."
     },
     {
-      "@id": "DefaultShot/",
+      "@id": "DefaultSlice/",
       "@type": "owl:Class",
       "rdfs:subClassOf": {
-        "@id": "FlowShot/"
+        "@id": "FlowSlice/"
       },
-      "rdfs:label": "Default Shot",
-      "rdfs:comment": "The Flow's default dataset shot under the '_default/' directory. For versioned flows, its content mirrors the latest Snapshot. For unversioned flows, it is the only authoritative dataset state. For deversioned flows, it is the current dataset state after the last weave."
+      "rdfs:label": "Default Slice",
+      "rdfs:comment": "The Flow's default dataset slice under the '_default/' directory. For versioned flows, its content mirrors the latest Version. For unversioned flows, it is the only authoritative dataset state. For deversioned flows, it is the current dataset state after the last weave."
     },
     {
-      "@id": "WorkingShot/",
+      "@id": "WorkingSlice/",
       "@type": "owl:Class",
       "rdfs:subClassOf": {
-        "@id": "FlowShot/"
+        "@id": "FlowSlice/"
       },
-      "rdfs:label": "Working Shot",
-      "rdfs:comment": "Mutable staging shot for a Flow, mapped to the '_working/' directory. Used for edits before weave. Not a committed dataset and normally not exposed in version history or as-of queries."
+      "rdfs:label": "Working Slice",
+      "rdfs:comment": "Mutable staging slice for a Flow, mapped to the '_working/' directory. Used for edits before weave. Not a committed dataset and normally not exposed in version history or as-of queries."
     },
     {
-      "@id": "hasFlowShot/",
+      "@id": "hasFlowSlice/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": {
         "@id": "hasComponent/"
@@ -475,32 +475,32 @@
         "@id": "Flow/"
       },
       "rdfs:range": {
-        "@id": "FlowShot/"
+        "@id": "FlowSlice/"
       },
-      "rdfs:label": "has FlowShot",
-      "rdfs:comment": "Associates a Flow with one of its shots (default, snapshot, or working)."
+      "rdfs:label": "has FlowSlice",
+      "rdfs:comment": "Associates a Flow with one of its slices (default, version, or working)."
     },
     {
-      "@id": "defaultShot/",
+      "@id": "defaultSlice/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": {
-        "@id": "hasFlowShot/"
+        "@id": "hasFlowSlice/"
       },
       "rdfs:domain": {
         "@id": "Flow/"
       },
       "rdfs:range": {
-        "@id": "DefaultShot/"
+        "@id": "DefaultSlice/"
       },
-      "rdfs:label": "default shot",
-      "rdfs:comment": "Links a Flow to its default shot under '_default/'. Each Flow must have exactly one DefaultShot."
+      "rdfs:label": "default slice",
+      "rdfs:comment": "Links a Flow to its default slice under '_default/'. Each Flow must have exactly one DefaultSlice."
     },
     {
-      "@id": "hasSnapshot/",
+      "@id": "hasVersion/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": [
         {
-          "@id": "hasFlowShot/"
+          "@id": "hasFlowSlice/"
         },
         {
           "@id": "prov:specializationOf"
@@ -510,10 +510,10 @@
         "@id": "Flow/"
       },
       "rdfs:range": {
-        "@id": "Snapshot/"
+        "@id": "Version/"
       },
-      "rdfs:label": "has Snapshot",
-      "rdfs:comment": "Associates a Flow with one of its committed snapshot shots and specializes the Flow as a DatasetSeries into this particular Snapshot dataset."
+      "rdfs:label": "has Version",
+      "rdfs:comment": "Associates a Flow with one of its committed version slices and specializes the Flow as a DatasetSeries into this particular Version dataset."
     },
     {
       "@id": "Distribution/",
@@ -530,7 +530,7 @@
         }
       ],
       "rdfs:label": "Distribution",
-      "rdfs:comment": "A distribution (file) that contains the RDF data for a FlowShot (snapshot, default shot, or working shot)."
+      "rdfs:comment": "A distribution (file) that contains the RDF data for a FlowSlice (version, default slice, or working slice)."
     },
     {
       "@id": "hasDistribution/",
@@ -539,47 +539,47 @@
         "@id": "dcat:distribution"
       },
       "schema:domainIncludes": {
-        "@id": "FlowShot/"
+        "@id": "FlowSlice/"
       },
       "schema:rangeIncludes": {
         "@id": "Distribution/"
       },
       "rdfs:label": "has Distribution",
-      "rdfs:comment": "Associates a FlowShot with its data distribution files."
+      "rdfs:comment": "Associates a FlowSlice with its data distribution files."
     },
     {
-      "@id": "hasCurrentShot/",
+      "@id": "hasCurrentSlice/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": {
-        "@id": "hasFlowShot/"
+        "@id": "hasFlowSlice/"
       },
       "rdfs:domain": {
         "@id": "Flow/"
       },
       "schema:rangeIncludes": [
         {
-          "@id": "Snapshot/"
+          "@id": "Version/"
         },
         {
-          "@id": "DefaultShot/"
+          "@id": "DefaultSlice/"
         }
       ],
-      "rdfs:label": "hasCurrentShot",
-      "rdfs:comment": "Associates a Flow with its current FlowShot."
+      "rdfs:label": "hasCurrentSlice",
+      "rdfs:comment": "Associates a Flow with its current FlowSlice."
     },
     {
-      "@id": "previousSnapshot/",
+      "@id": "previousVersion/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": {
         "@id": "dcat:previousVersion"
       },
-      "rdfs:label": "previous snapshot",
-      "rdfs:comment": "Links to the immediately-preceeding snapshot of this FlowShot.",
+      "rdfs:label": "previous version",
+      "rdfs:comment": "Links to the immediately-preceeding version of this FlowSlice.",
       "schema:domainIncludes": {
-        "@id": "FlowShot/"
+        "@id": "FlowSlice/"
       },
       "schema:rangeIncludes": {
-        "@id": "Snapshot/"
+        "@id": "Version/"
       }
     },
     {
@@ -608,7 +608,7 @@
         "VersioningState/"
       ],
       "rdfs:label": "Versioned",
-      "rdfs:comment": "The flow maintains snapshots with distinct version keys."
+      "rdfs:comment": "The flow maintains versions with distinct version keys."
     },
     {
       "@id": "VersioningState/unversioned/",
@@ -617,7 +617,7 @@
         "VersioningState/"
       ],
       "rdfs:label": "unversioned",
-      "rdfs:comment": "The flow does not have any Snapshots; only a WorkingShot and DefaultShot exist."
+      "rdfs:comment": "The flow does not have any Versions; only a WorkingSlice and DefaultSlice exist."
     },
     {
       "@id": "VersioningState/deversioned/",
@@ -626,7 +626,7 @@
         "VersioningState/"
       ],
       "rdfs:label": "deversioned",
-      "rdfs:comment": "The flow previously maintained snapshots but has been deversioned; historical versions may still exist."
+      "rdfs:comment": "The flow previously maintained versions but has been deversioned; historical versions may still exist."
     },
     {
       "@id": "versioningState/",
@@ -648,50 +648,50 @@
           "@id": "Flow/"
         },
         {
-          "@id": "Snapshot/"
+          "@id": "Version/"
         }
       ],
       "schema:rangeIncludes": {
         "@id": "xsd:string"
       },
       "rdfs:label": "weave label",
-      "rdfs:comment": "Human-readable label for a weave run (e.g., '2025-11-24_0142_07' or '2025-11-24_0142_15'). Format is YYYY-MM-DD_HHMM_SS with second-level precision. All snapshots created by the same weave share the same weaveLabel. Not guaranteed to be globally unique across all meshes."
+      "rdfs:comment": "Human-readable label for a weave run (e.g., '2025-11-24_0142_07' or '2025-11-24_0142_15'). Format is YYYY-MM-DD_HHMM_SS with second-level precision. All versions created by the same weave share the same weaveLabel. Not guaranteed to be globally unique across all meshes."
     },
     {
       "@id": "sequenceNumber/",
       "@type": "owl:DatatypeProperty",
       "schema:domainIncludes": {
-        "@id": "Snapshot/"
+        "@id": "Version/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:integer"
       },
       "rdfs:label": "sequence number",
-      "rdfs:comment": "Monotonic integer identifying this snapshot within its Flow. 1 for the first committed snapshot of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
+      "rdfs:comment": "Monotonic integer identifying this version within its Flow. 1 for the first committed version of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
     },
     {
       "@id": "hasOperationalConfigFlow/",
       "@type": "owl:ObjectProperty",
       "schema:domainIncludes": {
-        "@id": "NodeHandle/"
+        "@id": "KnopHandle/"
       },
       "schema:rangeIncludes": {
-        "@id": "OperationalNodeConfigFlow/"
+        "@id": "OperationalKnopConfigFlow/"
       },
       "rdfs:label": "opertaional config",
-      "rdfs:comment": "Links mesh nodes to their operational config flow."
+      "rdfs:comment": "Links mesh knops to their operational config flow."
     },
     {
       "@id": "hasInheritableConfigFlow/",
       "@type": "owl:ObjectProperty",
       "schema:domainIncludes": {
-        "@id": "NodeHandle/"
+        "@id": "KnopHandle/"
       },
       "schema:rangeIncludes": {
-        "@id": "InheritableNodeConfigFlow/"
+        "@id": "InheritableKnopConfigFlow/"
       },
       "rdfs:label": "inheritable config",
-      "rdfs:comment": "Links mesh nodes to their operational config flow."
+      "rdfs:comment": "Links mesh knops to their operational config flow."
     },
     {
       "@id": "disjoint/FileVsNamingResources",
@@ -708,18 +708,18 @@
       }
     },
     {
-      "@id": "disjoint/NodeStructuralRoles",
+      "@id": "disjoint/KnopStructuralRoles",
       "@type": "owl:AllDisjointClasses",
       "owl:members": {
         "@list": [
           {
-            "@id": "BareNode/"
+            "@id": "BareKnop/"
           },
           {
-            "@id": "ReferenceNode/"
+            "@id": "ReferenceKnop/"
           },
           {
-            "@id": "PayloadNode/"
+            "@id": "PayloadKnop/"
           }
         ]
       }
@@ -742,13 +742,13 @@
             "@id": "Flow/"
           },
           {
-            "@id": "Snapshot/"
+            "@id": "Version/"
           },
           {
-            "@id": "DefaultShot/"
+            "@id": "DefaultSlice/"
           },
           {
-            "@id": "WorkingShot/"
+            "@id": "WorkingSlice/"
           },
           {
             "@id": "Distribution/"
@@ -762,7 +762,7 @@
       "owl:members": {
         "@list": [
           {
-            "@id": "NodeMetadataFlow/"
+            "@id": "KnopMetadataFlow/"
           },
           {
             "@id": "ReferenceFlow/"
@@ -771,10 +771,10 @@
             "@id": "PayloadFlow/"
           },
           {
-            "@id": "InheritableNodeConfigFlow/"
+            "@id": "InheritableKnopConfigFlow/"
           },
           {
-            "@id": "OperationalNodeConfigFlow/"
+            "@id": "OperationalKnopConfigFlow/"
           }
         ]
       }
