@@ -28,7 +28,7 @@
       "@id": "ConfigurationClass/",
       "@type": "rdfs:Class",
       "rdfs:label": "Configuration Class",
-      "rdfs:comment": "Classes that structure configuration information within config distributions."
+      "rdfs:comment": "Abstract parent class for classes that structure configuration information."
     },
     {
       "@id": "AbstractKnopConfig/",
@@ -43,7 +43,7 @@
       "@id": "OperationalKnopConfig/",
       "@type": "rdfs:Class",
       "rdfs:label": "Operational knop configuration",
-      "rdfs:comment": "The actual operational configuration for a specific knop. Controls how this knop behaves (versioning, distribution formats, etc.). Does not participate in inheritance chain.",
+      "rdfs:comment": "The actual, fully-resolved operational configuration for a specific knop. Controls how this knop behaves (versioning, distribution formats, etc.). Does not participate in inheritance chain.",
       "rdfs:subClassOf": {
         "@id": "AbstractKnopConfig/"
       }

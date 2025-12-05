@@ -9,7 +9,7 @@
   "@graph": [
     {
       "@id": "NamingResourceShape/",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetClass": {
         "@id": "sflo:NamingResource/"
       },
@@ -23,7 +23,7 @@
     },
     {
       "@id": "FileResourceShape/",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetClass": {
         "@id": "sflo:FileResource/"
       },
@@ -37,7 +37,7 @@
     },
     {
       "@id": "MeshKnopShape/",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetClass": {
         "@id": "sflo:MeshKnop/"
       },
@@ -57,7 +57,7 @@
     },
     {
       "@id": "HandleAsComponentShape/",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetClass": {
         "@id": "sflo:HandleAsComponent/"
       },
@@ -75,7 +75,7 @@
     },
     {
       "@id": "NamingResourceShape2/",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetClass": {
         "@id": "sflo:FolderResource/"
       },
@@ -93,7 +93,7 @@
     },
     {
       "@id": "VersionShape/",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetClass": {
         "@id": "sflo:Version/"
       },
@@ -106,7 +106,7 @@
     },
     {
       "@id": "DocumentationResourceShape/",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetClass": {
         "@id": "sflo:DocumentationResource/"
       },
@@ -119,13 +119,36 @@
     },
     {
       "@id": "sflo:PayloadKnopIsDatasetShape",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetClass": "sflo:PayloadKnop",
       "sh:property": {
         "sh:path": "rdf:type",
         "sh:hasValue": "dcat:Dataset",
         "sh:message": "Payload knops MUST be typed as dcat:Dataset in their reference data. TODO: verify if this works as intended"
       }
+    },
+    {
+      "@id": "sflo:FlowWithVersionsShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": "sflo:FlowWithVersions",
+      "sh:property": [
+        {
+          "sh:path": "sflo:versioningState",
+          "sh:in": {
+            "@list": [
+              {
+                "@id": "sflo:VersioningState/versioned/"
+              },
+              {
+                "@id": "sflo:VersioningState/deversioned/"
+              }
+            ]
+          },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:message": "FlowWithVersions must have versioningState of either 'versioned' or 'deversioned'."
+        }
+      ]
     }
   ]
 }
