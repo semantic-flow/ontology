@@ -163,17 +163,17 @@
     },
     {
       "@id": "slug/",
-      "@type": "owl:AnnotationProperty",
+      "@type": "owl:DatatypeProperty",
       "schema:domainIncludes": [
         {
-          "@id": "Flow/"
+          "@id": "KnopHandle/"
         }
       ],
       "schema:rangeIncludes": {
         "@id": "xsd:string"
       },
       "rdfs:label": "has slug",
-      "rdfs:comment": "A concise, human-readable, kebab-case identifier for a flow, suitable for use in filenames and URLs."
+      "rdfs:comment": "Required kebab-case identifier for a Knop, used as the directory segment and URL component."
     },
     {
       "@id": "Component/",
@@ -322,7 +322,6 @@
       "rdfs:subClassOf": {
         "@id": "Flow/"
       },
-      "slug/": "_meta",
       "rdfs:label": "Metadata Flow",
       "rdfs:comment": "Flow containing metadata about the mesh knop itself."
     },
@@ -332,7 +331,6 @@
       "rdfs:subClassOf": {
         "@id": "Flow/"
       },
-      "slug/": "_ref",
       "rdfs:label": "Reference Flow",
       "rdfs:comment": "Flow containing reference data about the thing or concept referred to by the mesh knop."
     },
@@ -342,7 +340,6 @@
       "rdfs:subClassOf": {
         "@id": "Flow/"
       },
-      "slug/": "_payload",
       "rdfs:label": "Payload flow",
       "rdfs:comment": "Flow containing the dataset payload associated with the mesh knop."
     },
@@ -361,7 +358,6 @@
       "rdfs:subClassOf": {
         "@id": "KnopConfigFlow/"
       },
-      "slug/": "_cfg-inh",
       "rdfs:label": "Inheritable knop config flow",
       "rdfs:comment": "knop configuration flow whose settings can be inherited by child knops."
     },
@@ -371,7 +367,6 @@
       "rdfs:subClassOf": {
         "@id": "KnopConfigFlow/"
       },
-      "slug/": "_cfg-local",
       "rdfs:label": "Local knop config flow",
       "rdfs:comment": "knop configuration flow containing persisted local settings for this specific knop. Combined with inherited config at runtime to produce OperationalKnopConfig."
     },
@@ -381,7 +376,6 @@
       "rdfs:subClassOf": {
         "@id": "Flow/"
       },
-      "slug/": "_opslog",
       "rdfs:label": "Opslog flow",
       "rdfs:comment": "knop configuration flow containing persisted local settings for this specific knop. Combined with inherited config at runtime to produce OperationalKnopConfig."
     },

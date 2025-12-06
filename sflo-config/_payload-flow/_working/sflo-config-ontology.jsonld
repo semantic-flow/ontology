@@ -334,26 +334,6 @@
           "sh:message": "Stylesheet path must be a relative path ending in .css, .scss, or .sass"
         }
       ]
-    },
-    {
-      "@id": "defaultPlatformConfig",
-      "@type": "PlatformConfig/",
-      "rdfs:label": "Default Platform Configuration",
-      "rdfs:comment": "The default configuration for the Semantic Flow platform. Provides sensible defaults for all applications and knops.",
-      "hasInheritableKnopConfig": {
-        "@id": "defaultInheritableKnopConfig",
-        "@type": "InheritableKnopConfig/",
-        "rdfs:label": "Default Inheritable knop configuration",
-        "rdfs:comment": "Default configuration that is inherited by all knops unless overridden.",
-        "versioningEnabled": true,
-        "formats:media_type": [
-          "application/trig",
-          "application/ld+json"
-        ],
-        "generateUnifiedDataset": false,
-        "generateAggregatedDataset": false,
-        "knopConfigInheritanceEnabled": true
-      }
     }
   ]
 }
