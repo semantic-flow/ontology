@@ -251,27 +251,6 @@
       }
     },
     {
-      "@id": "parentKnop/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "parent knop",
-      "rdfs:comment": "indicates that this knop is contained in another knop. Should only be used in OperationalKnopConfig.",
-      "schema:domainIncludes": {
-        "@id": "sflo:Handle/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "sflo:Handle/"
-      }
-    },
-    {
-      "@id": "rootKnop/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "root knop",
-      "rdfs:comment": "indicates that this is a root knop. Should only be used in OperationalKnopConfig.",
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
       "@id": "DistributionFormatShape/",
       "@type": "sh:KnopShape",
       "sh:targetObjectsOf": {
