@@ -377,7 +377,7 @@
         "@id": "Flow/"
       },
       "rdfs:label": "Opslog flow",
-      "rdfs:comment": "knop configuration flow containing persisted local settings for this specific knop. Combined with inherited config at runtime to produce OperationalKnopConfig."
+      "rdfs:comment": "flow for tracking operations and changes within the knop."
     },
     {
       "@id": "hasFlow/",

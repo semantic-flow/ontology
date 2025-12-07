@@ -9,7 +9,8 @@
     "dcterms": "http://purl.org/dc/terms/",
     "schema": "https://schema.org/",
     "formats": "http://www.w3.org/ns/formats/",
-    "sflo-meta": "https://semantic-flow.github.io/ontology/sflo-meta/"
+    "vann": "http://purl.org/vocab/vann/",
+    "sflo": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
   },
   "@graph": [
     {
@@ -19,9 +20,9 @@
       "dcterms:description": "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh knops (operational config) and through inheritable config. Used by configuration files and sflo-host ontology for setting defaults.",
       "dcterms:creator": "Semantic Flow Project",
       "owl:versionInfo": "0.1.0",
-      "vann:preferredNamespacePrefix": "sflo-conf",
+      "vann:preferredNamespacePrefix": "conf",
       "vann:alternateNamespacePrefix": [
-        "sflo-config"
+        "sflo-conf"
       ]
     },
     {
@@ -67,25 +68,25 @@
       }
     },
     {
-      "@id": "PlatformConfig/",
+      "@id": "PlatformKnopConfig/",
       "@type": "rdfs:Class",
       "rdfs:label": "Platform Configuration",
       "rdfs:comment": "Platform-wide default configuration including inheritable knop configuration defaults. Provides base defaults for all applications and knops in the Semantic Flow platform.",
       "rdfs:subClassOf": {
-        "@id": "ConfigurationClass/"
+        "@id": "AbstractKnopConfig/"
       }
     },
     {
-      "@id": "ApplicationConfig/",
+      "@id": "ApplicationKnopConfig/",
       "@type": "rdfs:Class",
       "rdfs:label": "Application Configuration",
       "rdfs:comment": "Application/service-level configuration that can override platform defaults and provide inheritable configuration for knops within that application instance.",
       "rdfs:subClassOf": {
-        "@id": "ConfigurationClass/"
+        "@id": "AbstractKnopConfig/"
       }
     },
     {
-      "@id": "TemplateMappings/",
+      "@id": "TemplateMappingSet/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
         "@id": "ConfigurationClass/"
@@ -100,7 +101,7 @@
         "@id": "ConfigurationClass/"
       },
       "rdfs:label": "Template Mapping",
-      "rdfs:comment": "Template configuration mapping for resource page generation within knop configurations."
+      "rdfs:comment": "Template configuration mapping for resource page generation. A template mapping applies only if all specified target conditions (via mappingTargetClassRegex and mappingTargetSlugRegex) are satisfied. If a mapping specifies no class or slug conditions, it is applicable to all knops. Since mappings may come from multiple sources and may be multiple even from a single source, mappingPriority is used to resolve conflicts when multiple mappings apply to the same knop."
     },
     {
       "@id": "hasLocalKnopConfig/",
@@ -143,10 +144,58 @@
       }
     },
     {
-      "@id": "versioningEnabled/",
+      "@id": "payloadFlowVersioningEnabled/",
       "@type": "owl:DatatypeProperty",
-      "rdfs:label": "versioning enabled",
-      "rdfs:comment": "Whether versioning is enabled for this flow.",
+      "rdfs:label": "payload flow versioning enabled",
+      "rdfs:comment": "Whether versioning is enabled for associated payload flows.",
+      "schema:domainIncludes": {
+        "@id": "AbstractKnopConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
+    },
+    {
+      "@id": "referenceFlowVersioningEnabled/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "reference flow versioning enabled",
+      "rdfs:comment": "Whether versioning is enabled for associated reference flows.",
+      "schema:domainIncludes": {
+        "@id": "AbstractKnopConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
+    },
+    {
+      "@id": "metaFlowVersioningEnabled/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "meta flow versioning enabled",
+      "rdfs:comment": "Whether versioning is enabled for associated meta flows.",
+      "schema:domainIncludes": {
+        "@id": "AbstractKnopConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
+    },
+    {
+      "@id": "localConfigFlowVersioningEnabled/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "local config flow versioning enabled",
+      "rdfs:comment": "Whether versioning is enabled for associated local config flows.",
+      "schema:domainIncludes": {
+        "@id": "AbstractKnopConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
+      }
+    },
+    {
+      "@id": "inheritableConfigFlowVersioningEnabled/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "inheritable config flow versioning enabled",
+      "rdfs:comment": "Whether versioning is enabled for associated inheritable config flows.",
       "schema:domainIncludes": {
         "@id": "AbstractKnopConfig/"
       },
@@ -158,7 +207,7 @@
       "@id": "knopConfigInheritanceEnabled/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "knop config inheritance enabled",
-      "rdfs:comment": "Whether this knop should accept inherited configuration from parent knops. Set in LocalKnopConfig to disable inheritance resolution for this Knop. Set in InheritaleKnopConfig to disable inheritance for child knops. Set in ApplicationConfig to disable inheritance (if not otherwise specified) for knops within that application.",
+      "rdfs:comment": "Whether this knop should accept inherited configuration from parent knops. Set in LocalKnopConfig to disable inheritance resolution for this Knop. Set in InheritaleKnopConfig to disable inheritance for child knops. Set in ApplicationKnopConfig to disable inheritance (if not otherwise specified) for knops within that application.",
       "schema:domainIncludes": {
         "@id": "AbstractKnopConfig/"
       },
@@ -167,7 +216,7 @@
       }
     },
     {
-      "@id": "hasTemplateMappings/",
+      "@id": "hasTemplateMappingSet/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has template mappings",
       "rdfs:comment": "Collection of template mappings for resource page generation",
@@ -175,26 +224,74 @@
         "@id": "AbstractKnopConfig/"
       },
       "schema:rangeIncludes": {
-        "@id": "TemplateMappings/"
+        "@id": "TemplateMappingSet/"
       }
     },
     {
       "@id": "hasTemplateMapping/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has template mapping",
-      "rdfs:comment": "Individual template mapping within a collection",
+      "rdfs:comment": "Individual template mapping within a set of template mappings. ",
       "schema:domainIncludes": {
-        "@id": "TemplateMappings/"
+        "@id": "TemplateMappingSet/"
       },
       "schema:rangeIncludes": {
         "@id": "TemplateMapping/"
       }
     },
     {
-      "@id": "hasResourcePageTemplate/",
+      "@id": "innerTemplateUrl/",
       "@type": "owl:DatatypeProperty",
-      "rdfs:label": "has resource page template",
-      "rdfs:comment": "Template file path for resource pages",
+      "rdfs:label": "inner template url",
+      "rdfs:comment": "Inner template URL for resource pages",
+      "schema:domainIncludes": {
+        "@id": "TemplateMapping/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:anyURI"
+      }
+    },
+    {
+      "@id": "outerTemplateUrl/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "outer template url",
+      "rdfs:comment": "Outer template URL for resource pages",
+      "schema:domainIncludes": {
+        "@id": "TemplateMapping/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:anyURI"
+      }
+    },
+    {
+      "@id": "stylesheetUrl/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "stylesheet path",
+      "rdfs:comment": "Path to CSS stylesheet for generated pages",
+      "schema:domainIncludes": {
+        "@id": "TemplateMapping/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:anyURI"
+      }
+    },
+    {
+      "@id": "mappingPriority/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "mapping priority",
+      "rdfs:comment": "Integer priority for resolving conflicts between template mappings. Higher values SHOULD take precedence when multiple mappings apply to the same knop.",
+      "schema:domainIncludes": {
+        "@id": "TemplateMapping/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "mappingTargetClassRegex/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "mapping target class regex",
+      "rdfs:comment": "Regular expression for attaching mappings to target knops based on their class identifier.",
       "schema:domainIncludes": {
         "@id": "TemplateMapping/"
       },
@@ -203,10 +300,10 @@
       }
     },
     {
-      "@id": "stylesheetPath/",
+      "@id": "mappingTargetSlugRegex/",
       "@type": "owl:DatatypeProperty",
-      "rdfs:label": "stylesheet path",
-      "rdfs:comment": "Path to CSS stylesheet for generated pages",
+      "rdfs:label": "mapping target slug regex",
+      "rdfs:comment": "Regular expression for attaching mappings to target knops based on their 'local name' slug",
       "schema:domainIncludes": {
         "@id": "TemplateMapping/"
       },
@@ -252,7 +349,7 @@
     },
     {
       "@id": "DistributionFormatShape/",
-      "@type": "sh:KnopShape",
+      "@type": "sh:NodeShape",
       "sh:targetObjectsOf": {
         "@id": "formats:media_type"
       },
@@ -276,43 +373,24 @@
     },
     {
       "@id": "TemplatePathShape/",
-      "@type": "sh:KnopShape",
-      "sh:targetObjectsOf": {
-        "@id": "hasResourcePageTemplate/"
-      },
+      "@type": "sh:NodeShape",
+      "sh:targetObjectsOf": [
+        {
+          "@id": "innerTemplateUrl/"
+        },
+        {
+          "@id": "outerTemplateUrl/"
+        }
+      ],
       "sh:property": {
         "@type": "sh:PropertyShape",
         "sh:path": {
           "@id": "rdf:value"
         },
-        "sh:pattern": "^[^/].*\\.(html|htm|hbs|mustache)$",
-        "sh:message": "Template path must be a relative path ending in .html, .htm, .hbs, or .mustache"
+        "sh:pattern": "^[^/].*\\.(vto)$",
+        "sh:message": "Template URL should be a URL ending in .vto",
+        "sh:severity": "sh:Warning"
       }
-    },
-    {
-      "@id": "KnopShape/",
-      "@type": "sh:KnopShape",
-      "sh:targetClass": {
-        "@id": "sflo:Handle/"
-      },
-      "sh:property": [
-        {
-          "@type": "sh:PropertyShape",
-          "sh:path": {
-            "@id": "formats:media_type"
-          },
-          "sh:minCount": 1,
-          "sh:message": "At least one distribution format must be specified"
-        },
-        {
-          "@type": "sh:PropertyShape",
-          "sh:path": {
-            "@id": "stylesheetPath/"
-          },
-          "sh:pattern": "^[^/].*\\.(css|scss|sass)$",
-          "sh:message": "Stylesheet path must be a relative path ending in .css, .scss, or .sass"
-        }
-      ]
     }
   ]
 }
