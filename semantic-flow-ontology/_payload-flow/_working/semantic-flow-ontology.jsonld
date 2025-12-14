@@ -141,7 +141,7 @@
         "@id": "KnopHandle/"
       },
       "rdfs:label": "is handle for",
-      "rdfs:comment": "Indicates that this handle component provides identification and routing for a specific knop."
+      "rdfs:comment": "Indicates that this handle component provides identification for a specific knop."
     },
     {
       "@id": "hasHandle/",
@@ -208,7 +208,7 @@
         }
       ],
       "rdfs:label": "Handle As Component",
-      "rdfs:comment": "A handle considered as a mesh component in its own right, addressable via IRI and subject to mesh operations."
+      "rdfs:comment": "A handle considered as a Knop component in its own right, addressable via IRI and subject to mesh operations. By convention, its path ends with `_knop-handle/#`."
     },
     {
       "@id": "DocumentationResource/",
@@ -235,7 +235,7 @@
         "@id": "DocumentationResource/"
       },
       "rdfs:label": "Changelog",
-      "rdfs:comment": "Changelog files that document version history and changes for resources."
+      "rdfs:comment": "Changelog files that document the history and changes for resources."
     },
     {
       "@id": "Readme/",
@@ -250,7 +250,7 @@
       "@id": "hasDocumentationResource/",
       "@type": "owl:ObjectProperty",
       "schema:domainIncludes": {
-        "@id": "NamingResource/"
+        "@id": "Knop/"
       },
       "schema:rangeIncludes": {
         "@id": "DocumentationResource/"
@@ -274,25 +274,25 @@
       "@id": "hasReadme/",
       "@type": "owl:ObjectProperty",
       "schema:domainIncludes": {
-        "@id": "NamingResource/"
+        "@id": "Knop/"
       },
       "schema:rangeIncludes": {
         "@id": "Readme/"
       },
       "rdfs:label": "has Readme",
-      "rdfs:comment": "Associates a NamingResource with its README documentation file."
+      "rdfs:comment": "Associates a Knop with its README documentation file."
     },
     {
       "@id": "hasChangelog/",
       "@type": "owl:ObjectProperty",
       "schema:domainIncludes": {
-        "@id": "NamingResource/"
+        "@id": "Knop/"
       },
       "schema:rangeIncludes": {
         "@id": "Changelog/"
       },
       "rdfs:label": "has Changelog",
-      "rdfs:comment": "Associates a NamingResource with its changelog documentation file."
+      "rdfs:comment": "Associates a Knop with its changelog documentation file."
     },
     {
       "@id": "Flow/",
@@ -303,7 +303,7 @@
         }
       ],
       "rdfs:label": "Flow",
-      "rdfs:comment": "Evolvable containers for knop metadata, reference data, payload data, configuration, and opslogs."
+      "rdfs:comment": "Evolvable containers for knop metadata, reference data, payload data, and configuration."
     },
     {
       "@id": "KnopMetadataFlow/",
@@ -358,15 +358,6 @@
       },
       "rdfs:label": "Local knop config flow",
       "rdfs:comment": "knop configuration flow containing persisted local settings for this specific knop. Combined with inherited config at runtime to produce OperationalKnopConfig."
-    },
-    {
-      "@id": "OpslogFlow/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "Flow/"
-      },
-      "rdfs:label": "Opslog flow",
-      "rdfs:comment": "flow for tracking operations and changes within the knop."
     },
     {
       "@id": "hasFlow/",
@@ -440,34 +431,7 @@
         }
       ],
       "rdfs:label": "Flow Slice",
-      "rdfs:comment": "One concrete dataset instance belonging to a Flow: a committed version, the default slice under '_default/', or the mutable working slice under '_working/'. A FlowSlice represents the Flow's data as a whole at a particular stage, not a subset of it."
-    },
-    {
-      "@id": "VersionSlice/",
-      "@type": "owl:Class",
-      "rdfs:subClassOf": {
-        "@id": "FlowSlice/"
-      },
-      "rdfs:label": "Version Slice",
-      "rdfs:comment": "Immutable, committed flow slice (dataset state), typically materialized as a timestamped weave directory. Versioned flows have one Version per committed weave; unversioned flows may have none."
-    },
-    {
-      "@id": "DefaultSlice/",
-      "@type": "owl:Class",
-      "rdfs:subClassOf": {
-        "@id": "FlowSlice/"
-      },
-      "rdfs:label": "Default Slice",
-      "rdfs:comment": "The Flow's default dataset slice under the '_default/' directory. For versioned flows, its content mirrors the latest Version. For unversioned flows, it is the only authoritative dataset state. For deversioned flows, it is the current dataset state after the last weave."
-    },
-    {
-      "@id": "WorkingSlice/",
-      "@type": "owl:Class",
-      "rdfs:subClassOf": {
-        "@id": "FlowSlice/"
-      },
-      "rdfs:label": "Working Slice",
-      "rdfs:comment": "Mutable staging slice for a Flow, mapped to the '_working/' directory. Used for edits before weave. Not a committed dataset and normally not exposed in version history or as-of queries."
+      "rdfs:comment": "One concrete dataset instance belonging to a Flow. A FlowSlice represents the Flow's data as a whole at a particular stage, not a subset of it."
     },
     {
       "@id": "hasFlowSlice/",
@@ -482,42 +446,7 @@
         "@id": "FlowSlice/"
       },
       "rdfs:label": "has flow slice",
-      "rdfs:comment": "Associates a Flow with one of its slices (default, version, or working)."
-    },
-    {
-      "@id": "hasDefaultSlice/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "dcat:seriesMember/"
-      },
-      "rdfs:domain": {
-        "@id": "Flow/"
-      },
-      "rdfs:range": {
-        "@id": "DefaultSlice/"
-      },
-      "rdfs:label": "has default slice",
-      "rdfs:comment": "Links a Flow to its default slice under '_default/'. Each Flow must have exactly one DefaultSlice."
-    },
-    {
-      "@id": "hasVersionSlice/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": [
-        {
-          "@id": "hasFlowSlice/"
-        },
-        {
-          "@id": "prov:specializationOf"
-        }
-      ],
-      "rdfs:domain": {
-        "@id": "Flow/"
-      },
-      "rdfs:range": {
-        "@id": "VersionSlice/"
-      },
-      "rdfs:label": "has version slice",
-      "rdfs:comment": "Associates a Flow with one of its committed version slices and specializes the Flow as a DatasetSeries into this particular Version dataset."
+      "rdfs:comment": "Associates a Flow with one of its slices."
     },
     {
       "@id": "Distribution/",
@@ -528,13 +457,10 @@
         },
         {
           "@id": "FileResource/"
-        },
-        {
-          "@id": "Component/"
         }
       ],
       "rdfs:label": "Distribution",
-      "rdfs:comment": "A distribution (file) that contains the RDF data for a FlowSlice (version, default slice, or working slice)."
+      "rdfs:comment": "A distribution (file) that contains the content for a FlowSlice."
     },
     {
       "@id": "hasDistribution/",
@@ -562,83 +488,25 @@
       },
       "schema:rangeIncludes": [
         {
-          "@id": "VersionSlice/"
+          "@id": "FlowSlice/"
         }
       ],
-      "rdfs:label": "hasCurrentSlice",
+      "rdfs:label": "has current slice",
       "rdfs:comment": "Associates a Flow with its current FlowSlice."
     },
     {
-      "@id": "previousVersion/",
+      "@id": "previousSlice/",
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": {
         "@id": "dcat:previousVersion"
       },
-      "rdfs:label": "previous version",
-      "rdfs:comment": "Links to the immediately-preceeding version of this FlowSlice.",
+      "rdfs:label": "previous slice",
+      "rdfs:comment": "Links to the immediately-preceeding slice of this FlowSlice.",
       "schema:domainIncludes": {
         "@id": "FlowSlice/"
       },
       "schema:rangeIncludes": {
-        "@id": "Version/"
-      }
-    },
-    {
-      "@id": "VersioningState/",
-      "@type": "owl:Class",
-      "rdfs:label": "Versioning State",
-      "rdfs:comment": "Enumeration of possible versioning states for a flow.",
-      "owl:oneOf": {
-        "@list": [
-          {
-            "@id": "VersioningState/versioned/"
-          },
-          {
-            "@id": "VersioningState/unversioned/"
-          },
-          {
-            "@id": "VersioningState/deversioned/"
-          }
-        ]
-      }
-    },
-    {
-      "@id": "VersioningState/versioned/",
-      "@type": [
-        "owl:NamedIndividual",
-        "VersioningState/"
-      ],
-      "rdfs:label": "Versioned",
-      "rdfs:comment": "The flow maintains versions with distinct version keys."
-    },
-    {
-      "@id": "VersioningState/unversioned/",
-      "@type": [
-        "owl:NamedIndividual",
-        "VersioningState/"
-      ],
-      "rdfs:label": "unversioned",
-      "rdfs:comment": "The flow does not have any Versions; only a WorkingSlice and DefaultSlice exist."
-    },
-    {
-      "@id": "VersioningState/deversioned/",
-      "@type": [
-        "owl:NamedIndividual",
-        "VersioningState/"
-      ],
-      "rdfs:label": "deversioned",
-      "rdfs:comment": "The flow previously maintained versions but has been deversioned; historical versions may still exist."
-    },
-    {
-      "@id": "versioningState/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "versioning state",
-      "rdfs:comment": "The versioning state of a flow.",
-      "schema:domainIncludes": {
-        "@id": "Flow/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "VersioningState/"
+        "@id": "FlowSlice/"
       }
     },
     {
@@ -646,29 +514,26 @@
       "@type": "owl:DatatypeProperty",
       "schema:domainIncludes": [
         {
-          "@id": "Flow/"
-        },
-        {
-          "@id": "Version/"
+          "@id": "FlowSlice/"
         }
       ],
       "schema:rangeIncludes": {
         "@id": "xsd:string"
       },
       "rdfs:label": "weave label",
-      "rdfs:comment": "Human-readable label for a weave run (e.g., '2025-11-24_0142_07' or '2025-11-24_0142_15'). Format is YYYY-MM-DD_HHMM_SS with second-level precision. All versions created by the same weave share the same weaveLabel. Not guaranteed to be globally unique across all meshes."
+      "rdfs:comment": "Human-readable label corresponding to a weave run (e.g., '2025-11-24_0142_07' or '2025-11-24_0142_15'). Format is YYYY-MM-DD_HHMM_SS with second-level precision. All slices created by the same weave share the same weaveLabel. Not likely to be unique across meshes."
     },
     {
-      "@id": "versionNumber/",
+      "@id": "sliceNumber/",
       "@type": "owl:DatatypeProperty",
       "schema:domainIncludes": {
-        "@id": "Version/"
+        "@id": "FlowSlice/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:integer"
       },
-      "rdfs:label": "version number",
-      "rdfs:comment": "Monotonic integer identifying this version within its versioned Flow. 1 for the first committed version of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
+      "rdfs:label": "slice number",
+      "rdfs:comment": "Monotonic integer identifying this slice within its Flow. 1 for the first committed slice of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
     },
     {
       "@id": "hasLocalConfigFlow/",
@@ -782,13 +647,7 @@
             "@id": "Flow/"
           },
           {
-            "@id": "Version/"
-          },
-          {
-            "@id": "DefaultSlice/"
-          },
-          {
-            "@id": "WorkingSlice/"
+            "@id": "FlowSlice/"
           },
           {
             "@id": "Distribution/"
@@ -815,9 +674,8 @@
           },
           {
             "@id": "LocalKnopConfigFlow/"
-          }
-        ]
+          ]
+        }
       }
-    }
-  ]
-}
+    ]
+  }

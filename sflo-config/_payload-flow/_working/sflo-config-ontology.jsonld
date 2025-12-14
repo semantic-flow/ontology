@@ -171,66 +171,6 @@
       }
     },
     {
-      "@id": "payloadFlowVersioningEnabled/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "payload flow versioning enabled",
-      "rdfs:comment": "Whether versioning is enabled for associated payload flows.",
-      "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
-      "@id": "referenceFlowVersioningEnabled/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "reference flow versioning enabled",
-      "rdfs:comment": "Whether versioning is enabled for associated reference flows.",
-      "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
-      "@id": "metaFlowVersioningEnabled/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "meta flow versioning enabled",
-      "rdfs:comment": "Whether versioning is enabled for associated meta flows.",
-      "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
-      "@id": "localConfigFlowVersioningEnabled/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "local config flow versioning enabled",
-      "rdfs:comment": "Whether versioning is enabled for associated local config flows.",
-      "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
-      "@id": "inheritableConfigFlowVersioningEnabled/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "inheritable config flow versioning enabled",
-      "rdfs:comment": "Whether versioning is enabled for associated inheritable config flows.",
-      "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
       "@id": "knopConfigInheritanceEnabled/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "knop config inheritance enabled",
@@ -443,6 +383,5 @@
         "sh:severity": "sh:Warning"
       }
     }
-  }
-]
+  ]
 }
