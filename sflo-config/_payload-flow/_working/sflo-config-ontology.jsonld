@@ -104,6 +104,33 @@
       "rdfs:comment": "Template configuration mapping for resource page generation. A template mapping applies only if all specified target conditions (via mappingTargetClassRegex and mappingTargetSlugRegex) are satisfied. If a mapping specifies no class or slug conditions, it is applicable to all knops. Since mappings may come from multiple sources and may be multiple even from a single source, mappingPriority is used to resolve conflicts when multiple mappings apply to the same knop."
     },
     {
+      "@id": "Template/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": {
+        "@id": "ConfigurationClass/"
+      },
+      "rdfs:label": "Template",
+      "rdfs:comment": "Abstract class representing a resource page template."
+    },
+    {
+      "@id": "InnerTemplate/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": {
+        "@id": "Template/"
+      },
+      "rdfs:label": "Inner template",
+      "rdfs:comment": "An inner template defines the main content of a resource page."
+    },
+    {
+      "@id": "OuterTemplate/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": {
+        "@id": "Template/"
+      },
+      "rdfs:label": "Outer template",
+      "rdfs:comment": "An outer template defines the overall structure and layout of a resource page."
+    },
+    {
       "@id": "hasLocalKnopConfig/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "has local knop config",
@@ -240,31 +267,31 @@
       }
     },
     {
-      "@id": "innerTemplateUrl/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "inner template url",
-      "rdfs:comment": "Inner template URL for resource pages",
+      "@id": "innerTemplate/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "inner template",
+      "rdfs:comment": "Inner template for resource pages",
       "schema:domainIncludes": {
         "@id": "TemplateMapping/"
       },
       "schema:rangeIncludes": {
-        "@id": "xsd:anyURI"
+        "@id": "InnerTemplate"
       }
     },
     {
-      "@id": "outerTemplateUrl/",
-      "@type": "owl:DatatypeProperty",
+      "@id": "outerTemplate/",
+      "@type": "owl:ObjectProperty",
       "rdfs:label": "outer template url",
-      "rdfs:comment": "Outer template URL for resource pages",
+      "rdfs:comment": "Outer template for resource pages",
       "schema:domainIncludes": {
         "@id": "TemplateMapping/"
       },
       "schema:rangeIncludes": {
-        "@id": "xsd:anyURI"
+        "@id": "OuterTemplate"
       }
     },
     {
-      "@id": "stylesheetUrl/",
+      "@id": "stylesheet/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "stylesheet path",
       "rdfs:comment": "Path to CSS stylesheet for generated pages",
@@ -348,6 +375,30 @@
       }
     },
     {
+      "@id": "flowToken",
+      "@type": "owl:AnnotationProperty",
+      "rdfs:label": "Flow token",
+      "rdfs:comment": "Use in flow folder naming and as a suffix for flow distributions.",
+      "schema:domainIncludes": {
+        "@id": "Flow/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "string"
+      }
+    },
+    {
+      "@id": "isSameKnopAs/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "is same knop as",
+      "rdfs:comment": "Indicates that two knops are considered the same, semantically. Useful for moving knops to different paths or different hosts",
+      "schema:domainIncludes": {
+        "@id": "KnopHandle/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "KnopHandle/"
+      }
+    },
+    {
       "@id": "DistributionFormatShape/",
       "@type": "sh:NodeShape",
       "sh:targetObjectsOf": {
@@ -392,5 +443,6 @@
         "sh:severity": "sh:Warning"
       }
     }
-  ]
+  }
+]
 }

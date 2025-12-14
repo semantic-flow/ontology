@@ -167,13 +167,16 @@
       "schema:domainIncludes": [
         {
           "@id": "KnopHandle/"
+        },
+        {
+          "@id": "Flow/"
         }
       ],
       "schema:rangeIncludes": {
         "@id": "xsd:string"
       },
       "rdfs:label": "has slug",
-      "rdfs:comment": "Required kebab-case identifier for a Knop, used as the directory segment and URL component. Used in meta flow."
+      "rdfs:comment": "Optional kebab-case identifier for a Knop's distributions OR an overriding identifier for specific Flows' distributions. Defined in the _cfg-local or _cfg-inh flows."
     },
     {
       "@id": "Component/",
@@ -301,20 +304,6 @@
       ],
       "rdfs:label": "Flow",
       "rdfs:comment": "Evolvable containers for knop metadata, reference data, payload data, configuration, and opslogs."
-    },
-    {
-      "@id": "FlowWithVersions/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        {
-          "@id": "dcat:DatasetSeries"
-        },
-        {
-          "@id": "Flow/"
-        }
-      ],
-      "rdfs:label": "Flow with versions",
-      "rdfs:comment": "Evolving DatasetSeries that have at least one version slice."
     },
     {
       "@id": "KnopMetadataFlow/",
@@ -574,9 +563,6 @@
       "schema:rangeIncludes": [
         {
           "@id": "VersionSlice/"
-        },
-        {
-          "@id": "DefaultSlice/"
         }
       ],
       "rdfs:label": "hasCurrentSlice",
@@ -681,7 +667,7 @@
       "schema:rangeIncludes": {
         "@id": "xsd:integer"
       },
-      "rdfs:label": "sequence number",
+      "rdfs:label": "version number",
       "rdfs:comment": "Monotonic integer identifying this version within its versioned Flow. 1 for the first committed version of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
     },
     {
@@ -707,6 +693,24 @@
       },
       "rdfs:label": "inheritable config",
       "rdfs:comment": "Links mesh knops to their operational config flow."
+    },
+    {
+      "@id": "anticipatedAbsoluteIri/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "anticipated absolute IRI",
+      "rdfs:comment": "The anticipated absolute IRI of this knop within its mesh, based on its Knop identifier, its path location, and the hosting platform."
+    },
+    {
+      "@id": "isSameKnopAs/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "is same knop as",
+      "rdfs:comment": "Indicates that two knops are intended to represent the same conceptual knop, even if they exist in different meshes or contexts.",
+      "schema:domainIncludes": {
+        "@id": "KnopHandle/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "KnopHandle/"
+      }
     },
     {
       "@id": "parentKnop/",
