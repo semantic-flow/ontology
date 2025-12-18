@@ -6,6 +6,7 @@
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "sh": "http://www.w3.org/ns/shacl#",
+    "dcat": "http://www.w3.org/ns/dcat#",
     "dcterms": "http://purl.org/dc/terms/",
     "schema": "https://schema.org/",
     "formats": "http://www.w3.org/ns/formats/",
@@ -14,7 +15,7 @@
   },
   "@graph": [
     {
-      "@id": "/",
+      "@id": "",
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow knop configuration Ontology",
       "dcterms:description": "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh knops (operational config) and through inheritable config. Used by configuration files and sflo-host ontology for setting defaults.",
@@ -32,58 +33,54 @@
       "rdfs:comment": "Abstract parent class for classes that structure configuration information."
     },
     {
-      "@id": "AbstractKnopConfig/",
+      "@id": "KnopNodeConfig/",
       "@type": "rdfs:Class",
-      "rdfs:label": "Abstract knop configuration",
-      "rdfs:comment": "Abstract base class for knop configuration types. Defines the common structure for both operational and inheritable knop configurations.",
-      "rdfs:subClassOf": {
-        "@id": "ConfigurationClass/"
-      }
+      "rdfs:subClassOf": [
+        {
+          "@id": "sflo:PlatformElement/"
+        },
+        {
+          "@id": "dcat:Dataset"
+        }
+      ],
+      "rdfs:label": "knop config dataset",
+      "rdfs:comment": "Dataset containing KnopNode configuration data."
     },
     {
-      "@id": "LocalKnopConfig/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Local knop configuration",
-      "rdfs:comment": "The persisted configuration for a specific knop, stored in the _cfg-local flow. Contains explicit settings for this knop that override inherited defaults. Combined with inherited config to produce the runtime OperationalKnopConfig.",
-      "rdfs:subClassOf": {
-        "@id": "AbstractKnopConfig/"
-      }
+      "@id": "hasLocalConfig/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": {
+        "@id": "KnopNode/"
+      },
+      "rdfs:range": {
+        "@id": "KnopNodeConfig/"
+      },
+      "rdfs:label": "local config",
+      "rdfs:comment": "Links KnopNodes to a local config."
     },
     {
-      "@id": "OperationalKnopConfig/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Operational knop configuration",
-      "rdfs:comment": "The runtime-resolved configuration for a knop. Computed by applications by merging LocalKnopConfig with inherited config from parent knops, application defaults, and platform defaults. NOT persisted to the mesh—exists only in application memory.",
-      "rdfs:subClassOf": {
-        "@id": "AbstractKnopConfig/"
-      }
+      "@id": "hasInheritableConfig/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": {
+        "@id": "KnopNode/"
+      },
+      "rdfs:range": {
+        "@id": "KnopNodeConfig/"
+      },
+      "rdfs:label": "inheritable config",
+      "rdfs:comment": "Links KnopNodes to an inheritable config."
     },
     {
-      "@id": "InheritableKnopConfig/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Inheritable knop configuration",
-      "rdfs:comment": "Configuration that can be passed down to child knops. Used by knops, services, and platform to provide default configuration for contained knops.",
-      "rdfs:subClassOf": {
-        "@id": "AbstractKnopConfig/"
-      }
-    },
-    {
-      "@id": "PlatformKnopConfig/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Platform Configuration",
-      "rdfs:comment": "Platform-wide default configuration including inheritable knop configuration defaults. Provides base defaults for all applications and knops in the Semantic Flow platform.",
-      "rdfs:subClassOf": {
-        "@id": "AbstractKnopConfig/"
-      }
-    },
-    {
-      "@id": "ApplicationKnopConfig/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Application Configuration",
-      "rdfs:comment": "Application/service-level configuration that can override platform defaults and provide inheritable configuration for knops within that application instance.",
-      "rdfs:subClassOf": {
-        "@id": "AbstractKnopConfig/"
-      }
+      "@id": "hasEffectiveConfig/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": {
+        "@id": "KnopNode/"
+      },
+      "rdfs:range": {
+        "@id": "KnopNodeConfig/"
+      },
+      "rdfs:label": "effective config",
+      "rdfs:comment": "Links KnopNodes to their effective config. Shouldn't be persisted, only computed at runtime."
     },
     {
       "@id": "TemplateMappingSet/",
@@ -131,52 +128,12 @@
       "rdfs:comment": "An outer template defines the overall structure and layout of a resource page."
     },
     {
-      "@id": "hasLocalKnopConfig/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "has local knop config",
-      "rdfs:comment": "Links a knop to its persisted local configuration stored in the _cfg-local flow.",
-      "schema:domainIncludes": {
-        "@id": "sflo:Handle/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "LocalKnopConfig/"
-      }
-    },
-    {
-      "@id": "hasInheritableKnopConfig/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "has inheritable knop config",
-      "rdfs:comment": "Links a knop to a configuration that can be inherited by child knops.",
-      "schema:domainIncludes": [
-        {
-          "@id": "sflo:Handle/"
-        }
-      ],
-      "schema:rangeIncludes": {
-        "@id": "InheritableKnopConfig/"
-      }
-    },
-    {
-      "@id": "hasOperationalKnopConfig/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "has operational knop config",
-      "rdfs:comment": "Links a knop to its runtime-resolved operational configuration.",
-      "schema:domainIncludes": [
-        {
-          "@id": "sflo:Handle/"
-        }
-      ],
-      "schema:rangeIncludes": {
-        "@id": "OperationalKnopConfig/"
-      }
-    },
-    {
       "@id": "knopConfigInheritanceEnabled/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "knop config inheritance enabled",
       "rdfs:comment": "Whether this knop should accept inherited configuration from parent knops. Set in LocalKnopConfig to disable inheritance resolution for this Knop. Set in InheritaleKnopConfig to disable inheritance for child knops. Set in ApplicationKnopConfig to disable inheritance (if not otherwise specified) for knops within that application.",
       "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
+        "@id": "KnopConfig/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:boolean"
@@ -188,7 +145,7 @@
       "rdfs:label": "has template mappings",
       "rdfs:comment": "Collection of template mappings for resource page generation",
       "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
+        "@id": "KnopConfig/"
       },
       "schema:rangeIncludes": {
         "@id": "TemplateMappingSet/"
@@ -279,36 +236,12 @@
       }
     },
     {
-      "@id": "generateUnifiedDataset/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "generate unified dataset",
-      "rdfs:comment": "Whether to generate unified dataset components",
-      "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
-      "@id": "generateAggregatedDataset/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "generate aggregated dataset",
-      "rdfs:comment": "Whether to generate aggregated dataset components",
-      "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
       "@id": "generateResourcePages/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "generate resource pages",
       "rdfs:comment": "Whether to (re-)generate HTML resource pages during weave",
       "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
+        "@id": "KnopConfig/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:boolean"
@@ -333,23 +266,11 @@
       "rdfs:comment": "Use in flow folder naming and as a suffix for flow distributions.",
       "schema:domainIncludes": [
         {
-          "@id": "AbstractKnopConfig/"
+          "@id": "KnopConfig/"
         }
       ],
       "schema:rangeIncludes": {
         "@id": "xsd:string"
-      }
-    },
-    {
-      "@id": "isSameKnopAs/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "is same knop as",
-      "rdfs:comment": "Indicates that two knops are considered the same, semantically. Useful for moving knops to different paths or different hosts",
-      "schema:domainIncludes": {
-        "@id": "KnopHandle/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "KnopHandle/"
       }
     },
     {
@@ -358,7 +279,7 @@
       "rdfs:label": "retain number of slices",
       "rdfs:comment": "Number of previous FlowSlices to retain when weaving. Not defined means retain all.",
       "schema:domainIncludes": {
-        "@id": "AbstractKnopConfig/"
+        "@id": "KnopConfig/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:integer"

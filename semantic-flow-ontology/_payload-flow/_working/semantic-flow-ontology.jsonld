@@ -1,6 +1,6 @@
 {
   "@context": {
-    "@base": "https://semantic-flow.github.io/ontology/semantic-flow/",
+    "@base": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "dcterms": "http://purl.org/dc/terms/",
@@ -13,7 +13,7 @@
   },
   "@graph": [
     {
-      "@id": "/",
+      "@id": "",
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow Ontology",
       "dcterms:description": "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes.",
@@ -25,7 +25,7 @@
         "@id": "https://semantic-flow.github.io/ontology/semantic-flow/_payload/_default/sflo.ttl"
       },
       "vann:preferredNamespacePrefix": "sflo",
-      "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow/"
+      "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
     },
     {
       "@id": "PlatformElement/",
@@ -120,9 +120,6 @@
     {
       "@id": "hasKnop/",
       "@type": "owl:ObjectProperty",
-      "owl:inverseOf": {
-        "@id": "isKnopFor/"
-      },
       "rdfs:range": {
         "@id": "Knop/"
       },
@@ -136,19 +133,19 @@
         "@id": "PlatformElement/"
       },
       "rdfs:label": "Resource page",
-      "rdfs:comment": "Human-readable index.html pages that provide dereferenceability for NamingResources."
+      "rdfs:comment": "Human-readable index.html pages that provide dereferenceability for non-file PlatformElements."
     },
     {
       "@id": "hasResourcePage/",
       "@type": "owl:ObjectProperty",
       "schema:domainIncludes": {
-        "@id": "NamingResource/"
+        "@id": "PlatformElement/"
       },
       "schema:rangeIncludes": {
         "@id": "ResourcePage/"
       },
       "rdfs:label": "has ResourcePage",
-      "rdfs:comment": "Associates a NamingResource with its index.html resource page file."
+      "rdfs:comment": "Associates a PlatformElement with its index.html resource page file."
     },
     {
       "@id": "Flow/",
@@ -158,11 +155,11 @@
           "@id": "PlatformElement/"
         },
         {
-          "@id": "dcat:DatasetSeries/"
+          "@id": "dcat:DatasetSeries"
         }
       ],
       "rdfs:label": "Flow",
-      "rdfs:comment": "Evolvable containers for knop metadata, reference data, payload data, and configuration."
+      "rdfs:comment": "Evolvable containers for knop metadata, reference data, payload data."
     },
     {
       "@id": "KnopMetadataFlow/",
@@ -189,7 +186,7 @@
         "@id": "Flow/"
       },
       "rdfs:label": "Payload flow",
-      "rdfs:comment": "Flow containing version of the sflo:DigitalArtifact identified by a PayloadKnop."
+      "rdfs:comment": "Flow containing version of the Dataset identified by a PayloadKnop."
     },
     {
       "@id": "hasFlow/",
@@ -204,7 +201,7 @@
         "@id": "Flow/"
       },
       "rdfs:label": "has Flow",
-      "rdfs:comment": "Abstract property for linking mesh knops to their flows (metadata, reference, data, config)."
+      "rdfs:comment": "Abstract property for linking mesh knops to their flows (metadata, reference, data)."
     },
     {
       "@id": "hasKnopMetadataFlow/",
@@ -244,7 +241,7 @@
     },
     {
       "@id": "FlowSlice/",
-      "@type": "owl:Class",
+      "@type": "rdfs:Class",
       "rdfs:subClassOf": [
         {
           "@id": "PlatformElement/"
@@ -270,35 +267,6 @@
       },
       "rdfs:label": "has flow slice",
       "rdfs:comment": "Associates a Flow with one of its slices."
-    },
-    {
-      "@id": "Distribution/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        {
-          "@id": "dcat:Distribution"
-        },
-        {
-          "@id": "PlatformElement/"
-        }
-      ],
-      "rdfs:label": "Distribution",
-      "rdfs:comment": "A distribution (file) that contains the content for a FlowSlice."
-    },
-    {
-      "@id": "hasDistribution/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "dcat:distribution"
-      },
-      "schema:domainIncludes": {
-        "@id": "FlowSlice/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "Distribution/"
-      },
-      "rdfs:label": "has Distribution",
-      "rdfs:comment": "Associates a FlowSlice with its data distribution files."
     },
     {
       "@id": "hasCurrentSlice/",
@@ -381,72 +349,22 @@
       "@id": "parentKnop/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "parent knop",
-      "rdfs:comment": "indicates that this knop is contained in another knop. Should only be used in OperationalKnopConfig.",
+      "rdfs:comment": "indicates that this knop is contained in another knop. Should only be used in operational KnopConfig.",
       "schema:domainIncludes": {
-        "@id": "sflo:Handle/"
+        "@id": "Knop/"
       },
       "schema:rangeIncludes": {
-        "@id": "sflo:Handle/"
+        "@id": "Knop/"
       }
     },
     {
       "@id": "rootKnop/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "root knop",
-      "rdfs:comment": "indicates that this is a root knop. Should only be used in OperationalKnopConfig.",
+      "rdfs:comment": "indicates that this is a root knop. Should only be used in operational KnopConfig.",
       "schema:rangeIncludes": {
         "@id": "xsd:boolean"
       }
-    },
-    {
-      "@id": "KnopNodeConfig/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        {
-          "@id": "PlatformElement/"
-        },
-        {
-          "@id": "dcat:Dataset/"
-        }
-      ],
-      "rdfs:label": "knop config flow",
-      "rdfs:comment": "Abstract flow for mesh knop configuration data."
-    },
-    {
-      "@id": "hasLocalConfig/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "KnopNode/"
-      },
-      "rdfs:range": {
-        "@id": "KnopNodeConfig/"
-      },
-      "rdfs:label": "local config",
-      "rdfs:comment": "Links KnopNodes to a local config."
-    },
-    {
-      "@id": "hasInheritableConfig/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "KnopNode/"
-      },
-      "rdfs:range": {
-        "@id": "InheritableConfig/"
-      },
-      "rdfs:label": "inheritable config",
-      "rdfs:comment": "Links KnopNodes to an inheritable config."
-    },
-    {
-      "@id": "hasEffectiveConfig/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "KnopNode/"
-      },
-      "rdfs:range": {
-        "@id": "InheritableConfig/"
-      },
-      "rdfs:label": "effective config",
-      "rdfs:comment": "Links KnopNodes to their effective config. Shouldn't be persisted, only computed at runtime."
     },
     {
       "@id": "PointersDataset/",
@@ -456,7 +374,7 @@
           "@id": "KnopComponent/"
         },
         {
-          "@id": "dcat:Dataset/"
+          "@id": "dcat:Dataset"
         }
       ],
       "rdfs:label": "Pointers dataset",
@@ -488,11 +406,11 @@
           "@id": "KnopNodeComponent/"
         },
         {
-          "@id": "dcat:Dataset/"
+          "@id": "dcat:Dataset"
         }
       ],
       "rdfs:label": "KnopNode dataset",
-      "rdfs:comment": "Base class for KnopNode-level operational datasets (inventory, opslog, redirects, etc.)."
+      "rdfs:comment": "Base class for KnopNode-level operational datasets (inventory, opslog, backlinks)."
     },
     {
       "@id": "InventoryDataset/",
@@ -542,8 +460,8 @@
       "rdfs:subClassOf": {
         "@id": "KnopNodeDataset/"
       },
-      "rdfs:label": "redirects dataset",
-      "rdfs:comment": "KnopNode-level dataset describing redirects/relocations from this KnopNode to another KnopNode (used for moves, aliases, or deprecation)."
+      "rdfs:label": "backlinks dataset",
+      "rdfs:comment": "KnopNode-level dataset describing backlinks to a published IRI corresponding to this KnopNode."
     },
     {
       "@id": "hasBacklinksDataset/",
