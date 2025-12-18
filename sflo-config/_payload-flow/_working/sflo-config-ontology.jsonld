@@ -50,7 +50,7 @@
       "@id": "hasLocalConfig/",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": {
-        "@id": "KnopNode/"
+        "@id": "sflo:KnopNode/"
       },
       "rdfs:range": {
         "@id": "KnopNodeConfig/"
@@ -62,7 +62,7 @@
       "@id": "hasInheritableConfig/",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": {
-        "@id": "KnopNode/"
+        "@id": "sflo:KnopNode/"
       },
       "rdfs:range": {
         "@id": "KnopNodeConfig/"
@@ -74,7 +74,7 @@
       "@id": "hasEffectiveConfig/",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": {
-        "@id": "KnopNode/"
+        "@id": "sflo:KnopNode/"
       },
       "rdfs:range": {
         "@id": "KnopNodeConfig/"
@@ -128,12 +128,21 @@
       "rdfs:comment": "An outer template defines the overall structure and layout of a resource page."
     },
     {
-      "@id": "knopConfigInheritanceEnabled/",
+      "@id": "Stylesheet/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": {
+        "@id": "ConfigurationClass/"
+      },
+      "rdfs:label": "Stylesheet",
+      "rdfs:comment": "A CSS stylesheet for resource pages."
+    },
+    {
+      "@id": "knopNodeConfigInheritanceEnabled/",
       "@type": "owl:DatatypeProperty",
-      "rdfs:label": "knop config inheritance enabled",
-      "rdfs:comment": "Whether this knop should accept inherited configuration from parent knops. Set in LocalKnopConfig to disable inheritance resolution for this Knop. Set in InheritaleKnopConfig to disable inheritance for child knops. Set in ApplicationKnopConfig to disable inheritance (if not otherwise specified) for knops within that application.",
+      "rdfs:label": "KnopNode config inheritance enabled",
+      "rdfs:comment": "Whether this knop should accept inherited configuration from parent knops. Set in local KnopNodeConfig to disable inheritance resolution for this KnopNode. Set in InheritaleKnopNodeConfig to disable inheritance for child knops. Set in application KnopNodeConfig to disable inheritance (if not otherwise specified) for knops within that application.",
       "schema:domainIncludes": {
-        "@id": "KnopConfig/"
+        "@id": "KnopNodeConfig/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:boolean"
@@ -145,7 +154,7 @@
       "rdfs:label": "has template mappings",
       "rdfs:comment": "Collection of template mappings for resource page generation",
       "schema:domainIncludes": {
-        "@id": "KnopConfig/"
+        "@id": "KnopNodeConfig/"
       },
       "schema:rangeIncludes": {
         "@id": "TemplateMappingSet/"
@@ -172,19 +181,19 @@
         "@id": "TemplateMapping/"
       },
       "schema:rangeIncludes": {
-        "@id": "InnerTemplate"
+        "@id": "InnerTemplate/"
       }
     },
     {
       "@id": "outerTemplate/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "outer template url",
+      "rdfs:label": "outer template",
       "rdfs:comment": "Outer template for resource pages",
       "schema:domainIncludes": {
         "@id": "TemplateMapping/"
       },
       "schema:rangeIncludes": {
-        "@id": "OuterTemplate"
+        "@id": "OuterTemplate/"
       }
     },
     {
@@ -196,7 +205,7 @@
         "@id": "TemplateMapping/"
       },
       "schema:rangeIncludes": {
-        "@id": "xsd:anyURI"
+        "@id": "Stylesheet/"
       }
     },
     {
@@ -241,7 +250,7 @@
       "rdfs:label": "generate resource pages",
       "rdfs:comment": "Whether to (re-)generate HTML resource pages during weave",
       "schema:domainIncludes": {
-        "@id": "KnopConfig/"
+        "@id": "KnopNodeConfig/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:boolean"
@@ -253,7 +262,7 @@
       "rdfs:label": "Folder token",
       "rdfs:comment": "Use in flow folder naming and as a suffix for flow distributions.",
       "schema:domainIncludes": {
-        "@id": "NamingResource/"
+        "@id": "sflo:PlatformElement/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:string"
@@ -266,7 +275,7 @@
       "rdfs:comment": "Use in flow folder naming and as a suffix for flow distributions.",
       "schema:domainIncludes": [
         {
-          "@id": "KnopConfig/"
+          "@id": "KnopNodeConfig/"
         }
       ],
       "schema:rangeIncludes": {
@@ -279,55 +288,10 @@
       "rdfs:label": "retain number of slices",
       "rdfs:comment": "Number of previous FlowSlices to retain when weaving. Not defined means retain all.",
       "schema:domainIncludes": {
-        "@id": "KnopConfig/"
+        "@id": "KnopNodeConfig/"
       },
       "schema:rangeIncludes": {
         "@id": "xsd:integer"
-      }
-    },
-    {
-      "@id": "DistributionFormatShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetObjectsOf": {
-        "@id": "formats:media_type"
-      },
-      "sh:property": {
-        "@type": "sh:PropertyShape",
-        "sh:path": {
-          "@id": "rdf:value"
-        },
-        "sh:in": {
-          "@list": [
-            "application/trig",
-            "application/ld+json",
-            "text/turtle",
-            "application/n-triples",
-            "application/n-quads",
-            "application/rdf+xml"
-          ]
-        },
-        "sh:message": "Distribution format must be a valid RDF media type"
-      }
-    },
-    {
-      "@id": "TemplatePathShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetObjectsOf": [
-        {
-          "@id": "innerTemplateUrl/"
-        },
-        {
-          "@id": "outerTemplateUrl/"
-        }
-      ],
-      "sh:property": {
-        "@type": "sh:PropertyShape",
-        "sh:path": {
-          "@id": "rdf:value"
-        },
-        "sh:pattern": "^[^/].*\\.(vto)$",
-        "sh:message": "Template URL should be a URL ending in .vto",
-        "sh:severity": "sh:Warning"
       }
     }
   ]

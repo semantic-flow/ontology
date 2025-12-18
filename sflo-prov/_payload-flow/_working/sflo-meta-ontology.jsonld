@@ -1,6 +1,7 @@
 {
   "@context": {
     "@base": "https://semantic-flow.github.io/ontology/sflo-meta/",
+    "sflo": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -175,10 +176,10 @@
       }
     },
     {
-      "@id": "forVersion/",
+      "@id": "forSlice/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "for version",
-      "rdfs:comment": "Links a provenance context to the specific version it describes.",
+      "rdfs:label": "for slice",
+      "rdfs:comment": "Links a provenance context to the specific slice it describes.",
       "schema:domainIncludes": {
         "@id": "ProvenanceContext/"
       },
@@ -235,9 +236,9 @@
       }
     },
     {
-      "@id": "hasRole/",
+      "@id": "hasRoleCollection/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "has role",
+      "rdfs:label": "has role collection",
       "rdfs:comment": "Links an agent role collection to individual role assignments.",
       "schema:domainIncludes": {
         "@id": "AgentRoleCollection/"
@@ -247,10 +248,10 @@
       }
     },
     {
-      "@id": "role/",
+      "@id": "roleType/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "role",
-      "rdfs:comment": "The specific role or function the agent performs.",
+      "rdfs:comment": "The specific roleType or function the agent performs.",
       "schema:domainIncludes": {
         "@id": "AgentRole/"
       },
@@ -292,14 +293,14 @@
         {
           "@type": "sh:PropertyShape",
           "sh:path": {
-            "@id": "forVersion/"
+            "@id": "forSlice/"
           },
           "sh:class": {
-            "@id": "flow:Version/"
+            "@id": "sflo:Slice/"
           },
           "sh:minCount": 1,
           "sh:maxCount": 1,
-          "sh:message": "Provenance context must reference exactly one version"
+          "sh:message": "Provenance context must reference exactly one slice"
         },
         {
           "@type": "sh:PropertyShape",
