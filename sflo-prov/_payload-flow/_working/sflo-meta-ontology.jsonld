@@ -73,13 +73,13 @@
       "@id": "AgentRoleCollection/",
       "@type": "rdfs:Class",
       "rdfs:label": "Agent Role Collection",
-      "rdfs:comment": "A collection of agent role assignments for collaborative activities.",
+      "rdfs:comment": "A collection of agent role relators for collaborative activities.",
       "rdfs:subClassOf": {
         "@id": "ProvenanceClass/"
       }
     },
     {
-      "@id": "AgentRole/",
+      "@id": "AgentRoleRelator/",
       "@type": "rdfs:Class",
       "rdfs:label": "Agent Role",
       "rdfs:comment": "Describes the specific role an agent plays in a collaborative activity, using prov:agent to identify the agent.",
@@ -183,7 +183,7 @@
         "@id": "ProvenanceContext/"
       },
       "schema:rangeIncludes": {
-        "@id": "flow:Version/"
+        "@id": "FlowSlice/"
       }
     },
     {

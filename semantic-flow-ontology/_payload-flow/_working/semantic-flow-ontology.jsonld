@@ -28,9 +28,9 @@
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow/"
     },
     {
-      "@id": "Resource/",
+      "@id": "PlatformElement/",
       "@type": "rdfs:Class",
-      "rdfs:label": "Resource",
+      "rdfs:label": "Platform Element",
       "rdfs:comment": "Abstract base class for all Semantic Flow resources. Provides fundamental identification and documentation affordances."
     },
     {
@@ -46,22 +46,10 @@
       "@id": "NamingResource/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
-        "@id": "Resource/"
+        "@id": "PlatformElement/"
       },
       "rdfs:label": "Naming Resource",
       "rdfs:comment": "A resource that establishes a name, optionally denoting a non-file thing. Naming resources' IRIs end with a slash and may or may not have a referent."
-    },
-    {
-      "@id": "hasResource/",
-      "@type": "owl:ObjectProperty",
-      "schema:domainIncludes": {
-        "@id": "Resource/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "Resource/"
-      },
-      "rdfs:label": "has resource",
-      "rdfs:comment": "Abstract base property for associating resources."
     },
     {
       "@id": "AssetTree/",
@@ -75,7 +63,7 @@
         }
       ],
       "rdfs:label": "AssetTree",
-      "rdfs:comment": "Asset trees contain collections of files and directories that are not MeshResources. Can be contained in any NamingResource."
+      "rdfs:comment": "Asset trees contain collections of files and directories that are not PlatformElements. Can be contained in any KnopNode."
     },
     {
       "@id": "Knop/",
@@ -111,14 +99,11 @@
         "@id": "Knop/"
       },
       "rdfs:label": "Data",
-      "rdfs:comment": "Knops that contain and refer to 'payload data' via a payload flows."
+      "rdfs:comment": "Knops that contain and refer to a sflo:DigitalArtifact via a payload flow."
     },
     {
       "@id": "hasComponent/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasResource/"
-      },
       "rdfs:domain": {
         "@id": "Knop/"
       },
@@ -129,54 +114,34 @@
       "rdfs:comment": "Associates knops with their supporting components."
     },
     {
-      "@id": "isHandleFor/",
+      "@id": "isKnopFor/",
       "@type": "owl:ObjectProperty",
       "owl:inverseOf": {
-        "@id": "hasHandle/"
+        "@id": "hasKnop/"
       },
       "rdfs:domain": {
         "@id": "HandleAsComponent/"
       },
       "rdfs:range": {
-        "@id": "KnopHandle/"
+        "@id": "Knop/"
       },
       "rdfs:label": "is handle for",
       "rdfs:comment": "Indicates that this handle component provides identification for a specific knop."
     },
     {
-      "@id": "hasHandle/",
+      "@id": "hasKnop/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasComponent/"
-      },
       "owl:inverseOf": {
-        "@id": "isHandleFor/"
+        "@id": "isKnopFor/"
       },
       "rdfs:domain": {
-        "@id": "KnopHandle/"
+        "@id": "rdfs:Resource/"
       },
       "rdfs:range": {
-        "@id": "HandleAsComponent/"
+        "@id": "Knop/"
       },
-      "rdfs:label": "has handle",
-      "rdfs:comment": "Associates a mesh knop (via its handle) with its persistent handle component."
-    },
-    {
-      "@id": "slug/",
-      "@type": "owl:DatatypeProperty",
-      "schema:domainIncludes": [
-        {
-          "@id": "KnopHandle/"
-        },
-        {
-          "@id": "Flow/"
-        }
-      ],
-      "schema:rangeIncludes": {
-        "@id": "xsd:string"
-      },
-      "rdfs:label": "has slug",
-      "rdfs:comment": "Optional kebab-case identifier for a Knop's distributions OR an overriding identifier for specific Flows' distributions. Defined in the _cfg-local or _cfg-inh flows."
+      "rdfs:label": "has Knop",
+      "rdfs:comment": "Associates a referent (a thing or concept worth identifying) with its Knop."
     },
     {
       "@id": "Component/",
@@ -185,30 +150,16 @@
         "@id": "Resource/"
       },
       "rdfs:label": "Component",
-      "rdfs:comment": "Terminal resources that provide specific mesh functionality and support knops."
+      "rdfs:comment": "Resources that provide specific mesh functionality and support knops."
     },
     {
-      "@id": "KnopHandle/",
+      "@id": "KnopNode/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": {
         "@id": "NamingResource/"
       },
-      "rdfs:label": "Handle",
-      "rdfs:comment": "Conceptual handle that refers to a knop 'as a knop' (as opposed to the thing/concept referred to by the parent knop). This is the abstract handle concept."
-    },
-    {
-      "@id": "HandleAsComponent/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        {
-          "@id": "Component/"
-        },
-        {
-          "@id": "Resource/"
-        }
-      ],
-      "rdfs:label": "Handle As Component",
-      "rdfs:comment": "A handle considered as a Knop component in its own right, addressable via IRI and subject to mesh operations. By convention, its path ends with `_knop-handle/#`."
+      "rdfs:label": "Knop node",
+      "rdfs:comment": "A specific location of a Knop."
     },
     {
       "@id": "DocumentationResource/",
@@ -330,7 +281,7 @@
         "@id": "Flow/"
       },
       "rdfs:label": "Payload flow",
-      "rdfs:comment": "Flow containing the dataset payload associated with the mesh knop."
+      "rdfs:comment": "Flow containing version of the sflo:DigitalArtifact identified by a PayloadKnop."
     },
     {
       "@id": "KnopConfigFlow/",
@@ -524,7 +475,7 @@
       "rdfs:comment": "Human-readable label corresponding to a weave run (e.g., '2025-11-24_0142_07' or '2025-11-24_0142_15'). Format is YYYY-MM-DD_HHMM_SS with second-level precision. All slices created by the same weave share the same weaveLabel. Not likely to be unique across meshes."
     },
     {
-      "@id": "sliceNumber/",
+      "@id": "sliceSequence/",
       "@type": "owl:DatatypeProperty",
       "schema:domainIncludes": {
         "@id": "FlowSlice/"
@@ -532,14 +483,14 @@
       "schema:rangeIncludes": {
         "@id": "xsd:integer"
       },
-      "rdfs:label": "slice number",
-      "rdfs:comment": "Monotonic integer identifying this slice within its Flow. 1 for the first committed slice of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
+      "rdfs:label": "slice sequence",
+      "rdfs:comment": "Monotonic integer providing the sequence number of this slice within its Flow. Usually 1 for the first-woven slice of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
     },
     {
       "@id": "hasLocalConfigFlow/",
       "@type": "owl:ObjectProperty",
       "schema:domainIncludes": {
-        "@id": "KnopHandle/"
+        "@id": "Knop/"
       },
       "schema:rangeIncludes": {
         "@id": "LocalKnopConfigFlow/"
@@ -551,7 +502,7 @@
       "@id": "hasInheritableConfigFlow/",
       "@type": "owl:ObjectProperty",
       "schema:domainIncludes": {
-        "@id": "KnopHandle/"
+        "@id": "Knop/"
       },
       "schema:rangeIncludes": {
         "@id": "InheritableKnopConfigFlow/"
@@ -563,18 +514,72 @@
       "@id": "anticipatedAbsoluteIri/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "anticipated absolute IRI",
-      "rdfs:comment": "The anticipated absolute IRI of this knop within its mesh, based on its Knop identifier, its path location, and the hosting platform."
+      "rdfs:comment": "The anticipated absolute IRI of this knop within a published mesh, based on its Knop identifier, its path location, and the hosting platform."
     },
     {
-      "@id": "isSameKnopAs/",
+      "@id": "hasKnopNode/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "is same knop as",
-      "rdfs:comment": "Indicates that two knops are intended to represent the same conceptual knop, even if they exist in different meshes or contexts.",
+      "rdfs:label": "has knop node",
+      "rdfs:comment": "Associates a KnopNode with its Knop.",
       "schema:domainIncludes": {
-        "@id": "KnopHandle/"
+        "@id": "Knop/"
       },
       "schema:rangeIncludes": {
-        "@id": "KnopHandle/"
+        "@id": "KnopNode/"
+      }
+    },
+    {
+      "@id": "hasActiveKnopNode/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has active knop node",
+      "rdfs:comment": "Associates a Knop with its active KnopNode.",
+      "rdfs:subPropertyOf": {
+        "@id": "hasKnopNode/"
+      },
+      "schema:domainIncludes": {
+        "@id": "Knop/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "KnopNode/"
+      }
+    },
+    {
+      "@id": "peerKnopNode/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "is peer KnopNode",
+      "rdfs:comment": "Associates a KnopNode with another KnopNode that is part of the same conceptual knop.",
+      "schema:domainIncludes": {
+        "@id": "KnopNode/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "KnopNode/"
+      }
+    },
+    {
+      "@id": "activePeerKnopNode/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "active peer KnopNode",
+      "rdfs:comment": "Associates a KnopNode with the currently active KnopNode for a Knop.",
+      "rdfs:subPropertyOf": {
+        "@id": "peerKnopNode/"
+      },
+      "schema:domainIncludes": {
+        "@id": "KnopNode/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "KnopNode/"
+      }
+    },
+    {
+      "@id": "isActiveNode/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "is active node",
+      "rdfs:comment": "asserts that a KnopNode is active.",
+      "schema:domainIncludes": {
+        "@id": "KnopNode/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:boolean"
       }
     },
     {
@@ -674,8 +679,9 @@
           },
           {
             "@id": "LocalKnopConfigFlow/"
-          ]
-        }
+          }
+        ]
       }
-    ]
-  }
+    }
+  ]
+}

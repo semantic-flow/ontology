@@ -315,15 +315,29 @@
       }
     },
     {
-      "@id": "flowToken",
+      "@id": "folderToken",
+      "@type": "owl:AnnotationProperty",
+      "rdfs:label": "Folder token",
+      "rdfs:comment": "Use in flow folder naming and as a suffix for flow distributions.",
+      "schema:domainIncludes": {
+        "@id": "NamingResource/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "workingToken",
       "@type": "owl:AnnotationProperty",
       "rdfs:label": "Flow token",
       "rdfs:comment": "Use in flow folder naming and as a suffix for flow distributions.",
-      "schema:domainIncludes": {
-        "@id": "Flow/"
-      },
+      "schema:domainIncludes": [
+        {
+          "@id": "AbstractKnopConfig/"
+        }
+      ],
       "schema:rangeIncludes": {
-        "@id": "string"
+        "@id": "xsd:string"
       }
     },
     {
@@ -336,6 +350,18 @@
       },
       "schema:rangeIncludes": {
         "@id": "KnopHandle/"
+      }
+    },
+    {
+      "@id": "retainNumSlices/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "retain number of slices",
+      "rdfs:comment": "Number of previous FlowSlices to retain when weaving. Not defined means retain all.",
+      "schema:domainIncludes": {
+        "@id": "AbstractKnopConfig/"
+      },
+      "schema:rangeIncludes": {
+        "@id": "xsd:integer"
       }
     },
     {
