@@ -7,7 +7,6 @@
     "dcat": "http://www.w3.org/ns/dcat#",
     "sh": "http://www.w3.org/ns/shacl#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "prov": "http://www.w3.org/ns/prov#",
     "schema": "https://schema.org/",
     "vann": "http://purl.org/vocab/vann/",
     "rdfs:subClassOf": {
@@ -43,7 +42,7 @@
       "@id": "PlatformElement/",
       "@type": "rdfs:Class",
       "rdfs:label": "Platform Element",
-      "rdfs:comment": "Abstract base class for all Semantic Flow resources. Provides fundamental identification and documentation affordances."
+      "rdfs:comment": "Abstract base class for all dereferenceable Semantic Flow resources. Every PlatformElement should have a ResourcePage."
     },
     {
       "@id": "Knop/",
@@ -118,9 +117,9 @@
     {
       "@id": "ResourcePage/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "PlatformElement/",
+      "rdfs:subClassOf": "schema:WebPage",
       "rdfs:label": "Resource page",
-      "rdfs:comment": "Human-readable index.html pages that provide dereferenceability for non-file PlatformElements."
+      "rdfs:comment": "Human-readable index.html pages that provide dereferenceability for PlatformElements."
     },
     {
       "@id": "hasResourcePage/",
@@ -233,7 +232,7 @@
       "@type": "owl:ObjectProperty",
       "rdfs:subPropertyOf": "dcat:previousVersion",
       "rdfs:label": "previous slice",
-      "rdfs:comment": "Links to the immediately-preceeding slice of this FlowSlice.",
+      "rdfs:comment": "Links to the immediately-preceding slice of this FlowSlice.",
       "rdfs:domain": "FlowSlice/",
       "rdfs:range": "FlowSlice/"
     },
@@ -273,20 +272,20 @@
       "rdfs:comment": "A minimal dataset for bootstrapping."
     },
     {
-      "@id": "currentMetaTurtleDistribution/",
+      "@id": "currentMetaTurtleDownloadIRI/",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": "Knop/",
-      "rdfs:range": "TurtleDistribution/",
+      "rdfs:range": "rdfs:Resource",
       "rdfs:label": "current meta download Turtle",
-      "rdfs:comment": "Can be used as download URL to fetch the current meta bytes for this knop."
+      "rdfs:comment": "Can be used as download URL to fetch the current Turtle meta bytes for this knop."
     },
     {
-      "@id": "currentMetaJsonldDistribution/",
+      "@id": "currentMetaJsonldDownloadIRI/",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": "Knop/",
-      "rdfs:range": "JsonldDistribution/",
+      "rdfs:range": "rdfs:Resource",
       "rdfs:label": "current meta download JSON-LD",
-      "rdfs:comment": "Can be used as download URL to fetch the current meta bytes for this knop."
+      "rdfs:comment": "Can be used as download URL to fetch the current JSON-LD meta bytes for this knop."
     },
     {
       "@id": "KnopNodeDataset/",
@@ -346,9 +345,12 @@
     {
       "@id": "Distribution/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "dcat:Distribution",
+      "rdfs:subClassOf": [
+        "PlatformElement/",
+        "dcat:Distribution"
+      ],
       "rdfs:label": "Distribution",
-      "rdfs:comment": "Semantic Flow abstract Distribution. The Distribution IRI is the access IRI; dereferencing yields the representation bytes. You can include dcat:downloadURL optionally, but treat it as a duplicated convenience assertion"
+      "rdfs:comment": "Semantic Flow abstract Distribution. A sflo:Distribution describes exactly one concrete downloadable file. Should have a dcat:downloadURL pointing to the actual bytes."
     },
     {
       "@id": "hasDistribution/",
