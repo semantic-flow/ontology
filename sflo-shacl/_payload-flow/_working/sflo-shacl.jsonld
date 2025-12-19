@@ -1,152 +1,104 @@
 {
   "@context": {
-    "@base": "https://semantic-flow.github.io/ontology/sflo-shacl/",
-    "sflo": "https://semantic-flow.github.io/ontology/semantic-flow/",
     "sh": "http://www.w3.org/ns/shacl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "dcat": "http://www.w3.org/ns/dcat#"
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "formats": "http://www.w3.org/ns/formats/",
+    "sflo": "https://semantic-flow.github.io/ontology/semantic-flow/"
   },
   "@graph": [
     {
-      "@id": "NamingResourceShape/",
+      "@id": "sflo:FlowSliceShape",
       "@type": "sh:NodeShape",
       "sh:targetClass": {
-        "@id": "sflo:NamingResource/"
-      },
-      "sh:knopKind": {
-        "@id": "sh:IRI"
-      },
-      "sh:sparql": {
-        "sh:message": "NamingResource IRI must end with a slash (/).",
-        "sh:select": "SELECT ?this WHERE {\n                FILTER ( !STRENDS(STR(?this), \"/\") )\n            }"
-      }
-    },
-    {
-      "@id": "FileResourceShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": {
-        "@id": "sflo:FileResource/"
-      },
-      "sh:knopKind": {
-        "@id": "sh:IRI"
-      },
-      "sh:sparql": {
-        "sh:message": "FileResource IRI must not end with a slash (/).",
-        "sh:select": "SELECT ?this WHERE {\n                FILTER ( STRENDS(STR(?this), \"/\") )\n            }"
-      }
-    },
-    {
-      "@id": "MeshKnopShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": {
-        "@id": "sflo:MeshKnop/"
+        "@id": "sflo:FlowSlice"
       },
       "sh:property": [
         {
+          "@type": "sh:PropertyShape",
           "sh:path": {
-            "@id": "sflo:hasHandle/"
+            "@id": "dcat:distribution"
+          },
+          "sh:minCount": 0,
+          "sh:nodeKind": {
+            "@id": "sh:IRI"
           },
           "sh:class": {
-            "@id": "sflo:HandleAsComponent/"
+            "@id": "dcat:Distribution"
           },
-          "sh:minCount": 1,
-          "sh:maxCount": 1,
-          "sh:message": "Every MeshKnop must have exactly one HandleAsComponent"
+          "sh:message": "If present, dcat:distribution values MUST be IRIs of type dcat:Distribution."
         }
       ]
     },
     {
-      "@id": "HandleAsComponentShape/",
+      "@id": "sflo:DistributionShape",
       "@type": "sh:NodeShape",
       "sh:targetClass": {
-        "@id": "sflo:HandleAsComponent/"
+        "@id": "dcat:Distribution"
       },
-      "sh:property": {
-        "sh:path": {
-          "@id": "sflo:isHandleFor/"
-        },
-        "sh:class": {
-          "@id": "sflo:MeshKnop/"
-        },
-        "sh:minCount": 1,
-        "sh:maxCount": 1,
-        "sh:message": "Every HandleAsComponent must be handle for exactly one MeshKnop"
-      }
-    },
-    {
-      "@id": "NamingResourceShape2/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": {
-        "@id": "sflo:FolderResource/"
-      },
-      "sh:property": {
-        "sh:path": {
-          "@id": "sflo:hasResourcePage/"
-        },
-        "sh:class": {
-          "@id": "sflo:ResourcePage/"
-        },
-        "sh:minCount": 1,
-        "sh:maxCount": 1,
-        "sh:message": "Every NamingResource should have a ResourcePage"
-      }
-    },
-    {
-      "@id": "VersionShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": {
-        "@id": "sflo:Version/"
-      },
-      "sh:not": {
-        "sh:class": {
-          "@id": "sflo:Version/"
-        }
-      },
-      "sh:message": "Version is abstract - use VersionVersion or other concrete version types"
-    },
-    {
-      "@id": "DocumentationResourceShape/",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": {
-        "@id": "sflo:DocumentationResource/"
-      },
-      "sh:not": {
-        "sh:class": {
-          "@id": "sflo:DocumentationResource/"
-        }
-      },
-      "sh:message": "DocumentationResource is abstract - use Changelog, Readme, or other specific subclass"
-    },
-    {
-      "@id": "sflo:PayloadKnopIsDatasetShape",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": "sflo:PayloadKnop",
-      "sh:property": {
-        "sh:path": "rdf:type",
-        "sh:hasValue": "dcat:Dataset",
-        "sh:message": "Payload knops MUST be typed as dcat:Dataset in their reference data. TODO: verify if this works as intended"
-      }
-    },
-    {
-      "@id": "sflo:FlowWithVersionsShape",
-      "@type": "sh:NodeShape",
-      "sh:targetClass": "sflo:FlowWithVersions",
       "sh:property": [
         {
-          "sh:path": "sflo:versioningState",
+          "@type": "sh:PropertyShape",
+          "sh:path": {
+            "@id": "dcat:downloadURL"
+          },
+          "sh:minCount": 1,
+          "sh:nodeKind": {
+            "@id": "sh:IRI"
+          },
+          "sh:message": "dcat:Distribution MUST have at least one dcat:downloadURL (as an IRI)."
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": {
+            "@id": "dcterms:format"
+          },
+          "sh:minCount": 0,
+          "sh:nodeKind": {
+            "@id": "sh:IRI"
+          },
+          "sh:message": "If present, dcterms:format MUST be an IRI (prefer formats:*)."
+        }
+      ]
+    },
+    {
+      "@id": "sflo:DistributionFormatRestrictionShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": {
+        "@id": "dcat:Distribution"
+      },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": {
+            "@id": "dcterms:format"
+          },
+          "sh:minCount": 0,
           "sh:in": {
             "@list": [
               {
-                "@id": "sflo:VersioningState/versioned/"
+                "@id": "formats:Turtle"
               },
               {
-                "@id": "sflo:VersioningState/deversioned/"
+                "@id": "formats:TriG"
+              },
+              {
+                "@id": "formats:N-Triples"
+              },
+              {
+                "@id": "formats:N-Quads"
+              },
+              {
+                "@id": "formats:JSON-LD"
+              },
+              {
+                "@id": "formats:RDF_XML"
               }
             ]
           },
-          "sh:minCount": 1,
-          "sh:maxCount": 1,
-          "sh:message": "FlowWithVersions must have versioningState of either 'versioned' or 'deversioned'."
+          "sh:message": "If present, dcterms:format MUST be one of the allowed RDF syntaxes (formats:*)."
         }
       ]
     }

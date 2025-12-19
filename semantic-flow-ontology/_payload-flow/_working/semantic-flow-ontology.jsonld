@@ -9,7 +9,19 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "prov": "http://www.w3.org/ns/prov#",
     "schema": "https://schema.org/",
-    "vann": "http://purl.org/vocab/vann/"
+    "vann": "http://purl.org/vocab/vann/",
+    "rdfs:subClassOf": {
+      "@type": "@id"
+    },
+    "rdfs:subPropertyOf": {
+      "@type": "@id"
+    },
+    "rdfs:domain": {
+      "@type": "@id"
+    },
+    "rdfs:range": {
+      "@type": "@id"
+    }
   },
   "@graph": [
     {
@@ -20,9 +32,9 @@
       "dcterms:creator": {
         "@id": "https://djradon.github.io/ns/djradon/"
       },
-      "owl:versionInfo": "0.1.0",
+      "owl:versionInfo": "0.0.1",
       "owl:versionIRI": {
-        "@id": "https://semantic-flow.github.io/ontology/semantic-flow/_payload/_default/sflo.ttl"
+        "@id": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/_payload/_default/sflo.ttl"
       },
       "vann:preferredNamespacePrefix": "sflo",
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
@@ -36,53 +48,39 @@
     {
       "@id": "Knop/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "PlatformElement/"
-      },
+      "rdfs:subClassOf": "PlatformElement/",
       "rdfs:label": "Knop",
-      "rdfs:comment": "Structural-conceptual units that provide identifiers for things, may act as namespace segments to organize/contain other resources, may contain reference data about their referents, and may have a payload dataset. Knops form the structure of the mesh."
+      "rdfs:comment": "Structural-conceptual units that provide identifiers for things, may act as namespace segments to organize/contain other Knops, may contain reference data about their referents, and may have a payload dataset. Knops form the superstructure of a semantic mesh."
     },
     {
       "@id": "KnopComponent/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "PlatformElement/"
-      },
+      "rdfs:subClassOf": "PlatformElement/",
       "rdfs:label": "KnopComponent",
       "rdfs:comment": "Resources that provide specific mesh functionality and support knops."
     },
     {
       "@id": "hasKnopComponent/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "Knop/"
-      },
-      "rdfs:range": {
-        "@id": "KnopComponent/"
-      },
+      "rdfs:domain": "Knop/",
+      "rdfs:range": "KnopComponent/",
       "rdfs:label": "has KnopComponent",
       "rdfs:comment": "Associates knops with their supporting components."
     },
     {
       "@id": "KnopNode/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "PlatformElement/"
-      },
-      "rdfs:label": "Knop node",
+      "rdfs:subClassOf": "PlatformElement/",
+      "rdfs:label": "KnopNode",
       "rdfs:comment": "A specific location of a Knop."
     },
     {
       "@id": "hasKnopNode/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "has knop node",
+      "rdfs:label": "has KnopNode",
       "rdfs:comment": "Associates a Knop with a KnopNode.",
-      "rdfs:domain": {
-        "@id": "Knop/"
-      },
-      "rdfs:range": {
-        "@id": "KnopNode/"
-      }
+      "rdfs:domain": "Knop/",
+      "rdfs:range": "KnopNode/"
     },
     {
       "@id": "hasActiveKnopNode/",
@@ -92,58 +90,43 @@
       ],
       "rdfs:label": "has active knop node",
       "rdfs:comment": "Associates a Knop with its active KnopNode.",
-      "rdfs:subPropertyOf": {
-        "@id": "hasKnopNode/"
-      }
+      "rdfs:subPropertyOf": "hasKnopNode/"
     },
     {
       "@id": "KnopNodeComponent/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "PlatformElement/"
-      },
+      "rdfs:subClassOf": "PlatformElement/",
       "rdfs:label": "KnopNodeComponent",
       "rdfs:comment": "A KnopNodeComponent provides specific Node-level functionality."
     },
     {
       "@id": "hasKnopNodeComponent/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "KnopNode/"
-      },
-      "rdfs:range": {
-        "@id": "KnopNodeComponent/"
-      },
+      "rdfs:domain": "KnopNode/",
+      "rdfs:range": "KnopNodeComponent/",
       "rdfs:label": "has KnopNodeComponent",
       "rdfs:comment": "Associates KnopNodes with their supporting components."
     },
     {
       "@id": "hasKnop/",
       "@type": "owl:ObjectProperty",
-      "rdfs:range": {
-        "@id": "Knop/"
-      },
+      "rdfs:domain": "rdfs:Resource",
+      "rdfs:range": "Knop/",
       "rdfs:label": "has Knop",
       "rdfs:comment": "Associates a referent (a thing or concept worth identifying) with its Knop."
     },
     {
       "@id": "ResourcePage/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "PlatformElement/"
-      },
+      "rdfs:subClassOf": "PlatformElement/",
       "rdfs:label": "Resource page",
       "rdfs:comment": "Human-readable index.html pages that provide dereferenceability for non-file PlatformElements."
     },
     {
       "@id": "hasResourcePage/",
       "@type": "owl:ObjectProperty",
-      "schema:domainIncludes": {
-        "@id": "PlatformElement/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "ResourcePage/"
-      },
+      "rdfs:domain": "PlatformElement/",
+      "rdfs:range": "ResourcePage/",
       "rdfs:label": "has ResourcePage",
       "rdfs:comment": "Associates a PlatformElement with its index.html resource page file."
     },
@@ -151,12 +134,8 @@
       "@id": "Flow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        {
-          "@id": "PlatformElement/"
-        },
-        {
-          "@id": "dcat:DatasetSeries"
-        }
+        "PlatformElement/",
+        "dcat:DatasetSeries"
       ],
       "rdfs:label": "Flow",
       "rdfs:comment": "Evolvable containers for knop metadata, reference data, payload data."
@@ -164,250 +143,157 @@
     {
       "@id": "KnopMetadataFlow/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "Flow/"
-      },
+      "rdfs:subClassOf": "Flow/",
       "rdfs:label": "Metadata Flow",
       "rdfs:comment": "Flow containing metadata about the mesh knop itself."
     },
     {
       "@id": "ReferenceFlow/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "Flow/"
-      },
+      "rdfs:subClassOf": "Flow/",
       "rdfs:label": "Reference Flow",
       "rdfs:comment": "Flow containing reference data about the thing or concept referred to by the mesh knop."
     },
     {
       "@id": "PayloadFlow/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "Flow/"
-      },
+      "rdfs:subClassOf": "Flow/",
       "rdfs:label": "Payload flow",
       "rdfs:comment": "Flow containing version of the Dataset identified by a PayloadKnop."
     },
     {
       "@id": "hasFlow/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasKnopComponent/"
-      },
-      "rdfs:domain": {
-        "@id": "Knop/"
-      },
-      "rdfs:range": {
-        "@id": "Flow/"
-      },
+      "rdfs:subPropertyOf": "hasKnopComponent/",
+      "rdfs:domain": "Knop/",
+      "rdfs:range": "Flow/",
       "rdfs:label": "has Flow",
       "rdfs:comment": "Abstract property for linking mesh knops to their flows (metadata, reference, data)."
     },
     {
       "@id": "hasKnopMetadataFlow/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasFlow/"
-      },
-      "rdfs:range": {
-        "@id": "KnopMetadataFlow/"
-      },
+      "rdfs:subPropertyOf": "hasFlow/",
+      "rdfs:range": "KnopMetadataFlow/",
       "rdfs:label": "has KnopMetadataFlow",
       "rdfs:comment": "Links a mesh knop to its metadata flow."
     },
     {
       "@id": "hasReferenceFlow/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasFlow/"
-      },
-      "rdfs:range": {
-        "@id": "ReferenceFlow/"
-      },
+      "rdfs:subPropertyOf": "hasFlow/",
+      "rdfs:range": "ReferenceFlow/",
       "rdfs:label": "has ReferenceFlow",
       "rdfs:comment": "Links a mesh knop to its reference flow."
     },
     {
       "@id": "hasPayloadFlow/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasFlow/"
-      },
-      "rdfs:range": {
-        "@id": "PayloadFlow/"
-      },
+      "rdfs:subPropertyOf": "hasFlow/",
+      "rdfs:range": "PayloadFlow/",
       "rdfs:label": "has PayloadFlow",
       "rdfs:comment": "Links a mesh knop to its payload flow."
     },
     {
-      "@id": "FlowSlice/",
+      "@id": "Dataset/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        {
-          "@id": "PlatformElement/"
-        },
-        {
-          "@id": "dcat:Dataset"
-        }
+        "PlatformElement/",
+        "dcat:Dataset"
       ],
+      "rdfs:label": "Dataset",
+      "rdfs:comment": "An abstract base class for all datasets in the Semantic Flow platform."
+    },
+    {
+      "@id": "FlowSlice/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "Dataset/",
       "rdfs:label": "Flow Slice",
       "rdfs:comment": "One concrete dataset instance belonging to a Flow. A FlowSlice represents the Flow's data as a whole at a particular stage, not a subset of it."
     },
     {
       "@id": "hasFlowSlice/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasKnopComponent/"
-      },
-      "rdfs:domain": {
-        "@id": "Flow/"
-      },
-      "rdfs:range": {
-        "@id": "FlowSlice/"
-      },
+      "rdfs:domain": "Flow/",
+      "rdfs:range": "FlowSlice/",
       "rdfs:label": "has flow slice",
       "rdfs:comment": "Associates a Flow with one of its slices."
     },
     {
       "@id": "hasCurrentSlice/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasFlowSlice/"
-      },
-      "rdfs:domain": {
-        "@id": "Flow/"
-      },
-      "schema:rangeIncludes": [
-        {
-          "@id": "FlowSlice/"
-        }
-      ],
+      "rdfs:subPropertyOf": "hasFlowSlice/",
+      "rdfs:domain": "Flow/",
+      "rdfs:range": "FlowSlice/",
       "rdfs:label": "has current slice",
       "rdfs:comment": "Associates a Flow with its current FlowSlice."
     },
     {
       "@id": "previousSlice/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "dcat:previousVersion"
-      },
+      "rdfs:subPropertyOf": "dcat:previousVersion",
       "rdfs:label": "previous slice",
       "rdfs:comment": "Links to the immediately-preceeding slice of this FlowSlice.",
-      "schema:domainIncludes": {
-        "@id": "FlowSlice/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "FlowSlice/"
-      }
+      "rdfs:domain": "FlowSlice/",
+      "rdfs:range": "FlowSlice/"
     },
     {
       "@id": "sliceSequence/",
       "@type": "owl:DatatypeProperty",
-      "schema:domainIncludes": {
-        "@id": "FlowSlice/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "xsd:integer"
-      },
+      "rdfs:domain": "FlowSlice/",
+      "rdfs:range": "xsd:integer",
       "rdfs:label": "slice sequence",
       "rdfs:comment": "Monotonic integer providing the sequence number of this slice within its Flow. Usually 1 for the first-woven slice of a flow, 2 for the next, etc. Used for ordering and for detecting gaps or compaction at the flow level."
     },
     {
-      "@id": "anticipatedAbsoluteIri/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "anticipated absolute IRI",
-      "rdfs:comment": "The anticipated absolute IRI of this knop within a published mesh, based on its Knop identifier, its path location, and the hosting platform."
-    },
-    {
       "@id": "peerKnopNode/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "is peer KnopNode",
+      "rdfs:label": "Peer KnopNode",
       "rdfs:comment": "Associates a KnopNode with another KnopNode that is part of the same conceptual knop.",
-      "schema:domainIncludes": {
-        "@id": "KnopNode/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "KnopNode/"
-      }
+      "rdfs:domain": "KnopNode/",
+      "rdfs:range": "KnopNode/"
     },
     {
       "@id": "activePeerKnopNode/",
       "@type": "owl:ObjectProperty",
       "rdfs:label": "active peer KnopNode",
       "rdfs:comment": "Associates a KnopNode with the currently active KnopNode for a Knop.",
-      "rdfs:subPropertyOf": {
-        "@id": "peerKnopNode/"
-      },
-      "schema:domainIncludes": {
-        "@id": "KnopNode/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "KnopNode/"
-      }
-    },
-    {
-      "@id": "parentKnop/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "parent knop",
-      "rdfs:comment": "indicates that this knop is contained in another knop. Should only be used in operational KnopConfig.",
-      "schema:domainIncludes": {
-        "@id": "Knop/"
-      },
-      "schema:rangeIncludes": {
-        "@id": "Knop/"
-      }
-    },
-    {
-      "@id": "rootKnop/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "root knop",
-      "rdfs:comment": "indicates that this is a root knop. Should only be used in operational KnopConfig.",
-      "schema:rangeIncludes": {
-        "@id": "xsd:boolean"
-      }
+      "rdfs:subPropertyOf": "peerKnopNode/",
+      "rdfs:domain": "KnopNode/",
+      "rdfs:range": "KnopNode/"
     },
     {
       "@id": "PointersDataset/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        {
-          "@id": "KnopComponent/"
-        },
-        {
-          "@id": "dcat:Dataset"
-        }
+        "KnopComponent/",
+        "Dataset/"
       ],
       "rdfs:label": "Pointers dataset",
       "rdfs:comment": "A minimal dataset for bootstrapping."
     },
     {
-      "@id": "currentMetaDownloadTTL/",
+      "@id": "currentMetaTurtleDistribution/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "Knop/"
-      },
+      "rdfs:domain": "Knop/",
+      "rdfs:range": "TurtleDistribution/",
       "rdfs:label": "current meta download Turtle",
-      "rdfs:comment": "Relative IRI to fetch the current meta bytes for this knop. The representation is expected to be Turtle."
+      "rdfs:comment": "Can be used as download URL to fetch the current meta bytes for this knop."
     },
     {
-      "@id": "currentMetaDownloadJSONLD/",
+      "@id": "currentMetaJsonldDistribution/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "Knop/"
-      },
+      "rdfs:domain": "Knop/",
+      "rdfs:range": "JsonldDistribution/",
       "rdfs:label": "current meta download JSON-LD",
-      "rdfs:comment": "Relative IRI to fetch the current meta bytes for this knop. The representation is expected to be JSON-LD."
+      "rdfs:comment": "Can be used as download URL to fetch the current meta bytes for this knop."
     },
     {
       "@id": "KnopNodeDataset/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        {
-          "@id": "KnopNodeComponent/"
-        },
-        {
-          "@id": "dcat:Dataset"
-        }
+        "KnopNodeComponent/",
+        "Dataset/"
       ],
       "rdfs:label": "KnopNode dataset",
       "rdfs:comment": "Base class for KnopNode-level operational datasets (inventory, opslog, backlinks)."
@@ -415,65 +301,111 @@
     {
       "@id": "InventoryDataset/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "KnopNodeDataset/"
-      },
+      "rdfs:subClassOf": "KnopNodeDataset/",
       "rdfs:label": "Inventory dataset",
       "rdfs:comment": "KnopNode-level dataset describing the locally-present artifacts/resources/components at that KnopNode."
     },
     {
       "@id": "hasInventoryDataset/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasKnopNodeComponent/"
-      },
-      "rdfs:range": {
-        "@id": "InventoryDataset/"
-      },
+      "rdfs:subPropertyOf": "hasKnopNodeComponent/",
+      "rdfs:range": "InventoryDataset/",
       "rdfs:label": "has inventory dataset",
       "rdfs:comment": "Links a KnopNode to its InventoryDataset component."
     },
     {
       "@id": "OpslogDataset/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "KnopNodeDataset/"
-      },
+      "rdfs:subClassOf": "KnopNodeDataset/",
       "rdfs:label": "opslog dataset",
       "rdfs:comment": "KnopNode-level append-only dataset recording operations/events relevant to that KnopNode."
     },
     {
       "@id": "hasOpslogDataset/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasKnopNodeComponent/"
-      },
-      "rdfs:range": {
-        "@id": "OpslogDataset/"
-      },
+      "rdfs:subPropertyOf": "hasKnopNodeComponent/",
+      "rdfs:range": "OpslogDataset/",
       "rdfs:label": "has opslog dataset",
       "rdfs:comment": "Links a KnopNode to its OpslogDataset component."
     },
     {
       "@id": "BacklinksDataset/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "KnopNodeDataset/"
-      },
+      "rdfs:subClassOf": "KnopNodeDataset/",
       "rdfs:label": "backlinks dataset",
       "rdfs:comment": "KnopNode-level dataset describing backlinks to a published IRI corresponding to this KnopNode."
     },
     {
       "@id": "hasBacklinksDataset/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": {
-        "@id": "hasKnopNodeComponent/"
-      },
-      "rdfs:range": {
-        "@id": "BacklinksDataset/"
-      },
+      "rdfs:subPropertyOf": "hasKnopNodeComponent/",
+      "rdfs:range": "BacklinksDataset/",
       "rdfs:label": "has backlinks dataset",
       "rdfs:comment": "Links a KnopNode to its BacklinksDataset component."
+    },
+    {
+      "@id": "Distribution/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "dcat:Distribution",
+      "rdfs:label": "Distribution",
+      "rdfs:comment": "Semantic Flow abstract Distribution. The Distribution IRI is the access IRI; dereferencing yields the representation bytes. You can include dcat:downloadURL optionally, but treat it as a duplicated convenience assertion"
+    },
+    {
+      "@id": "hasDistribution/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has Distribution",
+      "rdfs:comment": "Links a Dataset to one of its Distributions.",
+      "rdfs:subPropertyOf": "dcat:distribution",
+      "rdfs:domain": "Dataset/",
+      "rdfs:range": "Distribution/"
+    },
+    {
+      "@id": "JsonldDistribution/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "Distribution/",
+      "rdfs:label": "JSON-LD Distribution",
+      "rdfs:comment": "A DCAT Distribution specifically for JSON-LD representations."
+    },
+    {
+      "@id": "hasJsonldDistribution/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has JSON-LD Distribution",
+      "rdfs:comment": "Links a Dataset to its JSON-LD Distribution.",
+      "rdfs:subPropertyOf": "hasDistribution",
+      "rdfs:domain": "Dataset/",
+      "rdfs:range": "JsonldDistribution/"
+    },
+    {
+      "@id": "TrigDistribution/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "Distribution/",
+      "rdfs:label": "Trig Distribution",
+      "rdfs:comment": "A DCAT Distribution specifically for TriG representations."
+    },
+    {
+      "@id": "hasTrigDistribution/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has TriG Distribution",
+      "rdfs:comment": "Links a Dataset to its TriG Distribution.",
+      "rdfs:subPropertyOf": "hasDistribution",
+      "rdfs:domain": "Dataset/",
+      "rdfs:range": "TrigDistribution/"
+    },
+    {
+      "@id": "TurtleDistribution/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "Distribution/",
+      "rdfs:label": "Turtle Distribution",
+      "rdfs:comment": "A DCAT Distribution specifically for Turtle representations."
+    },
+    {
+      "@id": "hasTurtleDistribution/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "has Turtle Distribution",
+      "rdfs:comment": "Links a Dataset to its Turtle Distribution.",
+      "rdfs:subPropertyOf": "hasDistribution",
+      "rdfs:domain": "Dataset/",
+      "rdfs:range": "TurtleDistribution/"
     }
   ]
 }
