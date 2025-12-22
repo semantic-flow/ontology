@@ -39,22 +39,36 @@
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
     },
     {
-      "@id": "PlatformElement/",
+      "@id": "NonArtifact/",
       "@type": "rdfs:Class",
-      "rdfs:label": "Platform Element",
-      "rdfs:comment": "Abstract base class for all dereferenceable Semantic Flow resources. Every PlatformElement should have a ResourcePage."
+      "rdfs:label": "NonArtifact resource",
+      "rdfs:comment": "Base class for all non-artifact resources. Every NonArtifact resource should have a ResourcePage."
+    },
+    {
+      "@id": "Artifact/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Artifact resource",
+      "rdfs:comment": "Base class for all file-like (i.e., self-contained bytestream) resources. Every Artifact resource should be downloadable via its IRI."
+    },
+    {
+      "@id": "downloadIRI/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "Distribution/",
+      "rdfs:range": "Artifact/",
+      "rdfs:label": "download IRI",
+      "rdfs:comment": "The IRI that can be used to download the artifact."
     },
     {
       "@id": "Knop/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "PlatformElement/",
+      "rdfs:subClassOf": "NonArtifact/",
       "rdfs:label": "Knop",
       "rdfs:comment": "Structural-conceptual units that provide identifiers for things, may act as namespace segments to organize/contain other Knops, may contain reference data about their referents, and may have a payload dataset. Knops form the superstructure of a semantic mesh."
     },
     {
       "@id": "KnopComponent/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "PlatformElement/",
+      "rdfs:subClassOf": "NonArtifact/",
       "rdfs:label": "KnopComponent",
       "rdfs:comment": "Resources that provide specific mesh functionality and support knops."
     },
@@ -69,7 +83,7 @@
     {
       "@id": "KnopNode/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "PlatformElement/",
+      "rdfs:subClassOf": "NonArtifact/",
       "rdfs:label": "KnopNode",
       "rdfs:comment": "A specific location of a Knop."
     },
@@ -94,7 +108,7 @@
     {
       "@id": "KnopNodeComponent/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "PlatformElement/",
+      "rdfs:subClassOf": "NonArtifact/",
       "rdfs:label": "KnopNodeComponent",
       "rdfs:comment": "A KnopNodeComponent provides specific Node-level functionality."
     },
@@ -119,21 +133,21 @@
       "@type": "rdfs:Class",
       "rdfs:subClassOf": "schema:WebPage",
       "rdfs:label": "Resource page",
-      "rdfs:comment": "Human-readable index.html pages that provide dereferenceability for PlatformElements."
+      "rdfs:comment": "Human-readable index.html pages that provide dereferenceability for NonArtifacts."
     },
     {
       "@id": "hasResourcePage/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": "PlatformElement/",
+      "rdfs:domain": "NonArtifact/",
       "rdfs:range": "ResourcePage/",
       "rdfs:label": "has ResourcePage",
-      "rdfs:comment": "Associates a PlatformElement with its index.html resource page file."
+      "rdfs:comment": "Associates a NonArtifact with its index.html resource page file."
     },
     {
       "@id": "Flow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "PlatformElement/",
+        "NonArtifact/",
         "dcat:DatasetSeries"
       ],
       "rdfs:label": "Flow",
@@ -197,7 +211,7 @@
       "@id": "Dataset/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "PlatformElement/",
+        "NonArtifact/",
         "dcat:Dataset"
       ],
       "rdfs:label": "Dataset",
@@ -346,11 +360,11 @@
       "@id": "Distribution/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "PlatformElement/",
+        "NonArtifact/",
         "dcat:Distribution"
       ],
       "rdfs:label": "Distribution",
-      "rdfs:comment": "Semantic Flow abstract Distribution. A sflo:Distribution describes exactly one concrete downloadable file. Should have a dcat:downloadURL pointing to the actual bytes."
+      "rdfs:comment": "Semantic Flow abstract Distribution. A sflo:Distribution describes exactly one concrete downloadable file. Should have a has*Distribution pointing to the actual bytes."
     },
     {
       "@id": "hasDistribution/",

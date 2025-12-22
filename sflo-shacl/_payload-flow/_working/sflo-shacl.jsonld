@@ -21,6 +21,136 @@
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-shacl/"
     },
     {
+      "@context": {
+        "@version": 1.1,
+
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+        "sh": "http://www.w3.org/ns/shacl#",
+        "dcat": "http://www.w3.org/ns/dcat#",
+
+        "sflo": "https://semantic-flow.github.io/ontology/semantic-flow/",
+
+        "id": "@id",
+        "type": "@type"
+      },
+
+      "@graph": [
+        {
+          "id": "sflo-shacl:ArtifactDisjointnessShape",
+          "type": "sh:NodeShape",
+          "rdfs:label": "Artifact disjointness",
+          "rdfs:comment": "Ensures an sflo:Artifact is not also typed sflo:NonArtifact.",
+
+          "sh:targetClass": { "id": "sflo:Artifact" },
+
+          "sh:not": {
+            "type": "sh:NodeShape",
+            "sh:property": {
+              "type": "sh:PropertyShape",
+              "sh:path": { "id": "rdf:type" },
+              "sh:hasValue": { "id": "sflo:NonArtifact" }
+            }
+          },
+
+          "sh:message": "A resource cannot be both sflo:Artifact and sflo:NonArtifact."
+        },
+        {
+          "id": "sflo-shacl:NonArtifactDisjointnessShape",
+          "type": "sh:NodeShape",
+          "rdfs:label": "NonArtifact disjointness",
+          "rdfs:comment": "Ensures an sflo:NonArtifact is not also typed sflo:Artifact.",
+
+          "sh:targetClass": { "id": "sflo:NonArtifact" },
+
+          "sh:not": {
+            "type": "sh:NodeShape",
+            "sh:property": {
+              "type": "sh:PropertyShape",
+              "sh:path": { "id": "rdf:type" },
+              "sh:hasValue": { "id": "sflo:Artifact" }
+            }
+          },
+
+          "sh:message": "A resource cannot be both sflo:NonArtifact and sflo:Artifact."
+        },
+        {
+          "id": "sflo-shacl:ArtifactNodeShape",
+          "type": "sh:NodeShape",
+          "rdfs:label": "Artifact IRI shape",
+          "rdfs:comment": "Validates the Semantic Flow convention: Artifact IRIs MUST NOT end with '/'.",
+
+          "sh:targetClass": { "id": "sflo:Artifact" },
+
+          "sh:nodeKind": { "id": "sh:IRI" },
+
+          "sh:pattern": ".+[^/]$",
+          "sh:flags": "s",
+
+          "sh:message": "sflo:Artifact IRIs must not end with '/'."
+        },
+
+        {
+          "id": "sflo-shacl:NonArtifactNodeShape",
+          "type": "sh:NodeShape",
+          "rdfs:label": "NonArtifact IRI shape",
+          "rdfs:comment": "Validates the Semantic Flow convention: NonArtifact IRIs MUST end with '/'.",
+
+          "sh:targetClass": { "id": "sflo:NonArtifact" },
+
+          "sh:nodeKind": { "id": "sh:IRI" },
+
+          "sh:pattern": ".+/$",
+          "sh:flags": "s",
+
+          "sh:message": "sflo:NonArtifact IRIs must end with '/'."
+        },
+
+        {
+          "id": "sflo-shacl:DistributionDownloadArtifactShape",
+          "type": "sh:NodeShape",
+          "rdfs:label": "Distribution downloadArtifact shape",
+          "rdfs:comment": "Ensures a dcat:Distribution links to at least one sflo:Artifact via sflo:downloadArtifact.",
+
+          "sh:targetClass": { "id": "dcat:Distribution" },
+
+          "sh:property": [
+            {
+              "type": "sh:PropertyShape",
+              "sh:path": { "id": "sflo:downloadArtifact" },
+
+              "sh:minCount": 1,
+
+              "sh:nodeKind": { "id": "sh:IRI" },
+              "sh:class": { "id": "sflo:Artifact" },
+
+              "sh:message": "A dcat:Distribution must have at least one sflo:downloadArtifact pointing to an sflo:Artifact IRI."
+            }
+          ]
+        },
+
+        {
+          "id": "sflo-shacl:DistributionIsNonArtifactShape",
+          "type": "sh:NodeShape",
+          "rdfs:label": "Distribution is NonArtifact shape",
+          "rdfs:comment": "Optional: enforces that every dcat:Distribution is also typed sflo:NonArtifact (your platform partition rule).",
+
+          "sh:targetClass": { "id": "dcat:Distribution" },
+
+          "sh:property": [
+            {
+              "type": "sh:PropertyShape",
+              "sh:path": { "id": "rdf:type" },
+              "sh:hasValue": { "id": "sflo:NonArtifact" },
+              "sh:message": "Every dcat:Distribution must also be explicitly typed sflo:NonArtifact."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "@id": "FlowSliceShape/",
       "@type": "sh:NodeShape",
       "sh:targetClass": {
@@ -51,18 +181,6 @@
         "@id": "sflo:Distribution/"
       },
       "sh:property": [
-        {
-          "@id": "DistributionShape/#downloadURLProperty",
-          "@type": "sh:PropertyShape",
-          "sh:path": {
-            "@id": "dcat:downloadURL"
-          },
-          "sh:minCount": 1,
-          "sh:nodeKind": {
-            "@id": "sh:IRI"
-          },
-          "sh:message": "sflo:Distribution/ MUST have at least one dcat:downloadURL (as an IRI)."
-        },
         {
           "@id": "DistributionShape/#formatProperty",
           "@type": "sh:PropertyShape",
@@ -118,39 +236,37 @@
       ]
     },
     {
-      "@id": "PlatformElementResourcePageShape/",
+      "@id": "NonArtifactResourcePageShape/",
       "@type": "sh:NodeShape",
-      "sh:targetClass": {
-        "@id": "sflo:PlatformElement/"
-      },
+      "sh:targetClass": { "@id": "sflo:NonArtifact" },
       "sh:property": {
-        "@id": "PlatformElementResourcePageShape/#hasResourcePageProperty",
         "@type": "sh:PropertyShape",
-        "sh:path": {
-          "@id": "sflo:hasResourcePage/"
-        },
+        "sh:path": { "@id": "sflo:hasResourcePage" },
         "sh:minCount": 1,
         "sh:maxCount": 1,
-        "sh:class": {
-          "@id": "sflo:ResourcePage/"
-        },
-        "sh:message": "Every sflo:PlatformElement/ must have exactly one sflo:hasResourcePage/ value, and it must be a sflo:ResourcePage/."
+        "sh:nodeKind": { "@id": "sh:IRI" },
+        "sh:class": { "@id": "sflo:ResourcePage" },
+        "sh:message": "Every sflo:NonArtifact must have exactly one sflo:hasResourcePage pointing to a sflo:ResourcePage."
       }
     },
     {
-      "@id": "ResourcePageNotPlatformElementShape/",
+      "@id": "ResourcePageIsArtifactShape/",
       "@type": "sh:NodeShape",
-      "sh:targetClass": {
-        "@id": "sflo:ResourcePage/"
-      },
-      "sh:not": {
-        "@id": "ResourcePageNotPlatformElementShape/#notPlatformElement",
-        "@type": "sh:NodeShape",
-        "sh:class": {
-          "@id": "sflo:PlatformElement/"
+      "sh:targetClass": { "@id": "sflo:ResourcePage" },
+      "sh:property": [
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "rdf:type" },
+          "sh:hasValue": { "@id": "sflo:Artifact" },
+          "sh:message": "Every sflo:ResourcePage must also be typed sflo:Artifact."
+        },
+        {
+          "@type": "sh:PropertyShape",
+          "sh:path": { "@id": "rdf:type" },
+          "sh:disjoint": { "@id": "sflo:NonArtifact" },
+          "sh:message": "A sflo:ResourcePage must not be typed sflo:NonArtifact."
         }
-      },
-      "sh:message": "A sflo:ResourcePage/ must not also be typed as a sflo:PlatformElement/."
+      ]
     }
   ]
 }

@@ -101,42 +101,6 @@
       "rdfs:comment": "Template configuration mapping for resource page generation. A template mapping applies only if all specified target conditions (via mappingTargetClassRegex and mappingTargetSlugRegex) are satisfied. If a mapping specifies no class or slug conditions, it is applicable to all knops. Since mappings may come from multiple sources and may be multiple even from a single source, mappingPriority is used to resolve conflicts when multiple mappings apply to the same knop."
     },
     {
-      "@id": "Template/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "ConfigurationClass/"
-      },
-      "rdfs:label": "Template",
-      "rdfs:comment": "Abstract class representing a resource page template."
-    },
-    {
-      "@id": "InnerTemplate/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "Template/"
-      },
-      "rdfs:label": "Inner template",
-      "rdfs:comment": "An inner template defines the main content of a resource page."
-    },
-    {
-      "@id": "OuterTemplate/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "Template/"
-      },
-      "rdfs:label": "Outer template",
-      "rdfs:comment": "An outer template defines the overall structure and layout of a resource page."
-    },
-    {
-      "@id": "Stylesheet/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "ConfigurationClass/"
-      },
-      "rdfs:label": "Stylesheet",
-      "rdfs:comment": "A CSS stylesheet for resource pages."
-    },
-    {
       "@id": "knopNodeConfigInheritanceEnabled/",
       "@type": "owl:DatatypeProperty",
       "rdfs:label": "KnopNode config inheritance enabled",
@@ -181,7 +145,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "InnerTemplate/"
+        "@id": "sflo:Artifact/"
       }
     },
     {
@@ -193,7 +157,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "OuterTemplate/"
+        "@id": "sflo:Artifact/"
       }
     },
     {
@@ -205,7 +169,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "Stylesheet/"
+        "@id": "sflo:Artifact/"
       }
     },
     {
