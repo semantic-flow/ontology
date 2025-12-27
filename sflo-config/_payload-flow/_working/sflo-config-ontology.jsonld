@@ -145,7 +145,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "sflo:Artifact/"
+        "@id": "sflo:InnerTemplate/"
       }
     },
     {
@@ -157,7 +157,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "sflo:Artifact/"
+        "@id": "sflo:OuterTemplate/"
       }
     },
     {
@@ -169,7 +169,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "sflo:Artifact/"
+        "@id": "sflo:Stylesheet/"
       }
     },
     {

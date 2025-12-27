@@ -47,8 +47,8 @@
     {
       "@id": "Artifact/",
       "@type": "rdfs:Class",
-      "rdfs:label": "Artifact resource",
-      "rdfs:comment": "Base class for all file-like (i.e., self-contained bytestream) resources. Every Artifact resource should be downloadable via its IRI."
+      "rdfs:label": "Retrievable artifact",
+      "rdfs:comment": "A resource whose IRI is intended as a retrieval location for bytes. Every Artifact resource should be downloadable via its IRI."
     },
     {
       "@id": "downloadIRI/",
@@ -422,6 +422,33 @@
       "rdfs:subPropertyOf": "hasDistribution",
       "rdfs:domain": "Dataset/",
       "rdfs:range": "TurtleDistribution/"
+    },
+    {
+      "@id": "InnerTemplate/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": {
+        "@id": "Artifact/"
+      },
+      "rdfs:label": "Inner template",
+      "rdfs:comment": "An inner template defines the main content of a resource page."
+    },
+    {
+      "@id": "OuterTemplate/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": {
+        "@id": "Artifact/"
+      },
+      "rdfs:label": "Outer template",
+      "rdfs:comment": "An outer template defines the overall structure and layout of a resource page."
+    },
+    {
+      "@id": "Stylesheet/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": {
+        "@id": "Artifact/"
+      },
+      "rdfs:label": "Stylesheet",
+      "rdfs:comment": "A CSS stylesheet for resource pages."
     }
   ]
 }
