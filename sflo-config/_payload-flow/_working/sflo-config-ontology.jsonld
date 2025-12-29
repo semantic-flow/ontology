@@ -136,6 +136,28 @@
         "@id": "TemplateMapping/"
       }
     },
+
+    {
+      "@id": "InnerTemplate/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "ContainerResource/",
+      "rdfs:label": "Inner template",
+      "rdfs:comment": "A template resource that can evolve via Flow/Version and is rendered as one or more AbstractFiles."
+    },
+    {
+      "@id": "OuterTemplate/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "ContainerResource/",
+      "rdfs:label": "Outer template",
+      "rdfs:comment": "A template resource that can evolve via Flow/Version and is rendered as one or more AbstractFiles."
+    },
+    {
+      "@id": "Stylesheet/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "ContainerResource/",
+      "rdfs:label": "Stylesheet",
+      "rdfs:comment": "A stylesheet resource that can evolve via Flow/Version and is rendered as one or more AbstractFiles."
+    },
     {
       "@id": "innerTemplate/",
       "@type": "owl:ObjectProperty",
@@ -145,7 +167,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "sflo:InnerTemplate/"
+        "@id": "InnerTemplate/"
       }
     },
     {
@@ -157,7 +179,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "sflo:OuterTemplate/"
+        "@id": "OuterTemplate/"
       }
     },
     {
@@ -169,7 +191,7 @@
         "@id": "TemplateMapping/"
       },
       "rdfs:range": {
-        "@id": "sflo:Stylesheet/"
+        "@id": "Stylesheet/"
       }
     },
     {
