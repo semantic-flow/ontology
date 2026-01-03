@@ -29,18 +29,25 @@
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
     },
     {
-      "@id": "SfloContainerResource/",
+      "@id": "SfloContainer/",
       "@type": "rdfs:Class",
       "rdfs:label": "SF container resource",
-      "rdfs:comment": "A resource that participates in Semantic Flow structural containment (sflo:containsSfloResource). Typically represented by a slash-terminated IRI and associated with a resource page file (often index.html). This class is a platform-scoped structural notion and does not imply real-world, mereological, or metaphysical containment of the denoted referent."
+      "rdfs:comment": "A resource that participates in Semantic Flow structural containment (sflo:containsSfloContainer). Typically represented by a slash-terminated IRI and associated with a resource page file (often index.html). This class is a platform-scoped structural notion and does not imply real-world, mereological, or metaphysical containment of the denoted referent."
     },
     {
-      "@id": "containsSfloResource/",
+      "@id": "containsSfloContainer/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": "SfloContainerResource/",
-      "rdfs:range": "SfloContainerResource/",
+      "rdfs:domain": "SfloContainer/",
+      "rdfs:range": "SfloContainer/",
       "rdfs:label": "contains SF resource",
       "rdfs:comment": "Intra-Knop structural containment relation. Intended for containment within Knop structure (e.g., within <.../_knop/> and its contained components). This relation is only asserted or derived inside Knop boundaries."
+    },
+    {
+      "@id": "FileBearingContainer/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": ["SfloContainer/"],
+      "rdfs:label": "File-bearing container",
+      "rdfs:comment": "A SfloContainer that should contain one or more AbstractFiles."
     },
     {
       "@id": "LocatedFile/",
@@ -61,7 +68,16 @@
       "rdfs:domain": "rdfs:Resource",
       "rdfs:range": "LocatedFile/",
       "rdfs:label": "has located file",
-      "rdfs:comment": "Links a resource to a LocatedFile whose IRI retrieves its bytes (download endpoint). Used for distribution-like resources (e.g., AbstractFile) and also for resource page files."
+      "rdfs:comment": "Links a resource to a LocatedFile whose IRI retrieves a byte-retrieval endpoint."
+    },
+    {
+      "@id": "hasCanonicalLocatedFile/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "hasLocatedFile/",
+      "rdfs:domain": "rdfs:Resource",
+      "rdfs:range": "LocatedFile/",
+      "rdfs:label": "has canonical LocatedFile",
+      "rdfs:comment": "Links a resource to a canonical LocatedFile."
     },
     {
       "@id": "hasResourcePageFile/",
@@ -70,26 +86,26 @@
       "rdfs:domain": "rdfs:Resource",
       "rdfs:range": "ResourcePageFile/",
       "rdfs:label": "has resource page file",
-      "rdfs:comment": "Associates any resource (including referents) with a human-readable resource page file (typically index.html)."
+      "rdfs:comment": "Associates any resource (including referents) with a human-readable presentation page."
     },
     {
       "@id": "Knop/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "SfloContainerResource/",
+      "rdfs:subClassOf": "SfloContainer/",
       "rdfs:label": "Knop",
-      "rdfs:comment": "A structural-conceptual unit that supports one referent (one-thing-per-knop). Knop instance IRIs are the Knop-structure IRIs (typically <.../_knop/>). A Knop is not itself a dataset; it is composed of datasets and other components."
+      "rdfs:comment": "A structural-conceptual unit that supports one referent (one-thing-per-knop). Knop instance IRIs are the Knop-structure IRIs (typically <.../_knop/>). Path containment outside _knop/ is not interpreted as containsSfloContainer, e.g. the containment of a Knop below its referent's IRI. A Knop is not itself a dataset; it is composed of Flows and non-Flow datasets."
     },
     {
       "@id": "KnopComponent/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "SfloContainerResource/",
+      "rdfs:subClassOf": "SfloContainer/",
       "rdfs:label": "Knop component",
       "rdfs:comment": "An SF container resource contained by a Knop that provides specific functionality. KnopComponents are typically addressed within the Knop structure namespace rooted at <.../_knop/>."
     },
     {
       "@id": "hasKnopComponent/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "containsSfloResource/",
+      "rdfs:subPropertyOf": "containsSfloContainer/",
       "rdfs:domain": "Knop/",
       "rdfs:range": "KnopComponent/",
       "rdfs:label": "has knop component",
@@ -102,7 +118,7 @@
       "rdfs:range": "rdfs:Resource",
       "owl:inverseOf": "hasKnop/",
       "rdfs:label": "supports referent",
-      "rdfs:comment": "Links a Knop to the resource it supports (its referent). This is an identification/support relation, not a containment relation."
+      "rdfs:comment": "Links a Knop to the resource it supports (its referent). This is an association, not a containment relation."
     },
     {
       "@id": "hasKnop/",
@@ -242,14 +258,14 @@
     {
       "@id": "NonRdfVersion/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["Version/"],
+      "rdfs:subClassOf": "Version/",
       "rdfs:label": "Non-RDF Version",
       "rdfs:comment": "A Version of the non-RDF digital artifact represented by a NonRdfFlow."
     },
     {
       "@id": "hasVersion/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "containsSfloResource/",
+      "rdfs:subPropertyOf": "containsSfloContainer/",
       "rdfs:domain": "Flow/",
       "rdfs:range": "Version/",
       "rdfs:label": "has version",
@@ -273,35 +289,28 @@
       "rdfs:comment": "Links to the immediately-preceding Version of this Version."
     },
     {
-      "@id": "currentVersionSequenceNumber/",
+      "@id": "nextVersionSequenceNumber/",
       "@type": "owl:DatatypeProperty",
       "rdfs:domain": "Flow/",
       "rdfs:range": "xsd:integer",
-      "rdfs:label": "current version sequence number",
-      "rdfs:comment": "Monotonic integer providing the currentsequence number of this Version within its Flow."
+      "rdfs:label": "next version sequence number",
+      "rdfs:comment": "Monotonic integer providing the next allocatable sequence number for a Flow."
     },
     {
       "@id": "AbstractFile/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["SfloContainerResource/"],
+      "rdfs:subClassOf": ["FileBearingContainer/"],
       "rdfs:label": "Abstract file",
-      "rdfs:comment": "A file in the abstract: an exact sequence of bytes that transcends any particular location. In Semantic Flow, AbstractFiles almost always have a 'canonical' and structually-contained and conceptually-associated LocatedFile. They optionally have one or more other conceptually-associated LocatedFiles (endpoints)."
+      "rdfs:comment": "A file in the abstract: an exact sequence of bytes that transcends any particular location. In Semantic Flow, AbstractFiles almost always have a 'canonical' and structually-contained and conceptually-associated LocatedFile (via hasCanonicalLocatedFile). They optionally have one or more other conceptually-associated LocatedFiles (endpoints)."
     },
     {
       "@id": "hasAbstractFile/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "containsSfloResource/",
-      "rdfs:domain": ["FileBearingContainer/"],
+      "rdfs:subPropertyOf": "containsSfloContainer/",
+      "rdfs:domain": "FileBearingContainer/",
       "rdfs:range": "AbstractFile/",
       "rdfs:label": "has abstract file",
-      "rdfs:comment": "Links a Version to one of its AbstractFiles."
-    },
-    {
-      "@id": "FileBearingContainer/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["SfloContainerResource/"],
-      "rdfs:label": "File-bearing container",
-      "rdfs:comment": "A SfloContainerResource that may contains one or more AbstractFiles."
+      "rdfs:comment": "Links a FileBearingContainer to one of its AbstractFiles."
     },
     {
       "@id": "PointersDataset/",
@@ -323,7 +332,7 @@
       "@id": "OpslogDatasetSeries/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "SfloContainerResource/",
+        "SfloContainer/",
         "dcat:DatasetSeries"
       ],
       "rdfs:label": "Opslog dataset series",
