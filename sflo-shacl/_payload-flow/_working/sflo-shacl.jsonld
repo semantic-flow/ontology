@@ -39,6 +39,40 @@
 
       "@graph": [
         {
+          "@id": "KnopPayloadXorShape/",
+          "@type": "sh:NodeShape",
+          "sh:targetClass": { "@id": "Knop/" },
+
+          "sh:property": [
+            { "sh:path": { "@id": "hasRdfPayloadFlow/" }, "sh:maxCount": 1 },
+            { "sh:path": { "@id": "hasNonRdfPayloadFlow/" }, "sh:maxCount": 1 }
+          ],
+
+          "sh:not": {
+            "@type": "sh:NodeShape",
+            "sh:and": [
+              {
+                "@type": "sh:NodeShape",
+                "sh:property": [
+                  {
+                    "sh:path": { "@id": "hasRdfPayloadFlow/" },
+                    "sh:minCount": 1
+                  }
+                ]
+              },
+              {
+                "@type": "sh:NodeShape",
+                "sh:property": [
+                  {
+                    "sh:path": { "@id": "hasNonRdfPayloadFlow/" },
+                    "sh:minCount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
           "id": "sflo-shacl:ArtifactDisjointnessShape",
           "type": "sh:NodeShape",
           "rdfs:label": "Artifact disjointness",
