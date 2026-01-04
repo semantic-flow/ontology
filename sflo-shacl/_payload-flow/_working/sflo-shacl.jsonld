@@ -5,6 +5,7 @@
     "vann": "http://purl.org/vocab/vann/",
     "sh": "http://www.w3.org/ns/shacl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "dcat": "http://www.w3.org/ns/dcat#",
     "dcterms": "http://purl.org/dc/terms/",
@@ -21,166 +22,466 @@
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-shacl/"
     },
     {
-      "@context": {
-        "@version": 1.1,
-
-        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-        "xsd": "http://www.w3.org/2001/XMLSchema#",
-
-        "sh": "http://www.w3.org/ns/shacl#",
-        "dcat": "http://www.w3.org/ns/dcat#",
-
-        "sflo": "https://semantic-flow.github.io/ontology/semantic-flow/",
-
-        "id": "@id",
-        "type": "@type"
+      "@id": "RdfDatasetAbstractFileShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "RdfDataset file presence",
+      "sh:targetClass": {
+        "@id": "sflo:RdfDataset/"
       },
-
-      "@graph": [
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:hasAbstractFile/"
+        },
+        "sh:minCount": 1,
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "An RdfDataset SHOULD have at least one sflo:hasAbstractFile."
+      }
+    },
+    {
+      "@id": "VersionAbstractFileShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Version file presence",
+      "sh:targetClass": {
+        "@id": "sflo:Version/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:hasAbstractFile/"
+        },
+        "sh:minCount": 1,
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "A Version SHOULD have at least one sflo:hasAbstractFile."
+      }
+    },
+    {
+      "@id": "FlowStructureShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Flow structure constraints",
+      "sh:targetClass": {
+        "@id": "sflo:Flow/"
+      },
+      "sh:property": [
         {
-          "@id": "KnopPayloadXorShape/",
-          "@type": "sh:NodeShape",
-          "sh:targetClass": { "@id": "Knop/" },
-
-          "sh:property": [
-            { "sh:path": { "@id": "hasRdfPayloadFlow/" }, "sh:maxCount": 1 },
-            { "sh:path": { "@id": "hasNonRdfPayloadFlow/" }, "sh:maxCount": 1 }
-          ],
-
-          "sh:not": {
+          "sh:path": {
+            "@id": "sflo:hasVersion/"
+          },
+          "sh:minCount": 1,
+          "sh:severity": {
+            "@id": "sh:Warning"
+          },
+          "sh:message": "A Flow SHOULD have at least one sflo:hasVersion."
+        },
+        {
+          "sh:path": {
+            "@id": "sflo:currentVersion/"
+          },
+          "sh:maxCount": 1,
+          "sh:severity": {
+            "@id": "sh:Violation"
+          },
+          "sh:message": "A Flow SHOULD have at most one sflo:currentVersion."
+        }
+      ]
+    },
+    {
+      "@id": "KnopPayloadXorShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Knop payload exclusivity",
+      "sh:targetClass": {
+        "@id": "sflo:Knop/"
+      },
+      "sh:property": [
+        {
+          "sh:path": {
+            "@id": "sflo:hasRdfPayloadFlow/"
+          },
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": {
+            "@id": "sflo:hasNonRdfPayloadFlow/"
+          },
+          "sh:maxCount": 1
+        }
+      ],
+      "sh:not": {
+        "@type": "sh:NodeShape",
+        "sh:and": [
+          {
             "@type": "sh:NodeShape",
-            "sh:and": [
+            "sh:property": [
               {
-                "@type": "sh:NodeShape",
-                "sh:property": [
-                  {
-                    "sh:path": { "@id": "hasRdfPayloadFlow/" },
-                    "sh:minCount": 1
-                  }
-                ]
-              },
+                "sh:path": {
+                  "@id": "sflo:hasRdfPayloadFlow/"
+                },
+                "sh:minCount": 1
+              }
+            ]
+          },
+          {
+            "@type": "sh:NodeShape",
+            "sh:property": [
               {
-                "@type": "sh:NodeShape",
-                "sh:property": [
-                  {
-                    "sh:path": { "@id": "hasNonRdfPayloadFlow/" },
-                    "sh:minCount": 1
-                  }
-                ]
+                "sh:path": {
+                  "@id": "sflo:hasNonRdfPayloadFlow/"
+                },
+                "sh:minCount": 1
               }
             ]
           }
+        ]
+      },
+      "sh:message": "A Knop MUST NOT have both hasRdfPayloadFlow and hasNonRdfPayloadFlow."
+    },
+    {
+      "@id": "KnopStructureSanityShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Knop structure sanity",
+      "sh:targetClass": {
+        "@id": "sflo:Knop/"
+      },
+      "sh:property": [
+        {
+          "sh:path": {
+            "@id": "sflo:hasKnopMetadataFlow/"
+          },
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:severity": {
+            "@id": "sh:Warning"
+          },
+          "sh:message": "A Knop SHOULD have exactly one sflo:hasKnopMetadataFlow."
         },
         {
-          "id": "sflo-shacl:ArtifactDisjointnessShape",
-          "type": "sh:NodeShape",
-          "rdfs:label": "Artifact disjointness",
-          "rdfs:comment": "Ensures an sflo:Artifact is not also typed sflo:NonArtifact.",
-
-          "sh:targetClass": { "id": "sflo:Artifact" },
-
+          "sh:path": {
+            "@id": "sflo:hasAbstractFile/"
+          },
+          "sh:maxCount": 0,
+          "sh:severity": {
+            "@id": "sh:Violation"
+          },
+          "sh:message": "A Knop SHOULD NOT directly contain AbstractFile."
+        },
+        {
+          "sh:path": {
+            "@id": "sflo:hasVersion/"
+          },
+          "sh:maxCount": 0,
+          "sh:severity": {
+            "@id": "sh:Violation"
+          },
+          "sh:message": "A Knop SHOULD NOT directly contain Version."
+        }
+      ]
+    },
+    {
+      "@id": "KnopComponentContainmentShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "KnopComponent containment",
+      "sh:targetClass": {
+        "@id": "sflo:KnopComponent/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "sh:inversePath": {
+            "@id": "sflo:hasKnopComponent/"
+          }
+        },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:severity": {
+          "@id": "sh:Violation"
+        },
+        "sh:message": "A KnopComponent MUST be contained by exactly one Knop via sflo:hasKnopComponent."
+      }
+    },
+    {
+      "@id": "RdfFlowVersionShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "RdfFlow version typing",
+      "sh:targetClass": {
+        "@id": "sflo:RdfFlow/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:hasVersion/"
+        },
+        "sh:class": {
+          "@id": "sflo:RdfVersion/"
+        },
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "Versions in an sflo:RdfFlow SHOULD be of type sflo:RdfVersion."
+      }
+    },
+    {
+      "@id": "NonRdfPayloadFlowVersionShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "NonRdfPayloadFlow version typing",
+      "sh:targetClass": {
+        "@id": "sflo:NonRdfPayloadFlow/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:hasVersion/"
+        },
+        "sh:class": {
+          "@id": "sflo:NonRdfVersion/"
+        },
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "Versions in an sflo:NonRdfPayloadFlow SHOULD be of type sflo:NonRdfVersion."
+      }
+    },
+    {
+      "@id": "AbstractFileContainmentShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "AbstractFile containment",
+      "sh:targetClass": {
+        "@id": "sflo:AbstractFile/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "sh:inversePath": {
+            "@id": "sflo:hasAbstractFile/"
+          }
+        },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:severity": {
+          "@id": "sh:Violation"
+        },
+        "sh:message": "An AbstractFile MUST be contained by exactly one container via sflo:hasAbstractFile."
+      }
+    },
+    {
+      "@id": "LocatedFileShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "LocatedFile constraints",
+      "sh:targetClass": {
+        "@id": "sflo:LocatedFile/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "sh:inversePath": {
+            "@id": "sflo:containsSfloContainer/"
+          }
+        },
+        "sh:maxCount": 0,
+        "sh:severity": {
+          "@id": "sh:Violation"
+        },
+        "sh:message": "A LocatedFile MUST NOT be the object of sflo:containsSfloContainer (or its subproperties)."
+      }
+    },
+    {
+      "@id": "ResourcePageFileShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "ResourcePageFile constraints",
+      "sh:targetClass": {
+        "@id": "sflo:ResourcePageFile/"
+      },
+      "sh:and": [
+        {
+          "@type": "sh:NodeShape",
+          "sh:class": {
+            "@id": "sflo:LocatedFile/"
+          },
+          "sh:message": "ResourcePageFile MUST be a sflo:LocatedFile."
+        },
+        {
+          "@type": "sh:NodeShape",
           "sh:not": {
-            "type": "sh:NodeShape",
-            "sh:property": {
-              "type": "sh:PropertyShape",
-              "sh:path": { "id": "rdf:type" },
-              "sh:hasValue": { "id": "sflo:NonArtifact" }
+            "sh:class": {
+              "@id": "sflo:AbstractFile/"
             }
           },
-
-          "sh:message": "A resource cannot be both sflo:Artifact and sflo:NonArtifact."
+          "sh:message": "ResourcePageFile MUST NOT be an sflo:AbstractFile."
+        }
+      ],
+      "sh:property": {
+        "sh:path": {
+          "sh:inversePath": {
+            "@id": "sflo:containsSfloContainer/"
+          }
         },
+        "sh:maxCount": 0,
+        "sh:severity": {
+          "@id": "sh:Violation"
+        },
+        "sh:message": "ResourcePageFile MUST NOT be contained via sflo:containsSfloContainer."
+      }
+    },
+    {
+      "@id": "OpslogDatasetSeriesShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "OpslogDatasetSeries constraints",
+      "sh:targetClass": {
+        "@id": "sflo:OpslogDatasetSeries/"
+      },
+      "sh:not": {
+        "sh:class": {
+          "@id": "sflo:Flow/"
+        },
+        "sh:message": "OpslogDatasetSeries MUST NOT be a sflo:Flow."
+      }
+    },
+    {
+      "@id": "OpslogDatasetShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "OpslogDataset constraints",
+      "sh:targetClass": {
+        "@id": "sflo:OpslogDataset/"
+      },
+      "sh:property": [
         {
-          "id": "sflo-shacl:NonArtifactDisjointnessShape",
-          "type": "sh:NodeShape",
-          "rdfs:label": "NonArtifact disjointness",
-          "rdfs:comment": "Ensures an sflo:NonArtifact is not also typed sflo:Artifact.",
-
-          "sh:targetClass": { "id": "sflo:NonArtifact" },
-
-          "sh:not": {
-            "type": "sh:NodeShape",
-            "sh:property": {
-              "type": "sh:PropertyShape",
-              "sh:path": { "id": "rdf:type" },
-              "sh:hasValue": { "id": "sflo:Artifact" }
+          "sh:path": {
+            "sh:inversePath": {
+              "@id": "sflo:hasOpslogDataset/"
             }
           },
-
-          "sh:message": "A resource cannot be both sflo:NonArtifact and sflo:Artifact."
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:severity": {
+            "@id": "sh:Violation"
+          },
+          "sh:message": "OpslogDataset MUST be linked to exactly one OpslogDatasetSeries via sflo:hasOpslogDataset."
         },
         {
-          "id": "sflo-shacl:ArtifactNodeShape",
-          "type": "sh:NodeShape",
-          "rdfs:label": "Artifact IRI shape",
-          "rdfs:comment": "Validates the Semantic Flow convention: Artifact IRIs MUST NOT end with '/'.",
-
-          "sh:targetClass": { "id": "sflo:Artifact" },
-
-          "sh:nodeKind": { "id": "sh:IRI" },
-
-          "sh:pattern": ".+[^/]$",
-          "sh:flags": "s",
-
-          "sh:message": "sflo:Artifact IRIs must not end with '/'."
-        },
-
+          "sh:path": {
+            "@id": "sflo:hasAbstractFile/"
+          },
+          "sh:minCount": 1,
+          "sh:severity": {
+            "@id": "sh:Warning"
+          },
+          "sh:message": "OpslogDataset SHOULD have at least one sflo:hasAbstractFile."
+        }
+      ]
+    },
+    {
+      "@id": "ArtifactDisjointnessShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Artifact disjointness",
+      "rdfs:comment": "Ensures an sflo:Artifact is not also typed sflo:NonArtifact.",
+      "sh:targetClass": {
+        "@id": "sflo:Artifact"
+      },
+      "sh:not": {
+        "@type": "sh:NodeShape",
+        "sh:property": {
+          "@type": "sh:PropertyShape",
+          "sh:path": {
+            "@id": "rdf:type"
+          },
+          "sh:hasValue": {
+            "@id": "sflo:NonArtifact"
+          }
+        }
+      },
+      "sh:message": "A resource cannot be both sflo:Artifact and sflo:NonArtifact."
+    },
+    {
+      "@id": "NonArtifactDisjointnessShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "NonArtifact disjointness",
+      "rdfs:comment": "Ensures an sflo:NonArtifact is not also typed sflo:Artifact.",
+      "sh:targetClass": {
+        "@id": "sflo:NonArtifact"
+      },
+      "sh:not": {
+        "@type": "sh:NodeShape",
+        "sh:property": {
+          "@type": "sh:PropertyShape",
+          "sh:path": {
+            "@id": "rdf:type"
+          },
+          "sh:hasValue": {
+            "@id": "sflo:Artifact"
+          }
+        }
+      },
+      "sh:message": "A resource cannot be both sflo:NonArtifact and sflo:Artifact."
+    },
+    {
+      "@id": "ArtifactNodeShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Artifact IRI shape",
+      "rdfs:comment": "Validates the Semantic Flow convention: Artifact IRIs MUST NOT end with '/'.",
+      "sh:targetClass": {
+        "@id": "sflo:Artifact"
+      },
+      "sh:nodeKind": {
+        "@id": "sh:IRI"
+      },
+      "sh:pattern": ".+[^/]$",
+      "sh:flags": "s",
+      "sh:message": "sflo:Artifact IRIs must not end with '/'."
+    },
+    {
+      "@id": "NonArtifactNodeShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "NonArtifact IRI shape",
+      "rdfs:comment": "Validates the Semantic Flow convention: NonArtifact IRIs MUST end with '/'.",
+      "sh:targetClass": {
+        "@id": "sflo:NonArtifact"
+      },
+      "sh:nodeKind": {
+        "@id": "sh:IRI"
+      },
+      "sh:pattern": ".+/$",
+      "sh:flags": "s",
+      "sh:message": "sflo:NonArtifact IRIs must end with '/'."
+    },
+    {
+      "@id": "DistributionDownloadArtifactShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Distribution downloadArtifact shape",
+      "rdfs:comment": "Ensures a dcat:Distribution links to at least one sflo:Artifact via sflo:downloadArtifact.",
+      "sh:targetClass": {
+        "@id": "dcat:Distribution"
+      },
+      "sh:property": [
         {
-          "id": "sflo-shacl:NonArtifactNodeShape",
-          "type": "sh:NodeShape",
-          "rdfs:label": "NonArtifact IRI shape",
-          "rdfs:comment": "Validates the Semantic Flow convention: NonArtifact IRIs MUST end with '/'.",
-
-          "sh:targetClass": { "id": "sflo:NonArtifact" },
-
-          "sh:nodeKind": { "id": "sh:IRI" },
-
-          "sh:pattern": ".+/$",
-          "sh:flags": "s",
-
-          "sh:message": "sflo:NonArtifact IRIs must end with '/'."
-        },
-
+          "@type": "sh:PropertyShape",
+          "sh:path": {
+            "@id": "sflo:downloadArtifact"
+          },
+          "sh:minCount": 1,
+          "sh:nodeKind": {
+            "@id": "sh:IRI"
+          },
+          "sh:class": {
+            "@id": "sflo:Artifact"
+          },
+          "sh:message": "A dcat:Distribution must have at least one sflo:downloadArtifact pointing to an sflo:Artifact IRI."
+        }
+      ]
+    },
+    {
+      "@id": "DistributionIsNonArtifactShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Distribution is NonArtifact shape",
+      "rdfs:comment": "Optional: enforces that every dcat:Distribution is also typed sflo:NonArtifact (your platform partition rule).",
+      "sh:targetClass": {
+        "@id": "dcat:Distribution"
+      },
+      "sh:property": [
         {
-          "id": "sflo-shacl:DistributionDownloadArtifactShape",
-          "type": "sh:NodeShape",
-          "rdfs:label": "Distribution downloadArtifact shape",
-          "rdfs:comment": "Ensures a dcat:Distribution links to at least one sflo:Artifact via sflo:downloadArtifact.",
-
-          "sh:targetClass": { "id": "dcat:Distribution" },
-
-          "sh:property": [
-            {
-              "type": "sh:PropertyShape",
-              "sh:path": { "id": "sflo:downloadArtifact" },
-
-              "sh:minCount": 1,
-
-              "sh:nodeKind": { "id": "sh:IRI" },
-              "sh:class": { "id": "sflo:Artifact" },
-
-              "sh:message": "A dcat:Distribution must have at least one sflo:downloadArtifact pointing to an sflo:Artifact IRI."
-            }
-          ]
-        },
-
-        {
-          "id": "sflo-shacl:DistributionIsNonArtifactShape",
-          "type": "sh:NodeShape",
-          "rdfs:label": "Distribution is NonArtifact shape",
-          "rdfs:comment": "Optional: enforces that every dcat:Distribution is also typed sflo:NonArtifact (your platform partition rule).",
-
-          "sh:targetClass": { "id": "dcat:Distribution" },
-
-          "sh:property": [
-            {
-              "type": "sh:PropertyShape",
-              "sh:path": { "id": "rdf:type" },
-              "sh:hasValue": { "id": "sflo:NonArtifact" },
-              "sh:message": "Every dcat:Distribution must also be explicitly typed sflo:NonArtifact."
-            }
-          ]
+          "@type": "sh:PropertyShape",
+          "sh:path": {
+            "@id": "rdf:type"
+          },
+          "sh:hasValue": {
+            "@id": "sflo:NonArtifact"
+          },
+          "sh:message": "Every dcat:Distribution must also be explicitly typed sflo:NonArtifact."
         }
       ]
     },
@@ -192,7 +493,6 @@
       },
       "sh:property": [
         {
-          "@id": "FlowSliceShape/#distributionProperty",
           "@type": "sh:PropertyShape",
           "sh:path": {
             "@id": "dcat:distribution"
@@ -216,7 +516,6 @@
       },
       "sh:property": [
         {
-          "@id": "DistributionShape/#formatProperty",
           "@type": "sh:PropertyShape",
           "sh:path": {
             "@id": "dcterms:format"
@@ -237,7 +536,6 @@
       },
       "sh:property": [
         {
-          "@id": "DistributionFormatRestrictionShape/#allowedFormatsProperty",
           "@type": "sh:PropertyShape",
           "sh:path": {
             "@id": "dcterms:format"
@@ -272,32 +570,50 @@
     {
       "@id": "NonArtifactResourcePageShape/",
       "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:NonArtifact" },
+      "sh:targetClass": {
+        "@id": "sflo:NonArtifact"
+      },
       "sh:property": {
         "@type": "sh:PropertyShape",
-        "sh:path": { "@id": "sflo:hasResourcePage" },
+        "sh:path": {
+          "@id": "sflo:hasResourcePage"
+        },
         "sh:minCount": 1,
         "sh:maxCount": 1,
-        "sh:nodeKind": { "@id": "sh:IRI" },
-        "sh:class": { "@id": "sflo:ResourcePage" },
+        "sh:nodeKind": {
+          "@id": "sh:IRI"
+        },
+        "sh:class": {
+          "@id": "sflo:ResourcePage"
+        },
         "sh:message": "Every sflo:NonArtifact must have exactly one sflo:hasResourcePage pointing to a sflo:ResourcePage."
       }
     },
     {
       "@id": "ResourcePageIsArtifactShape/",
       "@type": "sh:NodeShape",
-      "sh:targetClass": { "@id": "sflo:ResourcePage" },
+      "sh:targetClass": {
+        "@id": "sflo:ResourcePage"
+      },
       "sh:property": [
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "rdf:type" },
-          "sh:hasValue": { "@id": "sflo:Artifact" },
+          "sh:path": {
+            "@id": "rdf:type"
+          },
+          "sh:hasValue": {
+            "@id": "sflo:Artifact"
+          },
           "sh:message": "Every sflo:ResourcePage must also be typed sflo:Artifact."
         },
         {
           "@type": "sh:PropertyShape",
-          "sh:path": { "@id": "rdf:type" },
-          "sh:disjoint": { "@id": "sflo:NonArtifact" },
+          "sh:path": {
+            "@id": "rdf:type"
+          },
+          "sh:disjoint": {
+            "@id": "sflo:NonArtifact"
+          },
           "sh:message": "A sflo:ResourcePage must not be typed sflo:NonArtifact."
         }
       ]

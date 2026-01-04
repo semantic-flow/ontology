@@ -9,10 +9,18 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "schema": "https://schema.org/",
     "vann": "http://purl.org/vocab/vann/",
-    "rdfs:subClassOf": { "@type": "@id" },
-    "rdfs:subPropertyOf": { "@type": "@id" },
-    "rdfs:domain": { "@type": "@id" },
-    "rdfs:range": { "@type": "@id" }
+    "rdfs:subClassOf": {
+      "@type": "@id"
+    },
+    "rdfs:subPropertyOf": {
+      "@type": "@id"
+    },
+    "rdfs:domain": {
+      "@type": "@id"
+    },
+    "rdfs:range": {
+      "@type": "@id"
+    }
   },
   "@graph": [
     {
@@ -20,7 +28,9 @@
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow Ontology",
       "dcterms:description": "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes.",
-      "dcterms:creator": { "@id": "https://djradon.github.io/ns/djradon/" },
+      "dcterms:creator": {
+        "@id": "https://djradon.github.io/ns/djradon/"
+      },
       "owl:versionInfo": "0.0.1",
       "owl:versionIRI": {
         "@id": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/_payload/_default/sflo.ttl"
@@ -32,35 +42,48 @@
       "@id": "SfloContainer/",
       "@type": "rdfs:Class",
       "rdfs:label": "SF container resource",
-      "rdfs:comment": "A resource that participates in Semantic Flow structural containment (sflo:containsSfloContainer). Typically represented by a slash-terminated IRI and associated with a resource page file (often index.html). This class is a platform-scoped structural notion and does not imply real-world, mereological, or metaphysical containment of the denoted referent."
+      "rdfs:comment": "A non-terminal resource that is either a Knop or structurally contained within a Knop. Typically associated with a resource page file (often index.html). This class is a platform-scoped construct."
     },
     {
       "@id": "containsSfloContainer/",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": "SfloContainer/",
       "rdfs:range": "SfloContainer/",
-      "rdfs:label": "contains SF resource",
-      "rdfs:comment": "Intra-Knop structural containment relation. Intended for containment within Knop structure (e.g., within <.../_knop/> and its contained components). This relation is only asserted or derived inside Knop boundaries."
+      "rdfs:label": "contains Semantic Flow container",
+      "rdfs:comment": "Intra-Knop structural containment relation. Intended for expressing containment within Knop structure (e.g., under <.../_knop/>)."
     },
     {
       "@id": "FileBearingContainer/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["SfloContainer/"],
+      "rdfs:subClassOf": [
+        "SfloContainer/"
+      ],
       "rdfs:label": "File-bearing container",
-      "rdfs:comment": "A SfloContainer that should contain one or more AbstractFiles."
+      "rdfs:comment": "A SfloContainer that should contain one or more AbstractFiles, i.e. it represents an abstract digital artifact."
+    },
+    {
+      "@id": "AbstractFile/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "FileBearingContainer/"
+      ],
+      "rdfs:label": "Abstract file",
+      "rdfs:comment": "A file in the abstract: an exact sequence of bytes that transcends any particular location. In Semantic Flow, AbstractFiles almost always have a 'canonical' and structually-contained and conceptually-associated LocatedFile (via hasCanonicalLocatedFile). They optionally have one or more other conceptually-associated LocatedFiles (endpoints)."
+    },
+    {
+      "@id": "hasAbstractFile/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "containsSfloContainer/",
+      "rdfs:domain": "FileBearingContainer/",
+      "rdfs:range": "AbstractFile/",
+      "rdfs:label": "has abstract file",
+      "rdfs:comment": "Links a FileBearingContainer to one of its AbstractFiles."
     },
     {
       "@id": "LocatedFile/",
       "@type": "rdfs:Class",
       "rdfs:label": "Located file",
       "rdfs:comment": "A resource whose IRI is intended to retrieve its bytes. LocatedFiles do not act as SF containers."
-    },
-    {
-      "@id": "ResourcePageFile/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["LocatedFile/", "schema:WebPage"],
-      "rdfs:label": "Resource page file",
-      "rdfs:comment": "A LocatedFile intended to be a human-readable resource page (typically index.html) for a resource."
     },
     {
       "@id": "hasLocatedFile/",
@@ -78,6 +101,16 @@
       "rdfs:range": "LocatedFile/",
       "rdfs:label": "has canonical LocatedFile",
       "rdfs:comment": "Links a resource to a canonical LocatedFile."
+    },
+    {
+      "@id": "ResourcePageFile/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "LocatedFile/",
+        "schema:WebPage"
+      ],
+      "rdfs:label": "Resource page file",
+      "rdfs:comment": "A LocatedFile intended to be a human-readable resource page (typically index.html) for a resource."
     },
     {
       "@id": "hasResourcePageFile/",
@@ -132,14 +165,19 @@
     {
       "@id": "RdfDataset/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["dcat:Dataset", "FileBearingContainer/"],
+      "rdfs:subClassOf": [
+        "dcat:Dataset",
+        "FileBearingContainer/"
+      ],
       "rdfs:label": "RdfDataset",
       "rdfs:comment": "One or more RDF graphs. Some datasets are current-only; some are versioned via Flows."
     },
     {
       "@id": "Flow/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["KnopComponent/"],
+      "rdfs:subClassOf": [
+        "KnopComponent/"
+      ],
       "rdfs:label": "Flow",
       "rdfs:comment": "Abstract Superclass for a KnopComponent that organizes Versions and provides a lineage identity."
     },
@@ -174,7 +212,10 @@
     {
       "@id": "RdfPayloadFlow/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["PayloadFlow/", "RdfFlow/"],
+      "rdfs:subClassOf": [
+        "PayloadFlow/",
+        "RdfFlow/"
+      ],
       "rdfs:label": "RDF PayloadFlow",
       "rdfs:comment": "Flow containing versions of the referent RdfDataset contained in the Knop. Typically addressed under <.../_knop/_payload/>."
     },
@@ -191,6 +232,13 @@
       "rdfs:subClassOf": "RdfFlow/",
       "rdfs:label": "Backlinks flow",
       "rdfs:comment": "Flow containing curated or computed backlinks about the referent. Addressing is a convention within the Knop structure namespace."
+    },
+    {
+      "@id": "InventoryFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "RdfFlow/",
+      "rdfs:label": "Inventory flow",
+      "rdfs:comment": "Flow enumerating all Versions in every Flow; and all AbstractFiles and LocatedFiles per Version or Dataset; "
     },
     {
       "@id": "hasFlow/",
@@ -242,25 +290,35 @@
       "rdfs:comment": "Links a Knop to its backlinks flow (if present)."
     },
     {
+      "@id": "hasInventoryFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "hasFlow/",
+      "rdfs:range": "InventoryFlow/",
+      "rdfs:label": "has inventory flow",
+      "rdfs:comment": "Links a Knop to its inventory flow."
+    },
+    {
       "@id": "Version/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["FileBearingContainer/"],
+      "rdfs:subClassOf": [
+        "FileBearingContainer/"
+      ],
       "rdfs:label": "Version",
       "rdfs:comment": "One (abstract) version of the artifact represented by a Flow. A Version represents the content of the Flow's artifact at a particular point in time, but not a particular byte-representation of it."
     },
     {
       "@id": "RdfVersion/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["Version/"],
+      "rdfs:subClassOf": "Version/",
       "rdfs:label": "RDF Version",
-      "rdfs:comment": "A Version of the RDF Dataset represented by a RdfFlow."
+      "rdfs:comment": "A Version of the evolving RDF Dataset represented by a RdfFlow."
     },
     {
       "@id": "NonRdfVersion/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": "Version/",
       "rdfs:label": "Non-RDF Version",
-      "rdfs:comment": "A Version of the non-RDF digital artifact represented by a NonRdfFlow."
+      "rdfs:comment": "A Version of the evolving non-RDF digital artifact represented by a NonRdfFlow."
     },
     {
       "@id": "hasVersion/",
@@ -297,25 +355,12 @@
       "rdfs:comment": "Monotonic integer providing the next allocatable sequence number for a Flow."
     },
     {
-      "@id": "AbstractFile/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["FileBearingContainer/"],
-      "rdfs:label": "Abstract file",
-      "rdfs:comment": "A file in the abstract: an exact sequence of bytes that transcends any particular location. In Semantic Flow, AbstractFiles almost always have a 'canonical' and structually-contained and conceptually-associated LocatedFile (via hasCanonicalLocatedFile). They optionally have one or more other conceptually-associated LocatedFiles (endpoints)."
-    },
-    {
-      "@id": "hasAbstractFile/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "containsSfloContainer/",
-      "rdfs:domain": "FileBearingContainer/",
-      "rdfs:range": "AbstractFile/",
-      "rdfs:label": "has abstract file",
-      "rdfs:comment": "Links a FileBearingContainer to one of its AbstractFiles."
-    },
-    {
       "@id": "PointersDataset/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["RdfDataset/", "KnopComponent/"],
+      "rdfs:subClassOf": [
+        "RdfDataset/",
+        "KnopComponent/"
+      ],
       "rdfs:label": "Pointers dataset",
       "rdfs:comment": "A minimal current-only RdfDataset for bootstrapping; typically derived from the metadata flow and addressed as <.../_knop/_pointers/>."
     },
@@ -341,7 +386,10 @@
     {
       "@id": "OpslogDataset/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": ["RdfDataset/", "KnopComponent/"],
+      "rdfs:subClassOf": [
+        "RdfDataset/",
+        "KnopComponent/"
+      ],
       "rdfs:label": "Opslog dataset",
       "rdfs:comment": "An append-only operational log dataset (non-flow) associated with a Knop. Typically stored under <.../_knop/_opslog/>."
     },
