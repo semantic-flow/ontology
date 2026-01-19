@@ -20,6 +20,9 @@
     },
     "rdfs:range": {
       "@type": "@id"
+    },
+    "owl:inverseOf": {
+      "@type": "@id"
     }
   },
   "@graph": [
@@ -27,7 +30,7 @@
       "@id": "",
       "@type": "owl:Ontology",
       "dcterms:title": "Semantic Flow Ontology",
-      "dcterms:description": "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes.",
+      "dcterms:description": "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes and their resources.",
       "dcterms:creator": {
         "@id": "https://djradon.github.io/ns/djradon/"
       },
@@ -38,207 +41,360 @@
       "vann:preferredNamespacePrefix": "sflo",
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
     },
+    /* =========================
+       Foundations
+       ========================= */
     {
-      "@id": "SfloContainer/",
+      "@id": "SemanticFlowResource/",
       "@type": "rdfs:Class",
-      "rdfs:label": "SF container resource",
-      "rdfs:comment": "A non-terminal resource that is either a Knop or structurally contained within a Knop. Typically associated with a resource page file (often index.html). This class is a platform-scoped construct."
+      "rdfs:label": "Semantic Flow resource",
+      "rdfs:comment": "Any resource participating in Semantic Flow conventions."
     },
     {
-      "@id": "containsSfloContainer/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": "SfloContainer/",
-      "rdfs:range": "SfloContainer/",
-      "rdfs:label": "contains Semantic Flow container",
-      "rdfs:comment": "Intra-Knop structural containment relation. Intended for expressing containment within Knop structure (e.g., under <.../_knop/>)."
-    },
-    {
-      "@id": "FileBearingContainer/",
+      "@id": "Mesh/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        "SfloContainer/"
-      ],
-      "rdfs:label": "File-bearing container",
-      "rdfs:comment": "A SfloContainer that should contain one or more AbstractFiles, i.e. it represents an abstract digital artifact."
+      "rdfs:label": "Mesh",
+      "rdfs:comment": "A servable filesystem region that contains SemanticFlowResources and, optionally, other supporting resources."
     },
     {
-      "@id": "AbstractFile/",
+      "@id": "AbstractResource/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "FileBearingContainer/"
+        "SemanticFlowResource/"
       ],
-      "rdfs:label": "Abstract file",
-      "rdfs:comment": "A file in the abstract: an exact sequence of bytes that transcends any particular location. In Semantic Flow, AbstractFiles almost always have a 'canonical' and structually-contained and conceptually-associated LocatedFile (via hasCanonicalLocatedFile). They optionally have one or more other conceptually-associated LocatedFiles (endpoints)."
-    },
-    {
-      "@id": "hasAbstractFile/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "containsSfloContainer/",
-      "rdfs:domain": "FileBearingContainer/",
-      "rdfs:range": "AbstractFile/",
-      "rdfs:label": "has abstract file",
-      "rdfs:comment": "Links a FileBearingContainer to one of its AbstractFiles."
+      "rdfs:label": "Abstract resource",
+      "rdfs:comment": "A slash-terminated IRI whose dereference yields a resource page."
     },
     {
       "@id": "LocatedFile/",
-      "@type": "rdfs:Class",
+      "@type": [
+        "rdfs:Class",
+        "TargetKind/"
+      ],
+      "rdfs:subClassOf": [
+        "SemanticFlowResource/"
+      ],
       "rdfs:label": "Located file",
-      "rdfs:comment": "A resource whose IRI is intended to retrieve its bytes. LocatedFiles do not act as SF containers."
+      "rdfs:comment": "A file IRI (typically with an extension) intended to retrieve concrete bytes."
     },
     {
-      "@id": "hasLocatedFile/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": "rdfs:Resource",
-      "rdfs:range": "LocatedFile/",
-      "rdfs:label": "has located file",
-      "rdfs:comment": "Links a resource to a LocatedFile whose IRI retrieves a byte-retrieval endpoint."
-    },
-    {
-      "@id": "hasCanonicalLocatedFile/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasLocatedFile/",
-      "rdfs:domain": "rdfs:Resource",
-      "rdfs:range": "LocatedFile/",
-      "rdfs:label": "has canonical LocatedFile",
-      "rdfs:comment": "Links a resource to a canonical LocatedFile."
-    },
-    {
-      "@id": "ResourcePageFile/",
+      "@id": "ResourcePage/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
         "LocatedFile/",
+        "SemanticFlowResource/",
         "schema:WebPage"
       ],
       "rdfs:label": "Resource page file",
-      "rdfs:comment": "A LocatedFile intended to be a human-readable resource page (typically index.html) for a resource."
+      "rdfs:comment": "A derived UI/navigation file (e.g., index.html) that presents an AbstractResource (or other referent) to humans."
     },
     {
-      "@id": "hasResourcePageFile/",
+      "@id": "ArtifactLocatedFile/",
+      "@type": [
+        "rdfs:Class",
+        "TargetKind/"
+      ],
+      "rdfs:subClassOf": [
+        "LocatedFile/",
+        "SemanticFlowResource/"
+      ],
+      "rdfs:label": "Artifact located file",
+      "rdfs:comment": "A LocatedFile that is a concrete realization of an AbstractFile."
+    },
+    {
+      "@id": "AssetFile/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "LocatedFile/"
+      ],
+      "rdfs:label": "Asset file",
+      "rdfs:comment": "A non-artifact support file used by resource pages (images/css/js), conventionally under _assets/."
+    },
+    {
+      "@id": "OperationalLogFile/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "LocatedFile/"
+      ],
+      "rdfs:label": "Operational log file",
+      "rdfs:comment": "A plain tool log file (not discourse-worthy by default)."
+    },
+    {
+      "@id": "MeshComponent/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "AbstractResource/"
+      ],
+      "rdfs:label": "Mesh component",
+      "rdfs:comment": "A reserved underscore-path/system resource (e.g., _mesh/, _knops/, _assets/, inventories, configs)."
+    },
+    {
+      "@id": "containsSfloResource/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasLocatedFile/",
+      "rdfs:domain": "AbstractResource/",
+      "rdfs:range": "SemanticFlowResource/",
+      "rdfs:label": "contains Semantic Flow resource",
+      "rdfs:comment": "Structural containment relation for SF-governed resources (typically within reserved or conventional SF paths)."
+    },
+    {
+      "@id": "hasResourcePage/",
+      "@type": "owl:ObjectProperty",
       "rdfs:domain": "rdfs:Resource",
-      "rdfs:range": "ResourcePageFile/",
+      "rdfs:range": "ResourcePage/",
       "rdfs:label": "has resource page file",
       "rdfs:comment": "Associates any resource (including referents) with a human-readable presentation page."
     },
+    /* =========================
+       Naming (Nomen)
+       ========================= */
+    {
+      "@id": "Nomen/",
+      "@type": [
+        "rdfs:Class",
+        "TargetKind/"
+      ],
+      "rdfs:subClassOf": [
+        "AbstractResource/"
+      ],
+      "rdfs:label": "Nomen",
+      "rdfs:comment": "A human-facing designator IRI (e.g., /people/alice/) intended to denote a discourse-worthy thing."
+    },
+    {
+      "@id": "NomenHandle/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "AbstractResource/",
+        "MeshComponent/"
+      ],
+      "rdfs:label": "Nomen handle",
+      "rdfs:comment": "The naming-object handle for a Nomen (e.g., /people/alice/_nomen/), used to talk about the Nomen-as-Nomen."
+    },
+    {
+      "@id": "hasNomenHandle/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "Nomen/",
+      "rdfs:range": "NomenHandle/",
+      "rdfs:label": "has nomen handle",
+      "rdfs:comment": "Associates a Nomen with its NomenHandle."
+    },
+    {
+      "@id": "denotes/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "NomenHandle/",
+      "rdfs:range": "rdfs:Resource",
+      "rdfs:label": "denotes",
+      "rdfs:comment": "Asserts what the Nomen denotes (may be an external IRI or an in-mesh artifact such as a Flow/Slice/AbstractFile/LocatedFile)."
+    },
+    $1
+
+    {
+      "@id": "ReferenceLink/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Reference link",
+      "rdfs:comment": "A relator describing a reference-data link from a NomenHandle to a specific reference data source, including expectations and role metadata."
+    },
+    {
+      "@id": "ReferenceRole/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Reference role",
+      "rdfs:comment": "A controlled vocabulary of roles describing how a ReferenceLink should be used."
+    },
+    {
+      "@id": "TargetKind/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Target kind",
+      "rdfs:comment": "A metaclass used to constrain expected target kinds for ReferenceLinks (via punning)."
+    },
+    {
+      "@id": "ReferenceRoleCanonical/",
+      "@type": "ReferenceRole/",
+      "rdfs:label": "Canonical"
+    },
+    {
+      "@id": "ReferenceRoleIntegrate/",
+      "@type": "ReferenceRole/",
+      "rdfs:label": "Integrate into resource page"
+    },
+    {
+      "@id": "ReferenceRoleSupplemental/",
+      "@type": "ReferenceRole/",
+      "rdfs:label": "Supplemental"
+    },
+    {
+      "@id": "ReferenceRoleDeprecated/",
+      "@type": "ReferenceRole/",
+      "rdfs:label": "Deprecated"
+    },
+    {
+      "@id": "hasReferenceLink/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "NomenHandle/",
+      "rdfs:range": "ReferenceLink/",
+      "rdfs:label": "has reference link",
+      "rdfs:comment": "Links a NomenHandle to a ReferenceLink describing a specific reference-data source."
+    },
+    {
+      "@id": "referenceLinkForNomen/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "ReferenceLink/",
+      "rdfs:range": "NomenHandle/",
+      "owl:inverseOf": "hasReferenceLink/",
+      "rdfs:label": "reference link for nomen",
+      "rdfs:comment": "Inverse of hasReferenceLink: identifies the NomenHandle a ReferenceLink is about."
+    },
+    {
+      "@id": "referenceRole/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "ReferenceLink/",
+      "rdfs:range": "ReferenceRole/",
+      "rdfs:label": "reference role",
+      "rdfs:comment": "Assigns one or more roles to a ReferenceLink (e.g., Canonical, Integrate, Supplemental, Deprecated)."
+    },
+    {
+      "@id": "target/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "ReferenceLink/",
+      "rdfs:range": "rdfs:Resource",
+      "rdfs:label": "target",
+      "rdfs:comment": "If present, the target is expected to denote a reference-data source."
+    },
+    {
+      "@id": "targetUriLiteral/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:domain": "ReferenceLink/",
+      "rdfs:range": "xsd:anyURI",
+      "rdfs:label": "target URI literal",
+      "rdfs:comment": "If only this is present, it is expected to locate retrievable content (without assuming denotation)."
+    },
+    {
+      "@id": "expectedTargetKind/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "ReferenceLink/",
+      "rdfs:range": "TargetKind/",
+      "rdfs:label": "expected target kind",
+      "rdfs:comment": "Expected kind of the target (e.g., Nomen, Flow, Slice, AbstractFile, ArtifactLocatedFile, LocatedFile)."
+    },
+    {
+      "@id": "expectedPublishUrl/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:range": "xsd:anyURI",
+      "rdfs:label": "expected publish URL",
+      "rdfs:comment": "An anticipated publish location (URL/IRI string) used for warnings, link materialization, and extraction checks. Represented as a URI literal to avoid asserting anything about the denoted thing."
+    },
+    {
+      "@id": "lastVerifiedAt/",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:domain": "ReferenceLink/",
+      "rdfs:range": "xsd:dateTimeStamp",
+      "rdfs:label": "last verified at",
+      "rdfs:comment": "Most recent verification timestamp for this reference link."
+    },
+    {
+      "@id": "lastVerifiedBy/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "ReferenceLink/",
+      "rdfs:range": "rdfs:Resource",
+      "rdfs:label": "last verified by",
+      "rdfs:comment": "Agent responsible for the most recent verification of this reference link."
+    }
+    /* =========================
+       Containers (Knops)
+       ========================= */
     {
       "@id": "Knop/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "SfloContainer/",
+      "rdfs:subClassOf": [
+        "AbstractResource/"
+      ],
       "rdfs:label": "Knop",
-      "rdfs:comment": "A structural-conceptual unit that supports one referent (one-thing-per-knop). Knop instance IRIs are the Knop-structure IRIs (typically <.../_knop/>). Path containment outside _knop/ is not interpreted as containsSfloContainer, e.g. the containment of a Knop below its referent's IRI. A Knop is not itself a dataset; it is composed of Flows and non-Flow datasets."
+      "rdfs:comment": "SF container anchored at a stable in-mesh location; hosts payload and supporting flows."
     },
     {
       "@id": "KnopComponent/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "SfloContainer/",
+      "rdfs:subClassOf": [
+        "AbstractResource/",
+        "MeshComponent/"
+      ],
       "rdfs:label": "Knop component",
-      "rdfs:comment": "An SF container resource contained by a Knop that provides specific functionality. KnopComponents are typically addressed within the Knop structure namespace rooted at <.../_knop/>."
+      "rdfs:comment": "Reserved components under a Knop (payload/supporting flows and their parts)."
     },
     {
       "@id": "hasKnopComponent/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "containsSfloContainer/",
+      "rdfs:subPropertyOf": "containsSfloResource/",
       "rdfs:domain": "Knop/",
       "rdfs:range": "KnopComponent/",
       "rdfs:label": "has knop component",
       "rdfs:comment": "Associates a Knop with one of its directly contained KnopComponents."
     },
-    {
-      "@id": "supportsReferent/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": "Knop/",
-      "rdfs:range": "rdfs:Resource",
-      "owl:inverseOf": "hasKnop/",
-      "rdfs:label": "supports referent",
-      "rdfs:comment": "Links a Knop to the resource it supports (its referent). This is an association, not a containment relation."
-    },
-    {
-      "@id": "hasKnop/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": "rdfs:Resource",
-      "rdfs:range": "Knop/",
-      "owl:inverseOf": "supportsReferent/",
-      "rdfs:label": "has knop",
-      "rdfs:comment": "Associates a resource (referent) with a Knop that supports it."
-    },
-    {
-      "@id": "RdfDataset/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        "dcat:Dataset",
-        "FileBearingContainer/"
-      ],
-      "rdfs:label": "RdfDataset",
-      "rdfs:comment": "One or more RDF graphs. Some datasets are current-only; some are versioned via Flows."
-    },
+    /* =========================
+       Artifacts and versioning
+       ========================= */
     {
       "@id": "Flow/",
-      "@type": "rdfs:Class",
+      "@type": [
+        "rdfs:Class",
+        "TargetKind/"
+      ],
       "rdfs:subClassOf": [
+        "AbstractResource/",
         "KnopComponent/"
       ],
       "rdfs:label": "Flow",
-      "rdfs:comment": "Abstract Superclass for a KnopComponent that organizes Versions and provides a lineage identity."
+      "rdfs:comment": "Artifact over revisions; organizes Slices and provides a stable artifact identity."
     },
     {
-      "@id": "RdfFlow/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "Flow/",
-      "rdfs:label": "RdfFlow",
-      "rdfs:comment": "A Flow that organizes versions of RDF datasets."
+      "@id": "artifactKind/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "Flow/",
+      "rdfs:range": "rdfs:Resource",
+      "rdfs:label": "artifact kind",
+      "rdfs:comment": "Declares what kind of artifact this Flow carries (e.g., RdfDataset, RdfGraph, Image, Text)."
     },
     {
-      "@id": "KnopMetadataFlow/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "RdfFlow/",
-      "rdfs:label": "Metadata RdfFlow",
-      "rdfs:comment": "Flow containing metadata about the Knop-as-Knop (including inventory snapshots computed at weave time). Typically addressed at <.../_knop/_meta/>."
+      "@id": "Slice/",
+      "@type": [
+        "rdfs:Class",
+        "TargetKind/"
+      ],
+      "rdfs:subClassOf": [
+        "AbstractResource/",
+        "MeshComponent/"
+      ],
+      "rdfs:label": "Slice",
+      "rdfs:comment": "A particular revision of the artifact represented by a Flow."
     },
     {
-      "@id": "ReferenceFlow/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "RdfFlow/",
-      "rdfs:label": "Reference flow",
-      "rdfs:comment": "Flow containing reference data about the Knop's referent. Typically addressed under <.../_knop/_ref/> (or another intra-knop convention)."
-    },
-    {
-      "@id": "PayloadFlow/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "Flow/",
-      "rdfs:label": "Payload flow",
-      "rdfs:comment": "Flow containing versions of the referent digital artifact contained in the Knop. Typically addressed under <.../_knop/_payload/>."
-    },
-    {
-      "@id": "RdfPayloadFlow/",
+      "@id": "WorkingSlice/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "PayloadFlow/",
-        "RdfFlow/"
+        "Slice/"
       ],
-      "rdfs:label": "RDF PayloadFlow",
-      "rdfs:comment": "Flow containing versions of the referent RdfDataset contained in the Knop. Typically addressed under <.../_knop/_payload/>."
+      "rdfs:label": "Working slice",
+      "rdfs:comment": "Mutable current state for a Flow."
     },
     {
-      "@id": "NonRdfPayloadFlow/",
+      "@id": "HistoricalSlice/",
       "@type": "rdfs:Class",
-      "rdfs:subClassOf": "PayloadFlow/",
-      "rdfs:label": "Non-RDF PayloadFlow",
-      "rdfs:comment": "Flow containing versions of the referent non-RDF digital artifact contained in the Knop. Typically addressed under <.../_knop/_payload/>."
+      "rdfs:subClassOf": [
+        "Slice/"
+      ],
+      "rdfs:label": "Historical slice",
+      "rdfs:comment": "Immutable published snapshot for a Flow."
     },
     {
-      "@id": "BacklinksFlow/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "RdfFlow/",
-      "rdfs:label": "Backlinks flow",
-      "rdfs:comment": "Flow containing curated or computed backlinks about the referent. Addressing is a convention within the Knop structure namespace."
-    },
-    {
-      "@id": "InventoryFlow/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "RdfFlow/",
-      "rdfs:label": "Inventory flow",
-      "rdfs:comment": "Flow enumerating all Versions in every Flow; and all AbstractFiles and LocatedFiles per Version or Dataset; "
+      "@id": "AbstractFile/",
+      "@type": [
+        "rdfs:Class",
+        "TargetKind/"
+      ],
+      "rdfs:subClassOf": [
+        "AbstractResource/",
+        "MeshComponent/"
+      ],
+      "rdfs:label": "Abstract file",
+      "rdfs:comment": "A representation specification of a Slice (format/syntax/canonicalization/bundling)."
     },
     {
       "@id": "hasFlow/",
@@ -250,165 +406,203 @@
       "rdfs:comment": "Links a Knop to one of its contained flows."
     },
     {
-      "@id": "hasKnopMetadataFlow/",
+      "@id": "hasSlice/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasFlow/",
-      "rdfs:range": "KnopMetadataFlow/",
-      "rdfs:label": "has metadata flow",
-      "rdfs:comment": "Links a Knop to its metadata flow."
-    },
-    {
-      "@id": "hasReferenceFlow/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasFlow/",
-      "rdfs:range": "ReferenceFlow/",
-      "rdfs:label": "has reference flow",
-      "rdfs:comment": "Links a Knop to its reference flow."
-    },
-    {
-      "@id": "hasRdfPayloadFlow/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasFlow/",
-      "rdfs:range": "RdfPayloadFlow/",
-      "rdfs:label": "has RDF payload flow",
-      "rdfs:comment": "Links a Knop to its RDF payload flow."
-    },
-    {
-      "@id": "hasNonRdfPayloadFlow/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasFlow/",
-      "rdfs:range": "NonRdfPayloadFlow/",
-      "rdfs:label": "has Non-RDF payload flow",
-      "rdfs:comment": "Links a Knop to its non-RDF payload flow."
-    },
-    {
-      "@id": "hasBacklinksFlow/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasFlow/",
-      "rdfs:range": "BacklinksFlow/",
-      "rdfs:label": "has backlinks flow",
-      "rdfs:comment": "Links a Knop to its backlinks flow (if present)."
-    },
-    {
-      "@id": "hasInventoryFlow/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasFlow/",
-      "rdfs:range": "InventoryFlow/",
-      "rdfs:label": "has inventory flow",
-      "rdfs:comment": "Links a Knop to its inventory flow."
-    },
-    {
-      "@id": "Version/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        "FileBearingContainer/"
-      ],
-      "rdfs:label": "Version",
-      "rdfs:comment": "One (abstract) version of the artifact represented by a Flow. A Version represents the content of the Flow's artifact at a particular point in time, but not a particular byte-representation of it."
-    },
-    {
-      "@id": "RdfVersion/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "Version/",
-      "rdfs:label": "RDF Version",
-      "rdfs:comment": "A Version of the evolving RDF Dataset represented by a RdfFlow."
-    },
-    {
-      "@id": "NonRdfVersion/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "Version/",
-      "rdfs:label": "Non-RDF Version",
-      "rdfs:comment": "A Version of the evolving non-RDF digital artifact represented by a NonRdfFlow."
-    },
-    {
-      "@id": "hasVersion/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "containsSfloContainer/",
       "rdfs:domain": "Flow/",
-      "rdfs:range": "Version/",
-      "rdfs:label": "has version",
-      "rdfs:comment": "Associates a Flow with one of its contained Versions."
+      "rdfs:range": "Slice/",
+      "rdfs:label": "has slice",
+      "rdfs:comment": "Associates a Flow with one of its Slices."
     },
     {
-      "@id": "currentVersion/",
+      "@id": "currentSlice/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasVersion/",
+      "rdfs:subPropertyOf": "hasSlice/",
       "rdfs:domain": "Flow/",
-      "rdfs:range": "Version/",
-      "rdfs:label": "current version",
-      "rdfs:comment": "Associates a Flow with its current Version."
+      "rdfs:range": "Slice/",
+      "rdfs:label": "current slice",
+      "rdfs:comment": "Associates a Flow with its current Slice (often the WorkingSlice)."
     },
     {
-      "@id": "previousVersion/",
+      "@id": "previousSlice/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": "Version/",
-      "rdfs:range": "Version/",
-      "rdfs:label": "previous version",
-      "rdfs:comment": "Links to the immediately-preceding Version of this Version."
+      "rdfs:domain": "Slice/",
+      "rdfs:range": "Slice/",
+      "rdfs:label": "previous slice",
+      "rdfs:comment": "Links to the immediately-preceding Slice of this Slice."
     },
     {
-      "@id": "nextVersionSequenceNumber/",
+      "@id": "nextSliceSequenceNumber/",
       "@type": "owl:DatatypeProperty",
       "rdfs:domain": "Flow/",
       "rdfs:range": "xsd:integer",
-      "rdfs:label": "next version sequence number",
+      "rdfs:label": "next slice sequence number",
       "rdfs:comment": "Monotonic integer providing the next allocatable sequence number for a Flow."
     },
     {
-      "@id": "PointersDataset/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        "RdfDataset/",
-        "KnopComponent/"
-      ],
-      "rdfs:label": "Pointers dataset",
-      "rdfs:comment": "A minimal current-only RdfDataset for bootstrapping; typically derived from the metadata flow and addressed as <.../_knop/_pointers/>."
-    },
-    {
-      "@id": "hasPointersDataset/",
+      "@id": "hasAbstractFile/",
       "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasKnopComponent/",
-      "rdfs:domain": "Knop/",
-      "rdfs:range": "PointersDataset/",
-      "rdfs:label": "has pointers dataset",
-      "rdfs:comment": "Links a Knop to its pointers dataset component."
+      "rdfs:domain": "Slice/",
+      "rdfs:range": "AbstractFile/",
+      "rdfs:label": "has abstract file",
+      "rdfs:comment": "Links a Slice to one of its AbstractFiles."
     },
     {
-      "@id": "OpslogDatasetSeries/",
+      "@id": "hasLocatedFile/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "AbstractFile/",
+      "rdfs:range": "LocatedFile/",
+      "rdfs:label": "has located file",
+      "rdfs:comment": "Links an AbstractFile to a LocatedFile endpoint that retrieves bytes."
+    },
+    {
+      "@id": "hasCanonicalLocatedFile/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "hasLocatedFile/",
+      "rdfs:domain": "AbstractFile/",
+      "rdfs:range": "ArtifactLocatedFile/",
+      "rdfs:label": "has canonical located file",
+      "rdfs:comment": "Links an AbstractFile to its canonical ArtifactLocatedFile."
+    },
+    {
+      "@id": "realizesAbstractFile/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "ArtifactLocatedFile/",
+      "rdfs:range": "AbstractFile/",
+      "rdfs:label": "realizes abstract file",
+      "rdfs:comment": "Links an ArtifactLocatedFile to the AbstractFile it realizes (enables navigation without path heuristics)."
+    },
+    {
+      "@id": "DatasetSeries/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "SfloContainer/",
+        "AbstractResource/",
         "dcat:DatasetSeries"
       ],
-      "rdfs:label": "Opslog dataset series",
-      "rdfs:comment": "A conceptual series of operational log datasets (non-flow)"
+      "rdfs:label": "Dataset series",
+      "rdfs:comment": "A series/partitioning of related dataset artifacts."
+    },
+    /* =========================
+       Supporting flows
+       ========================= */
+    {
+      "@id": "SupportingFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "Flow/"
+      ],
+      "rdfs:label": "Supporting flow",
+      "rdfs:comment": "A non-payload flow used for metadata/inventory/auxiliary artifacts."
     },
     {
-      "@id": "OpslogDataset/",
+      "@id": "PayloadFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "Flow/"
+      ],
+      "rdfs:label": "Payload flow",
+      "rdfs:comment": "The primary digital-artifact flow hosted by a Knop."
+    },
+    {
+      "@id": "KnopMetadataFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "SupportingFlow/"
+      ],
+      "rdfs:label": "Knop metadata flow",
+      "rdfs:comment": "Small, discoverable: structure/pointers/summary inventory for the Knop."
+    },
+    {
+      "@id": "MeshMetadataFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "SupportingFlow/",
+        "MeshComponent/"
+      ],
+      "rdfs:label": "Mesh metadata flow",
+      "rdfs:comment": "Optional mesh-level operational metadata/config."
+    },
+    {
+      "@id": "NomenMetadataFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "SupportingFlow/"
+      ],
+      "rdfs:label": "Nomen metadata flow",
+      "rdfs:comment": "Metadata about a NomenHandle; may remain WorkingSlice-only until history is recorded."
+    },
+    {
+      "@id": "hasPayloadFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "hasFlow/",
+      "rdfs:domain": "Knop/",
+      "rdfs:range": "PayloadFlow/",
+      "rdfs:label": "has payload flow",
+      "rdfs:comment": "Links a Knop to its required payload flow."
+    },
+    {
+      "@id": "hasSupportingFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "hasFlow/",
+      "rdfs:domain": "Knop/",
+      "rdfs:range": "SupportingFlow/",
+      "rdfs:label": "has supporting flow",
+      "rdfs:comment": "Links a Knop to one of its supporting flows."
+    },
+    {
+      "@id": "hasKnopMetadataFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "hasSupportingFlow/",
+      "rdfs:domain": "Knop/",
+      "rdfs:range": "KnopMetadataFlow/",
+      "rdfs:label": "has knop metadata flow",
+      "rdfs:comment": "Links a Knop to its knop metadata flow (if present)."
+    },
+    /* =========================
+       RDF payload types
+       ========================= */
+    {
+      "@id": "RdfDataset/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "dcat:Dataset"
+      ],
+      "rdfs:label": "RDF dataset",
+      "rdfs:comment": "RDF dataset content: default graph + 0..n named graphs; default graph may be empty."
+    },
+    {
+      "@id": "RdfGraph/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "RDF graph",
+      "rdfs:comment": "RDF graph content: exactly one graph (default graph only; may be empty)."
+    },
+    {
+      "@id": "NamedGraph/",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Named graph",
+      "rdfs:comment": "A graph identified by a graph-name IRI (interpretation depends on whether you denote a Flow, a HistoricalSlice, or a WorkingSlice)."
+    },
+    /* =========================
+       Operational indices (non-flow datasets)
+       ========================= */
+    {
+      "@id": "MeshInventoryDataset/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "RdfDataset/",
+        "MeshComponent/"
+      ],
+      "rdfs:label": "Mesh inventory dataset",
+      "rdfs:comment": "Optional derived index for explorability at the mesh level (non-flow; may be large/sharded)."
+    },
+    {
+      "@id": "KnopInventoryDataset/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
         "RdfDataset/",
         "KnopComponent/"
       ],
-      "rdfs:label": "Opslog dataset",
-      "rdfs:comment": "An append-only operational log dataset (non-flow) associated with a Knop. Typically stored under <.../_knop/_opslog/>."
-    },
-    {
-      "@id": "hasOpslogDatasetSeries/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:subPropertyOf": "hasKnopComponent/",
-      "rdfs:domain": "Knop/",
-      "rdfs:range": "OpslogDatasetSeries/",
-      "rdfs:label": "has opslog dataset series",
-      "rdfs:comment": "Links a Knop to its opslog DatasetSeries."
-    },
-    {
-      "@id": "hasOpslogDataset/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": "OpslogDatasetSeries/",
-      "rdfs:range": "OpslogDataset/",
-      "rdfs:label": "has opslog dataset",
-      "rdfs:comment": "Links an OpslogDatasetSeries to its OpslogDatasets."
+      "rdfs:label": "Knop inventory dataset",
+      "rdfs:comment": "Optional derived index for explorability at the knop level (non-flow; may be large/sharded)."
     }
   ]
 }
