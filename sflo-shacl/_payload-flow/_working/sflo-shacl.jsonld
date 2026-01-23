@@ -286,23 +286,23 @@
       "@id": "ReferenceLinkBackpointerShape/",
       "@type": "sh:NodeShape",
       "rdfs:label": "ReferenceLink backpointer",
-      "rdfs:comment": "A ReferenceLink should identify the Nomen it is about.",
+      "rdfs:comment": "A ReferenceLink should identify the thing it is about.",
       "sh:targetClass": {
         "@id": "sflo:ReferenceLink/"
       },
       "sh:property": {
         "sh:path": {
-          "@id": "sflo:referenceLinkForNomen/"
+          "@id": "sflo:referenceLinkFor/"
         },
         "sh:minCount": 1,
         "sh:maxCount": 1,
         "sh:class": {
-          "@id": "sflo:Nomen/"
+          "@id": "sflo:ArtifactHost/"
         },
         "sh:severity": {
           "@id": "sh:Warning"
         },
-        "sh:message": "A ReferenceLink SHOULD point back to exactly one sflo:Nomen via sflo:referenceLinkForNomen."
+        "sh:message": "A ReferenceLink SHOULD point back to exactly one sflo:ArtifactHost via sflo:referenceLinkFor."
       }
     }
   ]
