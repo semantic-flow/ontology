@@ -10,7 +10,7 @@
     "dcat": "http://www.w3.org/ns/dcat#",
     "dcterms": "http://purl.org/dc/terms/",
     "formats": "http://www.w3.org/ns/formats/",
-    "sflo": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
+    "sflo": "https://semantic-flow.github.io/semantic-flow-ontology/"
   },
   "@graph": [
     {
@@ -22,24 +22,35 @@
       "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-shacl/"
     },
     {
-      "@id": "DenotesSubjectShape/",
+      "@id": "MeshBaseShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "denotes subject typing",
-      "rdfs:comment": "Ensures sflo:denotes is asserted only on sflo:NomenHandle subjects.",
-      "sh:targetSubjectsOf": {
-        "@id": "sflo:denotes/"
+      "rdfs:label": "Mesh base sanity",
+      "rdfs:comment": "Ensures a Mesh typically declares a canonical meshBase URI literal.",
+      "sh:targetClass": {
+        "@id": "sflo:Mesh/"
       },
-      "sh:class": {
-        "@id": "sflo:NomenHandle/"
-      },
-      "sh:message": "Subjects of sflo:denotes must be typed sflo:NomenHandle."
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:meshBase/"
+        },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:datatype": {
+          "@id": "xsd:anyURI"
+        },
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "A Mesh SHOULD declare exactly one sflo:meshBase (xsd:anyURI)."
+      }
     },
     {
-      "@id": "FlowStructureShape/",
+      "@id": "FlowArtifactStructureShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "Flow structure constraints",
+      "rdfs:label": "FlowArtifact structure constraints",
+      "rdfs:comment": "Basic structural constraints for FlowArtifact / slice membership.",
       "sh:targetClass": {
-        "@id": "sflo:Flow/"
+        "@id": "sflo:FlowArtifact/"
       },
       "sh:property": [
         {
@@ -50,7 +61,7 @@
           "sh:severity": {
             "@id": "sh:Warning"
           },
-          "sh:message": "A Flow SHOULD have at least one sflo:hasSlice."
+          "sh:message": "A FlowArtifact SHOULD have at least one sflo:hasSlice."
         },
         {
           "sh:path": {
@@ -60,14 +71,23 @@
           "sh:severity": {
             "@id": "sh:Violation"
           },
-          "sh:message": "A Flow SHOULD have at most one sflo:currentSlice."
+          "sh:message": "A FlowArtifact MUST have at most one sflo:currentSlice."
         }
-      ]
+      ],
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "If sflo:currentSlice is present, its value MUST also be one of the FlowArtifact's sflo:hasSlice values.",
+        "sh:severity": {
+          "@id": "sh:Violation"
+        },
+        "sh:select": "SELECT $this WHERE {\n  $this sflo:currentSlice ?cs .\n  FILTER NOT EXISTS { $this sflo:hasSlice ?cs }\n}"
+      }
     },
     {
-      "@id": "SliceAbstractFileShape/",
+      "@id": "SliceRealizableShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "Slice file presence",
+      "rdfs:label": "Slice realization presence",
+      "rdfs:comment": "Slices are content-bearing; they should usually have at least one AbstractFile realization.",
       "sh:targetClass": {
         "@id": "sflo:Slice/"
       },
@@ -79,70 +99,207 @@
         "sh:severity": {
           "@id": "sh:Warning"
         },
-        "sh:message": "A Slice SHOULD have at least one sflo:hasAbstractFile."
+        "sh:message": "A Slice SHOULD have at least one sflo:hasAbstractFile (realization spec)."
       }
     },
     {
-      "@id": "KnopStructureSanityShape/",
+      "@id": "SimpleArtifactRealizableShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "Knop structure sanity",
+      "rdfs:label": "SimpleArtifact realization presence",
+      "rdfs:comment": "SimpleArtifacts are realizable; they should usually have at least one AbstractFile realization.",
       "sh:targetClass": {
-        "@id": "sflo:Knop/"
-      },
-      "sh:property": [
-        {
-          "sh:path": {
-            "@id": "sflo:hasKnopMetadataFlow/"
-          },
-          "sh:minCount": 1,
-          "sh:maxCount": 1,
-          "sh:severity": {
-            "@id": "sh:Warning"
-          },
-          "sh:message": "A Knop SHOULD have exactly one sflo:hasKnopMetadataFlow."
-        }
-      ]
-    },
-    {
-      "@id": "KnopComponentContainmentShape/",
-      "@type": "sh:NodeShape",
-      "rdfs:label": "KnopComponent containment",
-      "sh:targetClass": {
-        "@id": "sflo:KnopComponent/"
+        "@id": "sflo:SimpleArtifact/"
       },
       "sh:property": {
         "sh:path": {
-          "sh:inversePath": {
-            "@id": "sflo:hasKnopComponent/"
-          }
+          "@id": "sflo:hasAbstractFile/"
         },
         "sh:minCount": 1,
-        "sh:maxCount": 1,
         "sh:severity": {
-          "@id": "sh:Violation"
+          "@id": "sh:Warning"
         },
-        "sh:message": "A KnopComponent MUST be contained by exactly one Knop via sflo:hasKnopComponent."
+        "sh:message": "A SimpleArtifact SHOULD have at least one sflo:hasAbstractFile (realization spec)."
       }
     },
     {
-      "@id": "AbstractFileContainmentShape/",
+      "@id": "AbstractFileLocatedFileShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "AbstractFile containment",
+      "rdfs:label": "AbstractFile should be locatable (usually)",
+      "rdfs:comment": "In many meshes, AbstractFiles are expected to have at least one LocatedFile. This is a warning because external/non-locatable realization specs may exist.",
       "sh:targetClass": {
         "@id": "sflo:AbstractFile/"
       },
       "sh:property": {
         "sh:path": {
-          "sh:inversePath": {
-            "@id": "sflo:hasAbstractFile/"
-          }
+          "@id": "sflo:hasLocatedFile/"
+        },
+        "sh:minCount": 1,
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "An AbstractFile SHOULD have at least one sflo:hasLocatedFile."
+      }
+    },
+    {
+      "@id": "AbstractArtifactFileLocatedArtifactFileShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "AbstractArtifactFile locatability",
+      "rdfs:comment": "Mesh-governed abstract artifact files should typically be backed by at least one mesh-governed located artifact file.",
+      "sh:targetClass": {
+        "@id": "sflo:AbstractArtifactFile/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:hasLocatedArtifactFile/"
+        },
+        "sh:minCount": 1,
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "An AbstractArtifactFile SHOULD have at least one sflo:hasLocatedArtifactFile."
+      }
+    },
+    {
+      "@id": "LocatedArtifactFileBacklinkShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "LocatedArtifactFile backlink",
+      "rdfs:comment": "Located artifact files should usually indicate which abstract artifact file they locate.",
+      "sh:targetClass": {
+        "@id": "sflo:LocatedArtifactFile/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:locatesAbstractArtifactFile/"
         },
         "sh:minCount": 1,
         "sh:maxCount": 1,
         "sh:severity": {
-          "@id": "sh:Violation"
+          "@id": "sh:Warning"
         },
-        "sh:message": "An AbstractFile MUST be contained by exactly one container via sflo:hasAbstractFile."
+        "sh:message": "A LocatedArtifactFile SHOULD locate exactly one AbstractArtifactFile via sflo:locatesAbstractArtifactFile."
+      }
+    },
+    {
+      "@id": "KnopPayloadChoiceShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Knop payload choice",
+      "rdfs:comment": "A Knop should have exactly one payload form: either a flow payload or a simple payload.",
+      "sh:targetClass": {
+        "@id": "sflo:Knop/"
+      },
+      "sh:xone": [
+        {
+          "@type": "sh:NodeShape",
+          "sh:property": [
+            {
+              "sh:path": {
+                "@id": "sflo:hasFlowPayload/"
+              },
+              "sh:minCount": 1,
+              "sh:maxCount": 1
+            },
+            {
+              "sh:path": {
+                "@id": "sflo:hasSimplePayload/"
+              },
+              "sh:maxCount": 0
+            }
+          ]
+        },
+        {
+          "@type": "sh:NodeShape",
+          "sh:property": [
+            {
+              "sh:path": {
+                "@id": "sflo:hasSimplePayload/"
+              },
+              "sh:minCount": 1,
+              "sh:maxCount": 1
+            },
+            {
+              "sh:path": {
+                "@id": "sflo:hasFlowPayload/"
+              },
+              "sh:maxCount": 0
+            }
+          ]
+        }
+      ],
+      "sh:message": "A Knop MUST have exactly one of: sflo:hasFlowPayload or sflo:hasSimplePayload (and not both)."
+    },
+    {
+      "@id": "KnopMetadataFlowShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Knop metadata flow presence",
+      "rdfs:comment": "Operationally recommended: a Knop should have exactly one metadata flow.",
+      "sh:targetClass": {
+        "@id": "sflo:Knop/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:hasKnopMetadataFlow/"
+        },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "A Knop SHOULD have exactly one sflo:hasKnopMetadataFlow."
+      }
+    },
+    {
+      "@id": "NomenReferenceLinksShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Nomen reference links",
+      "rdfs:comment": "Basic expectations for Nomen reference-link usage.",
+      "sh:targetClass": {
+        "@id": "sflo:Nomen/"
+      },
+      "sh:property": [
+        {
+          "sh:path": {
+            "@id": "sflo:hasReferenceLink/"
+          },
+          "sh:class": {
+            "@id": "sflo:ReferenceLink/"
+          },
+          "sh:severity": {
+            "@id": "sh:Violation"
+          },
+          "sh:message": "Values of sflo:hasReferenceLink must be typed sflo:ReferenceLink."
+        },
+        {
+          "sh:path": {
+            "@id": "sflo:hasChildNomen/"
+          },
+          "sh:severity": {
+            "@id": "sh:Info"
+          },
+          "sh:message": "sflo:hasChildNomen is operational/derived; validate only if present."
+        }
+      ]
+    },
+    {
+      "@id": "ReferenceLinkBackpointerShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "ReferenceLink backpointer",
+      "rdfs:comment": "A ReferenceLink should identify the Nomen it is about.",
+      "sh:targetClass": {
+        "@id": "sflo:ReferenceLink/"
+      },
+      "sh:property": {
+        "sh:path": {
+          "@id": "sflo:referenceLinkForNomen/"
+        },
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:class": {
+          "@id": "sflo:Nomen/"
+        },
+        "sh:severity": {
+          "@id": "sh:Warning"
+        },
+        "sh:message": "A ReferenceLink SHOULD point back to exactly one sflo:Nomen via sflo:referenceLinkForNomen."
       }
     }
   ]
