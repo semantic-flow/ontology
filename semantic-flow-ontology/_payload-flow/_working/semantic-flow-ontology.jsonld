@@ -1,6 +1,6 @@
 {
   "@context": {
-    "@base": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/",
+    "@base": "https://semantic-flow.github.io/semantic-flow-ontology/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "dcterms": "http://purl.org/dc/terms/",
@@ -9,6 +9,8 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "schema": "https://schema.org/",
     "vann": "http://purl.org/vocab/vann/",
+    "label": "rdfs:label",
+    "comment": "rdfs:comment",
     "rdfs:subClassOf": {
       "@type": "@id"
     },
@@ -36,14 +38,11 @@
       },
       "owl:versionInfo": "0.0.1",
       "owl:versionIRI": {
-        "@id": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/_payload/_default/sflo.ttl"
+        "@id": "https://semantic-flow.github.io/semantic-flow-ontology/_knops/_payload/_working/sflo.ttl/sflo.ttl"
       },
       "vann:preferredNamespacePrefix": "sflo",
-      "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
+      "vann:preferredNamespaceUri": "https://semantic-flow.github.io/semantic-flow-ontology/"
     },
-    /* =========================
-       Foundations
-       ========================= */
     {
       "@id": "SemanticFlowResource/",
       "@type": "rdfs:Class",
@@ -144,9 +143,6 @@
       "rdfs:label": "has resource page file",
       "rdfs:comment": "Associates any resource (including referents) with a human-readable presentation page."
     },
-    /* =========================
-       Naming (Nomen)
-       ========================= */
     {
       "@id": "Nomen/",
       "@type": [
@@ -160,11 +156,20 @@
       "rdfs:comment": "A human-facing designator IRI (e.g., /people/alice/) intended to denote a discourse-worthy thing."
     },
     {
+      "@id": "NomenComponent/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "MeshComponent/"
+      ],
+      "rdfs:label": "Nomen component",
+      "rdfs:comment": "Reserved components under a Nomen (e.g., NomenHandle, Nomen flows, inventories)."
+    },
+    {
       "@id": "NomenHandle/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
         "AbstractResource/",
-        "MeshComponent/"
+        "NomenComponent/"
       ],
       "rdfs:label": "Nomen handle",
       "rdfs:comment": "The naming-object handle for a Nomen (e.g., /people/alice/_nomen/), used to talk about the Nomen-as-Nomen."
@@ -183,10 +188,8 @@
       "rdfs:domain": "NomenHandle/",
       "rdfs:range": "rdfs:Resource",
       "rdfs:label": "denotes",
-      "rdfs:comment": "Asserts what the Nomen denotes (may be an external IRI or an in-mesh artifact such as a Flow/Slice/AbstractFile/LocatedFile)."
+      "rdfs:comment": "Given a NomenHandle subject (denoting the Nomen as an identifier-object), asserts what the Nomen denotes. This is not a statement about the designator's referent when using the designator IRI directly."
     },
-    $1
-
     {
       "@id": "ReferenceLink/",
       "@type": "rdfs:Class",
@@ -275,11 +278,11 @@
       "rdfs:comment": "Expected kind of the target (e.g., Nomen, Flow, Slice, AbstractFile, ArtifactLocatedFile, LocatedFile)."
     },
     {
-      "@id": "expectedPublishUrl/",
+      "@id": "meshBase/",
       "@type": "owl:DatatypeProperty",
       "rdfs:range": "xsd:anyURI",
-      "rdfs:label": "expected publish URL",
-      "rdfs:comment": "An anticipated publish location (URL/IRI string) used for warnings, link materialization, and extraction checks. Represented as a URI literal to avoid asserting anything about the denoted thing."
+      "rdfs:label": "Mesh Base",
+      "rdfs:comment": "A mesh's 'BASE', which should correspond to a publish location (URL/IRI string). Represented as a URI literal to avoid asserting anything about the denoted thing."
     },
     {
       "@id": "lastVerifiedAt/",
@@ -296,10 +299,7 @@
       "rdfs:range": "rdfs:Resource",
       "rdfs:label": "last verified by",
       "rdfs:comment": "Agent responsible for the most recent verification of this reference link."
-    }
-    /* =========================
-       Containers (Knops)
-       ========================= */
+    },
     {
       "@id": "Knop/",
       "@type": "rdfs:Class",
@@ -328,9 +328,6 @@
       "rdfs:label": "has knop component",
       "rdfs:comment": "Associates a Knop with one of its directly contained KnopComponents."
     },
-    /* =========================
-       Artifacts and versioning
-       ========================= */
     {
       "@id": "Flow/",
       "@type": [
@@ -338,11 +335,40 @@
         "TargetKind/"
       ],
       "rdfs:subClassOf": [
-        "AbstractResource/",
-        "KnopComponent/"
+        "AbstractResource/"
       ],
       "rdfs:label": "Flow",
       "rdfs:comment": "Artifact over revisions; organizes Slices and provides a stable artifact identity."
+    },
+    {
+      "@id": "KnopFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "Flow/",
+        "KnopComponent/"
+      ],
+      "rdfs:label": "Knop flow",
+      "rdfs:comment": "A Flow that is a component of a Knop."
+    },
+    {
+      "@id": "NomenFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "Flow/",
+        "NomenComponent/"
+      ],
+      "rdfs:label": "Nomen flow",
+      "rdfs:comment": "A Flow that is a component of a NomenHandle."
+    },
+    {
+      "@id": "MeshFlow/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "Flow/",
+        "MeshComponent/"
+      ],
+      "rdfs:label": "Mesh flow",
+      "rdfs:comment": "A Flow that is a component of the mesh (mesh-level)."
     },
     {
       "@id": "artifactKind/",
@@ -481,9 +507,6 @@
       "rdfs:label": "Dataset series",
       "rdfs:comment": "A series/partitioning of related dataset artifacts."
     },
-    /* =========================
-       Supporting flows
-       ========================= */
     {
       "@id": "SupportingFlow/",
       "@type": "rdfs:Class",
@@ -497,7 +520,7 @@
       "@id": "PayloadFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "Flow/"
+        "KnopFlow/"
       ],
       "rdfs:label": "Payload flow",
       "rdfs:comment": "The primary digital-artifact flow hosted by a Knop."
@@ -506,7 +529,8 @@
       "@id": "KnopMetadataFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "SupportingFlow/"
+        "SupportingFlow/",
+        "KnopFlow/"
       ],
       "rdfs:label": "Knop metadata flow",
       "rdfs:comment": "Small, discoverable: structure/pointers/summary inventory for the Knop."
@@ -516,7 +540,7 @@
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
         "SupportingFlow/",
-        "MeshComponent/"
+        "MeshFlow/"
       ],
       "rdfs:label": "Mesh metadata flow",
       "rdfs:comment": "Optional mesh-level operational metadata/config."
@@ -525,10 +549,19 @@
       "@id": "NomenMetadataFlow/",
       "@type": "rdfs:Class",
       "rdfs:subClassOf": [
-        "SupportingFlow/"
+        "SupportingFlow/",
+        "NomenFlow/"
       ],
       "rdfs:label": "Nomen metadata flow",
       "rdfs:comment": "Metadata about a NomenHandle; may remain WorkingSlice-only until history is recorded."
+    },
+    {
+      "@id": "hasNomenMetadataFlow/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "NomenHandle/",
+      "rdfs:range": "NomenMetadataFlow/",
+      "rdfs:label": "has nomen metadata flow",
+      "rdfs:comment": "Links a NomenHandle to its nomen metadata flow (if present)."
     },
     {
       "@id": "hasPayloadFlow/",
@@ -557,9 +590,6 @@
       "rdfs:label": "has knop metadata flow",
       "rdfs:comment": "Links a Knop to its knop metadata flow (if present)."
     },
-    /* =========================
-       RDF payload types
-       ========================= */
     {
       "@id": "RdfDataset/",
       "@type": "rdfs:Class",
@@ -581,9 +611,6 @@
       "rdfs:label": "Named graph",
       "rdfs:comment": "A graph identified by a graph-name IRI (interpretation depends on whether you denote a Flow, a HistoricalSlice, or a WorkingSlice)."
     },
-    /* =========================
-       Operational indices (non-flow datasets)
-       ========================= */
     {
       "@id": "MeshInventoryDataset/",
       "@type": "rdfs:Class",
@@ -603,6 +630,16 @@
       ],
       "rdfs:label": "Knop inventory dataset",
       "rdfs:comment": "Optional derived index for explorability at the knop level (non-flow; may be large/sharded)."
+    },
+    {
+      "@id": "NomenInventoryDataset/",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": [
+        "RdfDataset/",
+        "NomenComponent/"
+      ],
+      "rdfs:label": "Nomen inventory dataset",
+      "rdfs:comment": "Optional derived index for explorability at the nomen handle level (non-flow; may be large/sharded)."
     }
   ]
 }
