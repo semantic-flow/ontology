@@ -68,10 +68,13 @@
             "@id": "sflo:currentSlice/"
           },
           "sh:maxCount": 1,
+          "sh:class": {
+            "@id": "sflo:WorkingSlice/"
+          },
           "sh:severity": {
             "@id": "sh:Violation"
           },
-          "sh:message": "A FlowArtifact MUST have at most one sflo:currentSlice."
+          "sh:message": "If present, a FlowArtifact's sflo:currentSlice MUST be a sflo:WorkingSlice (and at most one value)."
         }
       ],
       "sh:sparql": {
