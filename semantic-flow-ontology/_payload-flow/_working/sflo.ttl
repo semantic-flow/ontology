@@ -347,12 +347,12 @@
   rdfs:label "Knop component" ;
   rdfs:comment "Reserved components under a Knop (payload/supporting flows and their parts)." .
 
-<PayloadFlow/> a rdfs:Class ;
+<FlowPayload/> a rdfs:Class ;
   rdfs:subClassOf <FlowArtifact/>, <KnopComponent/> ;
   rdfs:label "Payload flow" ;
   rdfs:comment "The primary FlowArtifact hosted by a Knop." .
 
-<PayloadArtifact/> a rdfs:Class ;
+<SimplePayload/> a rdfs:Class ;
   rdfs:subClassOf <SimpleArtifact/>, <KnopComponent/> ;
   rdfs:label "Payload artifact" ;
   rdfs:comment "A primary (simple) artifact hosted directly by a Knop, for cases where the payload is not managed as a FlowArtifact." .
@@ -360,23 +360,23 @@
 <hasPayload/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsMeshResource/> ;
   rdfs:domain <Knop/> ;
-  rdfs:range <PayloadArtifact/> ;
+  rdfs:range <DigitalArtifact/> ;
   rdfs:label "has payload" ;
   rdfs:comment "Links a Knop to its primary payload artifact identity (either a FlowArtifact-based payload or a SimpleArtifact-based payload)." .
 
 <hasFlowPayload/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <hasPayload/> ;
   rdfs:domain <Knop/> ;
-  rdfs:range <PayloadFlow/> ;
+  rdfs:range <FlowPayload/> ;
   rdfs:label "has flow payload" ;
-  rdfs:comment "Links a Knop to its payload when the payload is modeled as a FlowArtifact (PayloadFlow)." .
+  rdfs:comment "Links a Knop to its payload when the payload is modeled as a FlowArtifact (FlowPayload)." .
 
 <hasSimplePayload/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <hasPayload/> ;
   rdfs:domain <Knop/> ;
-  rdfs:range <PayloadArtifact/> ;
+  rdfs:range <SimplePayload/> ;
   rdfs:label "has simple payload" ;
-  rdfs:comment "Links a Knop to its payload when the payload is modeled as a SimpleArtifact (PayloadArtifact)." .
+  rdfs:comment "Links a Knop to its payload when the payload is modeled as a SimpleArtifact (SimplePayload)." .
 
 # Metadata
 
