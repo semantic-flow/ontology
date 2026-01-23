@@ -394,16 +394,16 @@
   rdfs:comment "A SimpleArtifact whose content is an RDF dataset (default graph + 0..n named graphs)." .
 
 <MeshInventoryDataset/> a rdfs:Class ;
-  rdfs:subClassOf <RdfDataset/>, <MeshComponent/> ;
+  rdfs:subClassOf <RdfDataset/>, <MeshComponent/>, <SimpleArtifact/> ;
   rdfs:label "Mesh inventory dataset" ;
   rdfs:comment "Optional derived index for explorability at the mesh level (non-flow; may be large/sharded)." .
 
 <KnopInventoryDataset/> a rdfs:Class ;
-  rdfs:subClassOf <RdfDataset/>, <KnopComponent/> ;
+  rdfs:subClassOf <RdfDataset/>, <KnopComponent/>, <SimpleArtifact/> ;
   rdfs:label "Knop inventory dataset" ;
   rdfs:comment "Optional derived index for explorability at the knop level (non-flow; may be large/sharded)." .
 
 <NomenInventoryDataset/> a rdfs:Class ;
-  rdfs:subClassOf <RdfDataset/>, <NomenComponent/> ;
+  rdfs:subClassOf <RdfDataset/>, <NomenComponent/>, <SimpleArtifact/> ;
   rdfs:label "Nomen inventory dataset" ;
   rdfs:comment "Optional derived index for explorability at the nomen level (non-flow; may be large/sharded)." .
