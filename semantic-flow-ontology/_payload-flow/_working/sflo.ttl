@@ -19,7 +19,7 @@
   vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-ontology/> .
 
 
-# Core Semantice Mesh-scoped resources
+# Core Semantic Mesh-scoped resources
 
 <MeshResource/> a rdfs:Class ;
   rdfs:label "Mesh resource" ;
@@ -29,6 +29,12 @@
   rdfs:subClassOf <MeshResource/> ;
   rdfs:label "Artifact host" ;
   rdfs:comment "A mesh-governed resource that can contain artifacts and associated structural resources. Nomen are ArtifactHosts that can also contain other Nomen. " .
+
+<containsMeshResource/> a owl:ObjectProperty ;
+  rdfs:domain <ArtifactHost/> ;
+  rdfs:range <MeshResource/> ;
+  rdfs:label "contains mesh resource" ;
+  rdfs:comment "Structural containment relation for mesh-governed resources, asserted from an artifact-hosting resource (Mesh, Knop, or Nomen)." .
 
 <Mesh/> a rdfs:Class ;
   rdfs:subClassOf <ArtifactHost/> ;
@@ -44,27 +50,49 @@
 <MeshComponent/> a rdfs:Class ;
   rdfs:subClassOf <MeshResource/> ;
   rdfs:label "Mesh component" ;
-  rdfs:comment "A reserved, mesh-scoped structural resource (e.g., the _mesh/ handle, mesh-level metadata, mesh inventory)." .  
+  rdfs:comment "A reserved, mesh-scoped structural resource (e.g., mesh-level metadata, mesh inventory)." .  
 
-<containsMeshResource/> a owl:ObjectProperty ;
-  rdfs:domain <ArtifactHost/> ;
-  rdfs:range <MeshResource/> ;
-  rdfs:label "contains mesh resource" ;
-  rdfs:comment "Structural containment relation for mesh-governed resources, asserted from an artifact-hosting resource (Mesh, Knop, or Nomen)." .
+<containsMeshComponent/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <containsMeshResource/> ;
+  rdfs:domain <Mesh/> ;
+  rdfs:range <MeshComponent/> ;
+  rdfs:label "contains mesh component" ;
+  rdfs:comment "Associates a Mesh with one of its directly contained MeshComponents." .
 
+<containsKnopComponent/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <containsMeshResource/> ;
+  rdfs:domain <Knop/> ;
+  rdfs:range <KnopComponent/> ;
+  rdfs:label "contains knop component" ;
+  rdfs:comment "Associates a Knop with one of its directly contained KnopComponents." .
 
+<containsNomenComponent/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <containsMeshResource/> ;
+  rdfs:domain <Nomen/> ;
+  rdfs:range <NomenComponent/> ;
+  rdfs:label "contains nomen component" ;
+  rdfs:comment "Associates a Nomen with one of its directly contained NomenComponents." .
+
+  
 # General-purpose Resources
-# These could be usable anywhere on the Semantic Web, not just in Semantic Flow meshes
+# These could be usable anywhere on the Semantic Web, not just in Semantic Flow meshes'
+
+## Digital Artifact
+
+<DigitalArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <MeshResource/> ;
+  rdfs:label "Digital artifact" ;
+  rdfs:comment "A mesh-governed artifact identity (something treated as a digital artifact in the abstract)." .
 
 ## Realizable + Realizations
 
 <Realizable/> a rdfs:Class ;
   rdfs:label "Realizable" ;
-  rdfs:comment "A abstract resource whose content can be realized via one or more Realizations (e.g., files, streams)." .
+  rdfs:comment "The essential, particular (at a point in time) content of a DigitalArtifact (e.g., an image, an ontology, a text file) that can be realized via one or more Realizations (e.g., files, streams)." .
 
 <Realization/> a rdfs:Class ;
   rdfs:label "Realization" ;
-  rdfs:comment "A abstract representation/encoding/packaging of a Realizable resource, independent of any particular access endpoint." .
+  rdfs:comment "A representation/encoding/packaging of a Realizable DigitalArtifact, independent of any particular access endpoint." .
 
 
 ## Abstract files and streams
@@ -125,14 +153,9 @@
   rdfs:label "has resource page file" ;
   rdfs:comment "Associates any resource (including referents) with a human-readable presentation page." .
 
-# Artifacts
+# Semantic Flow Artifacts
 
-## Digital Artifacts 
-
-<DigitalArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <MeshResource/> ;
-  rdfs:label "Digital artifact" ;
-  rdfs:comment "A mesh-governed artifact identity (something treated as a digital artifact in the abstract)." .
+## Digital Artifacts kinds
 
 <FlowArtifact/> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact/> ;
@@ -236,16 +259,23 @@
   rdfs:label "Nomen" ;
   rdfs:comment "A naming-object resource (conventionally located at a reserved _nomen/ path) that records a meshPath token (interpreted relative to the mesh base) and ties that token to what it is about. A Nomen may specify, via ReferenceLinks, additional sources of reference data about what it is about. A Nomen may also function as a namespace prefix for subordinate Nomens under its path." .
 
+<hasNomen/> a owl:ObjectProperty ;
+  rdfs:domain <Mesh/> ;
+  rdfs:range <Nomen/> ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:label "has nomen"@en ;
+  rdfs:comment "Asserts that a Nomen participates in (and is inventoried by) a Mesh's naming surface. This supports meshes whose naming vehicle exists independent of any filesystem serialization or dereferenceable publication."@en .
+
 <NomenComponent/> a rdfs:Class ;
   rdfs:subClassOf <MeshResource/> ;
   rdfs:label "Nomen component" ;
   rdfs:comment "Reserved components under a Nomen (e.g., nomen flows, inventories)." .
 
-<nomenSubject/> a owl:ObjectProperty ;
+<nomenFor/> a owl:ObjectProperty ;
   rdfs:domain <Nomen/> ;
   rdfs:range rdfs:Resource ;
-  rdfs:label "nomen subject" ;
-  rdfs:comment "Optional asserted subject (designator IRI) for the Nomen. Usually matches the meshPath. If absent, the Nomen may be anchored only via ReferenceLinks (or used purely for namespacing / token management)." .
+  rdfs:label "nomen for" ;
+  rdfs:comment "Asserted designator IRI for the Nomen. Usually matches the meshPath." .
 
 <meshPath/> a owl:DatatypeProperty ;
   rdfs:domain <Nomen/> ;
@@ -260,7 +290,6 @@
   rdfs:comment "Optional asserted designatum for the Nomen's designator token. If absent, the Nomen may be anchored only via ReferenceLinks (or used purely for namespacing / token management)." .
 
 <hasChildNomen/> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <containsMeshResource/> ;
   rdfs:domain <Nomen/> ;
   rdfs:range <Nomen/> ;
   rdfs:label "has child nomen" ;
@@ -271,54 +300,55 @@
 
 <ReferenceLink/> a rdfs:Class ;
   rdfs:label "Reference link" ;
-  rdfs:comment "A relator describing a reference-data link from a Nomen to a specific reference data source, including expectations and role metadata." .
+  rdfs:comment "A relator describing a reference-data link from a MeshResource to a specific reference data source, including role metadata." .
 
 <ReferenceRole/> a rdfs:Class ;
   rdfs:label "Reference role" ;
   rdfs:comment "A controlled vocabulary of roles describing how a ReferenceLink should be used." .
 
-<ReferenceRoleCanonical/> a <ReferenceRole/> ;
+<ReferenceRole/Canonical/> a <ReferenceRole/> ;
   rdfs:label "Canonical" .
 
-<ReferenceRoleIntegrate/> a <ReferenceRole/> ;
+<ReferenceRole/Integrate/> a <ReferenceRole/> ;
   rdfs:label "Integrate into resource page" .
 
-<ReferenceRoleSupplemental/> a <ReferenceRole/> ;
+<ReferenceRole/Supplemental/> a <ReferenceRole/> ;
   rdfs:label "Supplemental" .
 
-<ReferenceRoleDeprecated/> a <ReferenceRole/> ;
+<ReferenceRole/Deprecated/> a <ReferenceRole/> ;
   rdfs:label "Deprecated" .
 
 <hasReferenceLink/> a owl:ObjectProperty ;
   rdfs:domain <ArtifactHost/> ;
   rdfs:range <ReferenceLink/> ;
   rdfs:label "has reference link" ;
-  rdfs:comment "Links a Nomen to a ReferenceLink describing a specific reference-data source." .
+  rdfs:comment "Links an ArtifactHost (Mesh, Nomen, Knop) to a ReferenceLink describing a specific reference-data source." .
+
+<hasReferenceLink/> a owl:ObjectProperty ;
+  rdfs:domain <MeshResource/> ;
+  rdfs:range <ReferenceLink/> ;
+  owl:inverseOf <referenceLinkFor/> ;
+  rdfs:label "has reference link"@en ;
+  rdfs:comment "Associates a mesh-governed resource with a ReferenceLink that provides external or supporting reference information about it." .
 
 <referenceLinkFor/> a owl:ObjectProperty ;
   rdfs:domain <ReferenceLink/> ;
-  rdfs:range <ArtifactHost/> ;
+  rdfs:range <MeshResource/> ;
   owl:inverseOf <hasReferenceLink/> ;
-  rdfs:label "reference link for nomen" ;
-  rdfs:comment "Inverse of hasReferenceLink: identifies the Nomen a ReferenceLink is about." .
-
-<referenceRole/> a owl:ObjectProperty ;
-  rdfs:domain <ReferenceLink/> ;
-  rdfs:range <ReferenceRole/> ;
-  rdfs:label "reference role" ;
-  rdfs:comment "Assigns one or more roles to a ReferenceLink (e.g., Canonical, Integrate, Supplemental, Deprecated)." .
+  rdfs:label "reference link for"@en ;
+  rdfs:comment "Identifies the mesh-governed resource that a ReferenceLink is about." .
 
 <referenceTarget/> a owl:ObjectProperty ;
   rdfs:domain <ReferenceLink/> ;
   rdfs:range rdfs:Resource ;
   rdfs:label "reference target" ;
-  rdfs:comment "If present, the reference target is a node used as a reference-data handle (often a mesh-governed artifact/file identifier, but it may also be an external identifier)." .
+  rdfs:comment "If present, the reference target is a node used as a reference-data identifier (often a mesh-governed artifact/file identifier, but it may also be an external identifier)." .
 
-<targetUrlLiteral/> a owl:DatatypeProperty ;
+<referenceUriLiteral/> a owl:DatatypeProperty ;
   rdfs:domain <ReferenceLink/> ;
   rdfs:range xsd:anyURI ;
-  rdfs:label "reference target URI literal" ;
-  rdfs:comment "Expected to locate retrievable content (without assuming denotation)." .
+  rdfs:label "reference URI literal" ;
+  rdfs:comment "If present, a retrievable location for reference data (without asserting denotation). May be used alongside referenceTarget or alone." .
 
 ### Verification metadata
 
@@ -340,7 +370,14 @@
 <Knop/> a rdfs:Class ;
   rdfs:subClassOf <ArtifactHost/> ;
   rdfs:label "Knop" ;
-  rdfs:comment "SF container anchored at a stable in-mesh location; hosts payload and supporting flows." .
+  rdfs:comment "A container for DigitalArtifacts anchored at a stable in-mesh location; hosts payload and supporting FlowArtifacts and SimpleArtifacts." .
+
+<hasKnop/> a owl:ObjectProperty ;
+  rdfs:domain <Mesh/> ;
+  rdfs:range <Knop/> ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:label "has knop"@en ;
+  rdfs:comment "Asserts that a Knop is a member of (and is inventoried by) a Mesh. This is a semantic containment/inventory assertion, not a filesystem directory listing, and can apply to meshes that exist only in memory."@en .
 
 <KnopComponent/> a rdfs:Class ;
   rdfs:subClassOf <MeshResource/> ;
@@ -361,21 +398,21 @@
   rdfs:subPropertyOf <containsMeshResource/> ;
   rdfs:domain <Knop/> ;
   rdfs:range <DigitalArtifact/> ;
-  rdfs:label "has payload" ;
+  rdfs:label "contains payload" ;
   rdfs:comment "Links a Knop to its primary payload artifact identity (either a FlowArtifact-based payload or a SimpleArtifact-based payload)." .
 
-<hasFlowPayload/> a owl:ObjectProperty ;
+<containsFlowPayload/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <hasPayload/> ;
   rdfs:domain <Knop/> ;
   rdfs:range <FlowPayload/> ;
-  rdfs:label "has flow payload" ;
+  rdfs:label "contains flow payload" ;
   rdfs:comment "Links a Knop to its payload when the payload is modeled as a FlowArtifact (FlowPayload)." .
 
-<hasSimplePayload/> a owl:ObjectProperty ;
+<containsSimplePayload/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <hasPayload/> ;
   rdfs:domain <Knop/> ;
   rdfs:range <SimplePayload/> ;
-  rdfs:label "has simple payload" ;
+  rdfs:label "contains simple payload" ;
   rdfs:comment "Links a Knop to its payload when the payload is modeled as a SimpleArtifact (SimplePayload)." .
 
 # Metadata
@@ -395,25 +432,25 @@
   rdfs:label "Nomen metadata flow" ;
   rdfs:comment "Metadata about a Nomen; may remain WorkingSlice-only until history is recorded." .
 
-<hasKnopMetadataFlow/> a owl:ObjectProperty ;
+<containsKnopMetadataFlow/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsMeshResource/> ;
   rdfs:domain <Knop/> ;
   rdfs:range <KnopMetadataFlow/> ;
-  rdfs:label "has knop metadata flow" ;
+  rdfs:label "contains knop metadata flow" ;
   rdfs:comment "Links a Knop to its knop metadata flow (if present)." .
 
-<hasMeshMetadataFlow/> a owl:ObjectProperty ;
+<containsMeshMetadataFlow/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsMeshResource/> ;
   rdfs:domain <Mesh/> ;
   rdfs:range <MeshMetadataFlow/> ;
-  rdfs:label "has mesh metadata flow" ;
+  rdfs:label "contains mesh metadata flow" ;
   rdfs:comment "Links a Mesh to its mesh metadata flow (if present)." .
 
-<hasNomenMetadataFlow/> a owl:ObjectProperty ;
+<containsNomenMetadataFlow/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsMeshResource/> ;
   rdfs:domain <Nomen/> ;
   rdfs:range <NomenMetadataFlow/> ;
-  rdfs:label "has nomen metadata flow" ;
+  rdfs:label "contains nomen metadata flow" ;
   rdfs:comment "Links a Nomen to its nomen metadata flow (if present)." .
 
 

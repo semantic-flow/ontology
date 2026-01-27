@@ -196,14 +196,14 @@
           "sh:property": [
             {
               "sh:path": {
-                "@id": "sflo:hasFlowPayload/"
+                "@id": "sflo:containsFlowPayload/"
               },
               "sh:minCount": 1,
               "sh:maxCount": 1
             },
             {
               "sh:path": {
-                "@id": "sflo:hasSimplePayload/"
+                "@id": "sflo:containsSimplePayload/"
               },
               "sh:maxCount": 0
             }
@@ -214,21 +214,21 @@
           "sh:property": [
             {
               "sh:path": {
-                "@id": "sflo:hasSimplePayload/"
+                "@id": "sflo:containsSimplePayload/"
               },
               "sh:minCount": 1,
               "sh:maxCount": 1
             },
             {
               "sh:path": {
-                "@id": "sflo:hasFlowPayload/"
+                "@id": "sflo:containsFlowPayload/"
               },
               "sh:maxCount": 0
             }
           ]
         }
       ],
-      "sh:message": "A Knop MUST have exactly one of: sflo:hasFlowPayload or sflo:hasSimplePayload (and not both)."
+      "sh:message": "A Knop MUST have exactly one of: sflo:containsFlowPayload or sflo:containsSimplePayload (and not both)."
     },
     {
       "@id": "KnopMetadataFlowShape/",
@@ -240,14 +240,14 @@
       },
       "sh:property": {
         "sh:path": {
-          "@id": "sflo:hasKnopMetadataFlow/"
+          "@id": "sflo:containsKnopMetadataFlow/"
         },
         "sh:minCount": 1,
         "sh:maxCount": 1,
         "sh:severity": {
           "@id": "sh:Warning"
         },
-        "sh:message": "A Knop SHOULD have exactly one sflo:hasKnopMetadataFlow."
+        "sh:message": "A Knop SHOULD have exactly one sflo:containsKnopMetadataFlow."
       }
     },
     {
@@ -297,12 +297,12 @@
         "sh:minCount": 1,
         "sh:maxCount": 1,
         "sh:class": {
-          "@id": "sflo:ArtifactHost/"
+          "@id": "sflo:MeshResource/"
         },
         "sh:severity": {
           "@id": "sh:Warning"
         },
-        "sh:message": "A ReferenceLink SHOULD point back to exactly one sflo:ArtifactHost via sflo:referenceLinkFor."
+        "sh:message": "A ReferenceLink SHOULD point back to exactly one sflo:MeshResource via sflo:referenceLinkFor."
       }
     }
   ]
