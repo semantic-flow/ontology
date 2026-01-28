@@ -354,6 +354,36 @@
           "sh:message": "Values of sflo:hasReferenceLink must be typed sflo:ReferenceLink."
         }
       ]
+    },
+    {
+      "@id": "PreferredSlugShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Knop preferred slug",
+      "rdfs:comment": "Constraints for sflo:preferredSlug when used to suggest payload distribution filename stems.",
+      "sh:targetClass": "sflo:Knop/",
+      "sh:property": [
+        {
+          "sh:path": {
+            "@id": "sflo:preferredSlug/"
+          },
+          "sh:maxCount": 1,
+          "sh:datatype": {
+            "@id": "xsd:string"
+          },
+          "sh:severity": {
+            "@id": "sh:Violation"
+          },
+          "sh:message": "If present, sflo:preferredSlug MUST be a single xsd:string value."
+        },
+        {
+          "sh:path": {
+            "@id": "sflo:preferredPayloadSlug/"
+          },
+          "sh:pattern": "^[A-Za-z0-9](?:[A-Za-z0-9_.-]*[A-Za-z0-9])?$",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, sflo:preferredSlug SHOULD be a portable file-stem:  ASCII letters/digits separated by hyphens or underscores (no spaces)."
+        }
+      ]
     }
   ]
 }

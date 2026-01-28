@@ -314,6 +314,13 @@
   rdfs:label "contains simple payload" ;
   rdfs:comment "Links a Knop to its payload when the payload is modeled as a SimpleArtifact (SimplePayload)." .
 
+<preferredPayloadSlug/> a owl:DatatypeProperty ;
+  rdfs:domain <Knop/> ;
+  rdfs:range xsd:string ;
+  rdfs:label "preferred slug" ;
+  rdfs:comment "Optional human-friendly file-stem hint for naming payload distribution files (e.g., 'alice-profile'). Not an identifier; does not affect IRIs or designator paths. Generators may sanitize/ignore it and must resolve collisions mechanically (e.g., suffix or hash)." .
+
+
 #################################################################
 # RDF datasets (artifact kind)
 #################################################################
