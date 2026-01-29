@@ -166,7 +166,7 @@
       "@id": "KnopPayloadChoiceShape/",
       "@type": "sh:NodeShape",
       "rdfs:label": "Knop payload choice",
-      "rdfs:comment": "A Knop must have exactly one payload form: either FlowPayload or SimplePayload (accepts either specific properties or the generic containment predicate).",
+      "rdfs:comment": "A Knop MUST have exactly one payload form: either a FlowPayload or a SimplePayload. Counts are qualified-by-class and accept either the specific containment predicates or the generic sflo:containsSemanticFlowResource.",
       "sh:targetClass": "sflo:Knop/",
       "sh:xone": [
         {
@@ -176,26 +176,30 @@
               "sh:path": {
                 "sh:alternativePath": [
                   "sflo:containsFlowPayload/",
-                  "sflo:containsMeshResource/"
+                  "sflo:containsSemanticFlowResource/"
                 ]
               },
               "sh:qualifiedValueShape": {
                 "sh:class": "sflo:FlowPayload/"
               },
               "sh:qualifiedMinCount": 1,
-              "sh:qualifiedMaxCount": 1
+              "sh:qualifiedMaxCount": 1,
+              "sh:severity": "sh:Violation",
+              "sh:message": "A Knop MUST contain exactly one FlowPayload (via containsFlowPayload or containsSemanticFlowResource)."
             },
             {
               "sh:path": {
                 "sh:alternativePath": [
                   "sflo:containsSimplePayload/",
-                  "sflo:containsMeshResource/"
+                  "sflo:containsSemanticFlowResource/"
                 ]
               },
               "sh:qualifiedValueShape": {
                 "sh:class": "sflo:SimplePayload/"
               },
-              "sh:qualifiedMaxCount": 0
+              "sh:qualifiedMaxCount": 0,
+              "sh:severity": "sh:Violation",
+              "sh:message": "A Knop MUST NOT contain any SimplePayload when it contains a FlowPayload."
             }
           ]
         },
@@ -206,26 +210,30 @@
               "sh:path": {
                 "sh:alternativePath": [
                   "sflo:containsSimplePayload/",
-                  "sflo:containsMeshResource/"
+                  "sflo:containsSemanticFlowResource/"
                 ]
               },
               "sh:qualifiedValueShape": {
                 "sh:class": "sflo:SimplePayload/"
               },
               "sh:qualifiedMinCount": 1,
-              "sh:qualifiedMaxCount": 1
+              "sh:qualifiedMaxCount": 1,
+              "sh:severity": "sh:Violation",
+              "sh:message": "A Knop MUST contain exactly one SimplePayload (via containsSimplePayload or containsSemanticFlowResource)."
             },
             {
               "sh:path": {
                 "sh:alternativePath": [
                   "sflo:containsFlowPayload/",
-                  "sflo:containsMeshResource/"
+                  "sflo:containsSemanticFlowResource/"
                 ]
               },
               "sh:qualifiedValueShape": {
                 "sh:class": "sflo:FlowPayload/"
               },
-              "sh:qualifiedMaxCount": 0
+              "sh:qualifiedMaxCount": 0,
+              "sh:severity": "sh:Violation",
+              "sh:message": "A Knop MUST NOT contain any FlowPayload when it contains a SimplePayload."
             }
           ]
         }
@@ -243,7 +251,7 @@
           "sh:path": {
             "sh:alternativePath": [
               "sflo:containsKnopMetadataFlow/",
-              "sflo:containsMeshResource/"
+              "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
@@ -258,7 +266,7 @@
           "sh:path": {
             "sh:alternativePath": [
               "sflo:containsKnopInventoryDataset/",
-              "sflo:containsMeshResource/"
+              "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
@@ -282,7 +290,7 @@
           "sh:path": {
             "sh:alternativePath": [
               "sflo:containsMeshInventoryDataset/",
-              "sflo:containsMeshResource/"
+              "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
@@ -297,7 +305,7 @@
           "sh:path": {
             "sh:alternativePath": [
               "sflo:containsMeshMetadataFlow/",
-              "sflo:containsMeshResource/"
+              "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
@@ -306,7 +314,7 @@
           "sh:qualifiedMinCount": 1,
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
-          "sh:message": "A Mesh may have at most one MeshMetadataFlow."
+          "sh:message": "A Mesh must have a MeshMetadataFlow."
         }
       ]
     },
@@ -321,7 +329,7 @@
           "sh:path": {
             "sh:alternativePath": [
               "sflo:containsNomenInventoryDataset/",
-              "sflo:containsMeshResource/"
+              "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
@@ -336,7 +344,7 @@
           "sh:path": {
             "sh:alternativePath": [
               "sflo:containsNomenMetadataFlow/",
-              "sflo:containsMeshResource/"
+              "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
@@ -345,7 +353,7 @@
           "sh:qualifiedMinCount": 1,
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
-          "sh:message": "A Nomen may have at most one NomenMetadataFlow."
+          "sh:message": "A Nomen must have one NomenMetadataFlow."
         },
         {
           "sh:path": "sflo:hasReferenceLink/",
@@ -356,15 +364,15 @@
       ]
     },
     {
-      "@id": "PreferredSlugShape/",
+      "@id": "preferredPayloadSlugShape/",
       "@type": "sh:NodeShape",
       "rdfs:label": "Knop preferred slug",
-      "rdfs:comment": "Constraints for sflo:preferredSlug when used to suggest payload distribution filename stems.",
+      "rdfs:comment": "Constraints for sflo:preferredPayloadSlug when used to suggest payload distribution filename stems.",
       "sh:targetClass": "sflo:Knop/",
       "sh:property": [
         {
           "sh:path": {
-            "@id": "sflo:preferredSlug/"
+            "@id": "sflo:preferredPayloadSlug/"
           },
           "sh:maxCount": 1,
           "sh:datatype": {
@@ -373,7 +381,7 @@
           "sh:severity": {
             "@id": "sh:Violation"
           },
-          "sh:message": "If present, sflo:preferredSlug MUST be a single xsd:string value."
+          "sh:message": "If present, sflo:preferredPayloadSlug MUST be a single xsd:string value."
         },
         {
           "sh:path": {
@@ -381,7 +389,7 @@
           },
           "sh:pattern": "^[A-Za-z0-9](?:[A-Za-z0-9_.-]*[A-Za-z0-9])?$",
           "sh:severity": "sh:Warning",
-          "sh:message": "If present, sflo:preferredSlug SHOULD be a portable file-stem:  ASCII letters/digits separated by hyphens or underscores (no spaces)."
+          "sh:message": "If present, sflo:preferredPayloadSlug SHOULD be a portable file-stem:  ASCII letters/digits separated by hyphens or underscores (no spaces)."
         }
       ]
     }
