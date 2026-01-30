@@ -8,6 +8,7 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix schema: <https://schema.org/> .
 @prefix vann: <http://purl.org/vocab/vann/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 
 <> a owl:Ontology ;
   dcterms:title "Semantic Flow Ontology" ;
@@ -115,9 +116,9 @@
 #################################################################
 
 <Slice/> a rdfs:Class ;
-  rdfs:subClassOf <Realizable/> ;
+  rdfs:subClassOf <DigitalArtifact/>, <Realizable/> ;
   rdfs:label "Slice" ;
-  rdfs:comment "A particular revision member of a FlowArtifact. A Slice is content-bearing/realizable but is not a DigitalArtifact identity." .
+  rdfs:comment "A realizable state of a FlowArtifact, either the working draft (WorkingSlice) or a historical revision (HistoricalSlice). Each Slice has its own DigitalArtifact identity distinct from the FlowArtifact identity." .
 
 <WorkingSlice/> a rdfs:Class ;
   rdfs:subClassOf <Slice/> ;
@@ -143,6 +144,7 @@
   rdfs:comment "Associates a FlowArtifact with its current Slice." .
 
 <previousSlice/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:wasRevisionOf ;
   rdfs:domain <Slice/> ;
   rdfs:range <Slice/> ;
   rdfs:label "previous slice" ;
