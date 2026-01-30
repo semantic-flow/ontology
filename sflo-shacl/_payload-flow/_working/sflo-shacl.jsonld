@@ -73,64 +73,130 @@
       }
     },
     {
-      "@id": "FlowArtifactStructureShape/",
+      "@id": "AbstractArtifactHasFlowShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "FlowArtifact structure",
-      "rdfs:comment": "Basic structural constraints for slice membership (targeted by property use; does not require rdf:type or RDFS inference).",
-      "sh:targetSubjectsOf": "sflo:hasSlice/",
+      "rdfs:label": "AbstractArtifact has exactly one Flow",
+      "rdfs:comment": "In meshes, each AbstractArtifact has exactly one Flow. This shape assumes AbstractArtifacts are typed.",
+      "sh:targetClass": "sflo:AbstractArtifact/",
+      "sh:property": {
+        "sh:path": "sflo:hasFlow/",
+        "sh:minCount": 1,
+        "sh:maxCount": 1,
+        "sh:nodeKind": "sh:IRI",
+        "sh:severity": "sh:Violation",
+        "sh:message": "An AbstractArtifact MUST have exactly one sflo:hasFlow (IRI)."
+      }
+    },
+    {
+      "@id": "FlowWorkingStateShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "Flow working state",
+      "rdfs:comment": "A Flow must have exactly one working state.",
+      "sh:targetClass": "sflo:Flow/",
       "sh:property": [
         {
-          "sh:path": "sflo:hasSlice/",
+          "sh:path": "sflo:hasWorkingState/",
           "sh:minCount": 1,
+          "sh:maxCount": 1,
           "sh:nodeKind": "sh:IRI",
-          "sh:severity": "sh:Warning",
-          "sh:message": "A FlowArtifact SHOULD have at least one sflo:hasSlice."
+          "sh:severity": "sh:Violation",
+          "sh:message": "A Flow MUST have exactly one sflo:hasWorkingState (IRI)."
+        },
+        {
+          "sh:path": "sflo:hasHistoricalState/",
+          "sh:nodeKind": "sh:IRI",
+          "sh:severity": "sh:Info",
+          "sh:message": "If present, values of sflo:hasHistoricalState must be IRIs."
+        },
+        {
+          "sh:path": "sflo:latestHistoricalState/",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:severity": "sh:Info",
+          "sh:message": "If present, sflo:latestHistoricalState must be a single IRI."
         }
       ]
     },
     {
-      "@id": "SliceRealizableShape/",
+      "@id": "LatestHistoricalStateIsMemberShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "Slice realization presence",
-      "rdfs:comment": "Slices are content-bearing; they should usually have at least one AbstractFile realization.",
-      "sh:targetClass": "sflo:Slice/",
-      "sh:property": {
-        "sh:path": "sflo:hasAbstractFile/",
-        "sh:minCount": 1,
-        "sh:severity": "sh:Warning",
-        "sh:message": "A Slice SHOULD have at least one sflo:hasAbstractFile (realization spec)."
+      "rdfs:label": "latestHistoricalState must be among hasHistoricalState",
+      "rdfs:comment": "If latestHistoricalState is asserted, it must also be asserted as a hasHistoricalState of the same Flow.",
+      "sh:targetClass": "sflo:Flow/",
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "If a Flow has sflo:latestHistoricalState, that value MUST also appear among sflo:hasHistoricalState values.",
+        "sh:severity": "sh:Violation",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology/>\nSELECT $this WHERE {\n  $this sflo:latestHistoricalState ?s .\n  FILTER NOT EXISTS { $this sflo:hasHistoricalState ?s }\n}"
       }
     },
     {
-      "@id": "SimpleRealizableShape/",
+      "@id": "StateHasAbstractFileShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "Simple realizable realization presence",
-      "rdfs:comment": "Simple realizables should usually have at least one AbstractFile realization. Explicitly targets leaf classes to avoid requiring RDFS inference.",
-      "sh:targetClass": [
-        "sflo:SimpleArtifact/",
-        "sflo:SimplePayload/",
-        "sflo:MeshInventoryDataset/",
-        "sflo:KnopInventoryDataset/",
-        "sflo:NomenInventoryDataset/"
-      ],
+      "rdfs:label": "State realization presence",
+      "rdfs:comment": "States are content-bearing; they should usually have at least one AbstractFile realization.",
+      "sh:targetClass": "sflo:State/",
       "sh:property": {
         "sh:path": "sflo:hasAbstractFile/",
         "sh:minCount": 1,
+        "sh:nodeKind": "sh:IRI",
         "sh:severity": "sh:Warning",
-        "sh:message": "A realizable SHOULD have at least one sflo:hasAbstractFile (realization spec)."
+        "sh:message": "A State SHOULD have at least one sflo:hasAbstractFile (IRI)."
       }
     },
     {
       "@id": "AbstractFileLocatedFileShape/",
       "@type": "sh:NodeShape",
       "rdfs:label": "AbstractFile should be locatable (usually)",
-      "rdfs:comment": "Many meshes expect AbstractFiles to have at least one LocatedFile. Warning because some realization specs may be non-locatable.",
+      "rdfs:comment": "Many meshes expect AbstractFiles to have at least one LocatedFile. Warning because some abstract file identities may be non-locatable.",
       "sh:targetClass": "sflo:AbstractFile/",
       "sh:property": {
         "sh:path": "sflo:hasLocatedFile/",
         "sh:minCount": 1,
+        "sh:nodeKind": "sh:IRI",
         "sh:severity": "sh:Warning",
-        "sh:message": "An AbstractFile SHOULD have at least one sflo:hasLocatedFile."
+        "sh:message": "An AbstractFile SHOULD have at least one sflo:hasLocatedFile (IRI)."
+      }
+    },
+    {
+      "@id": "PreviousHistoricalStateShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "HistoricalState revision linkage",
+      "rdfs:comment": "previousHistoricalState is optional but, if present, must point to exactly one HistoricalState (the immediately preceding published state).",
+      "sh:targetSubjectsOf": "sflo:previousHistoricalState/",
+      "sh:property": {
+        "sh:path": "sflo:previousHistoricalState/",
+        "sh:maxCount": 1,
+        "sh:nodeKind": "sh:IRI",
+        "sh:class": "sflo:HistoricalState/",
+        "sh:severity": "sh:Violation",
+        "sh:message": "sflo:previousHistoricalState must have at most one value, and it must be an IRI typed sflo:HistoricalState."
+      }
+    },
+    {
+      "@id": "PreviousHistoricalStateNotSelfShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "previousHistoricalState must not be self",
+      "rdfs:comment": "Disallow self-links in the published revision chain.",
+      "sh:targetSubjectsOf": "sflo:previousHistoricalState/",
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "A HistoricalState MUST NOT have itself as sflo:previousHistoricalState.",
+        "sh:severity": "sh:Violation",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology/>\nSELECT $this WHERE {\n  $this sflo:previousHistoricalState $this .\n}"
+      }
+    },
+    {
+      "@id": "LocatedFileForStateConsistencyShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "locatedFileForState consistency",
+      "rdfs:comment": "If locatedFileForState is used as a shortcut, it should align with hasAbstractFile/hasLocatedFile.",
+      "sh:targetSubjectsOf": "sflo:locatedFileForState/",
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "If a State uses sflo:locatedFileForState ?lf, there SHOULD exist an AbstractFile ?af such that ($this sflo:hasAbstractFile ?af) and (?af sflo:hasLocatedFile ?lf).",
+        "sh:severity": "sh:Warning",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology/>\nSELECT $this WHERE {\n  $this sflo:locatedFileForState ?lf .\n  FILTER NOT EXISTS {\n    $this sflo:hasAbstractFile ?af .\n    ?af sflo:hasLocatedFile ?lf .\n  }\n}"
       }
     },
     {
@@ -163,119 +229,63 @@
       ]
     },
     {
-      "@id": "KnopPayloadChoiceShape/",
+      "@id": "KnopPayloadArtifactShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "Knop payload choice",
-      "rdfs:comment": "A Knop MUST have exactly one payload form: either a FlowPayload or a SimplePayload. Counts are qualified-by-class and accept either the specific containment predicates or the generic sflo:containsSemanticFlowResource.",
+      "rdfs:label": "Knop payload artifact",
+      "rdfs:comment": "A Knop MUST contain exactly one PayloadArtifact. Accepts either containsPayloadArtifact or the generic containsSemanticFlowResource.",
       "sh:targetClass": "sflo:Knop/",
-      "sh:xone": [
-        {
-          "@type": "sh:NodeShape",
-          "sh:property": [
-            {
-              "sh:path": {
-                "sh:alternativePath": [
-                  "sflo:containsFlowPayload/",
-                  "sflo:containsSemanticFlowResource/"
-                ]
-              },
-              "sh:qualifiedValueShape": {
-                "sh:class": "sflo:FlowPayload/"
-              },
-              "sh:qualifiedMinCount": 1,
-              "sh:qualifiedMaxCount": 1,
-              "sh:severity": "sh:Violation",
-              "sh:message": "A Knop MUST contain exactly one FlowPayload (via containsFlowPayload or containsSemanticFlowResource)."
-            },
-            {
-              "sh:path": {
-                "sh:alternativePath": [
-                  "sflo:containsSimplePayload/",
-                  "sflo:containsSemanticFlowResource/"
-                ]
-              },
-              "sh:qualifiedValueShape": {
-                "sh:class": "sflo:SimplePayload/"
-              },
-              "sh:qualifiedMaxCount": 0,
-              "sh:severity": "sh:Violation",
-              "sh:message": "A Knop MUST NOT contain any SimplePayload when it contains a FlowPayload."
-            }
+      "sh:property": {
+        "sh:path": {
+          "sh:alternativePath": [
+            "sflo:containsPayloadArtifact/",
+            "sflo:containsSemanticFlowResource/"
           ]
         },
-        {
-          "@type": "sh:NodeShape",
-          "sh:property": [
-            {
-              "sh:path": {
-                "sh:alternativePath": [
-                  "sflo:containsSimplePayload/",
-                  "sflo:containsSemanticFlowResource/"
-                ]
-              },
-              "sh:qualifiedValueShape": {
-                "sh:class": "sflo:SimplePayload/"
-              },
-              "sh:qualifiedMinCount": 1,
-              "sh:qualifiedMaxCount": 1,
-              "sh:severity": "sh:Violation",
-              "sh:message": "A Knop MUST contain exactly one SimplePayload (via containsSimplePayload or containsSemanticFlowResource)."
-            },
-            {
-              "sh:path": {
-                "sh:alternativePath": [
-                  "sflo:containsFlowPayload/",
-                  "sflo:containsSemanticFlowResource/"
-                ]
-              },
-              "sh:qualifiedValueShape": {
-                "sh:class": "sflo:FlowPayload/"
-              },
-              "sh:qualifiedMaxCount": 0,
-              "sh:severity": "sh:Violation",
-              "sh:message": "A Knop MUST NOT contain any FlowPayload when it contains a SimplePayload."
-            }
-          ]
-        }
-      ],
-      "sh:message": "A Knop MUST have exactly one of: FlowPayload or SimplePayload (and not both)."
+        "sh:qualifiedValueShape": {
+          "sh:class": "sflo:PayloadArtifact/"
+        },
+        "sh:qualifiedMinCount": 1,
+        "sh:qualifiedMaxCount": 1,
+        "sh:severity": "sh:Violation",
+        "sh:message": "A Knop MUST contain exactly one PayloadArtifact (via containsPayloadArtifact or containsSemanticFlowResource)."
+      }
     },
     {
       "@id": "KnopSlotsShape/",
       "@type": "sh:NodeShape",
       "rdfs:label": "Knop slots",
-      "rdfs:comment": "Enforces per-class slot cardinalities for common Knop-contained artifacts.",
+      "rdfs:comment": "Operational slot expectations for common Knop-contained artifacts.",
       "sh:targetClass": "sflo:Knop/",
       "sh:property": [
         {
           "sh:path": {
             "sh:alternativePath": [
-              "sflo:containsKnopMetadataFlow/",
+              "sflo:containsKnopMetadataArtifact/",
               "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
-            "sh:class": "sflo:KnopMetadataFlow/"
+            "sh:class": "sflo:KnopMetadataArtifact/"
           },
           "sh:qualifiedMinCount": 1,
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
-          "sh:message": "A Knop MUST have exactly one KnopMetadataFlow."
+          "sh:message": "A Knop MUST have exactly one KnopMetadataArtifact."
         },
         {
           "sh:path": {
             "sh:alternativePath": [
-              "sflo:containsKnopInventoryDataset/",
+              "sflo:containsKnopInventoryArtifact/",
               "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
-            "sh:class": "sflo:KnopInventoryDataset/"
+            "sh:class": "sflo:KnopInventoryArtifact/"
           },
           "sh:qualifiedMinCount": 1,
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
-          "sh:message": "A Knop MUST have exactly one KnopInventoryDataset."
+          "sh:message": "A Knop MUST have exactly one KnopInventoryArtifact."
         }
       ]
     },
@@ -283,38 +293,38 @@
       "@id": "MeshSlotsShape/",
       "@type": "sh:NodeShape",
       "rdfs:label": "Mesh slots",
-      "rdfs:comment": "Enforces per-class slot cardinalities for common Mesh-contained artifacts.",
+      "rdfs:comment": "Operational slot expectations for common Mesh-contained artifacts.",
       "sh:targetClass": "sflo:Mesh/",
       "sh:property": [
         {
           "sh:path": {
             "sh:alternativePath": [
-              "sflo:containsMeshInventoryDataset/",
+              "sflo:containsMeshInventoryArtifact/",
               "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
-            "sh:class": "sflo:MeshInventoryDataset/"
+            "sh:class": "sflo:MeshInventoryArtifact/"
           },
           "sh:qualifiedMinCount": 1,
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
-          "sh:message": "A Mesh MUST have exactly one MeshInventoryDataset."
+          "sh:message": "A Mesh MUST have exactly one MeshInventoryArtifact."
         },
         {
           "sh:path": {
             "sh:alternativePath": [
-              "sflo:containsMeshMetadataFlow/",
+              "sflo:containsMeshMetadataArtifact/",
               "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
-            "sh:class": "sflo:MeshMetadataFlow/"
+            "sh:class": "sflo:MeshMetadataArtifact/"
           },
           "sh:qualifiedMinCount": 1,
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
-          "sh:message": "A Mesh must have a MeshMetadataFlow."
+          "sh:message": "A Mesh MUST have exactly one MeshMetadataArtifact."
         }
       ]
     },
@@ -322,38 +332,38 @@
       "@id": "NomenSlotsShape/",
       "@type": "sh:NodeShape",
       "rdfs:label": "Nomen slots",
-      "rdfs:comment": "Enforces per-class slot cardinalities for common Nomen-contained artifacts.",
+      "rdfs:comment": "Operational slot expectations for common Nomen-contained artifacts.",
       "sh:targetClass": "sflo:Nomen/",
       "sh:property": [
         {
           "sh:path": {
             "sh:alternativePath": [
-              "sflo:containsNomenInventoryDataset/",
+              "sflo:containsNomenInventoryArtifact/",
               "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
-            "sh:class": "sflo:NomenInventoryDataset/"
+            "sh:class": "sflo:NomenInventoryArtifact/"
           },
           "sh:qualifiedMinCount": 1,
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
-          "sh:message": "A Nomen MUST have exactly one NomenInventoryDataset."
+          "sh:message": "A Nomen MUST have exactly one NomenInventoryArtifact."
         },
         {
           "sh:path": {
             "sh:alternativePath": [
-              "sflo:containsNomenMetadataFlow/",
+              "sflo:containsNomenMetadataArtifact/",
               "sflo:containsSemanticFlowResource/"
             ]
           },
           "sh:qualifiedValueShape": {
-            "sh:class": "sflo:NomenMetadataFlow/"
+            "sh:class": "sflo:NomenMetadataArtifact/"
           },
           "sh:qualifiedMinCount": 1,
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
-          "sh:message": "A Nomen must have one NomenMetadataFlow."
+          "sh:message": "A Nomen MUST have exactly one NomenMetadataArtifact."
         },
         {
           "sh:path": "sflo:hasReferenceLink/",
@@ -364,34 +374,86 @@
       ]
     },
     {
-      "@id": "preferredPayloadSlugShape/",
+      "@id": "PayloadSlugShape/",
       "@type": "sh:NodeShape",
-      "rdfs:label": "Knop preferred slug",
-      "rdfs:comment": "Constraints for sflo:preferredPayloadSlug when used to suggest payload distribution filename stems.",
-      "sh:targetClass": "sflo:Knop/",
+      "rdfs:label": "AbstractArtifact payloadSlug",
+      "rdfs:comment": "Validates sflo:payloadSlug token constraints (folder-segment).",
+      "sh:targetClass": "sflo:AbstractArtifact/",
       "sh:property": [
         {
-          "sh:path": {
-            "@id": "sflo:preferredPayloadSlug/"
-          },
+          "sh:path": "sflo:payloadSlug/",
           "sh:maxCount": 1,
-          "sh:datatype": {
-            "@id": "xsd:string"
-          },
-          "sh:severity": {
-            "@id": "sh:Violation"
-          },
-          "sh:message": "If present, sflo:preferredPayloadSlug MUST be a single xsd:string value."
+          "sh:datatype": "xsd:string",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, sflo:payloadSlug MUST be a single xsd:string."
         },
         {
-          "sh:path": {
-            "@id": "sflo:preferredPayloadSlug/"
-          },
-          "sh:pattern": "^[A-Za-z0-9](?:[A-Za-z0-9_.-]*[A-Za-z0-9])?$",
+          "sh:path": "sflo:payloadSlug/",
+          "sh:pattern": "^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$",
           "sh:severity": "sh:Warning",
-          "sh:message": "If present, sflo:preferredPayloadSlug SHOULD be a portable file-stem:  ASCII letters/digits separated by hyphens or underscores (no spaces)."
+          "sh:message": "If present, sflo:payloadSlug SHOULD be a portable folder token (ASCII letters/digits with . _ -). It SHOULD NOT start with '_' (reserved)."
         }
       ]
+    },
+    {
+      "@id": "PayloadSlugIndexHtmlBanShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "payloadSlug must not be index.html",
+      "rdfs:comment": "Reserves index.html for ResourcePage LocatedFiles.",
+      "sh:targetSubjectsOf": "sflo:payloadSlug/",
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "sflo:payloadSlug MUST NOT be 'index.html' (reserved for ResourcePage files).",
+        "sh:severity": "sh:Violation",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology/>\nSELECT $this WHERE {\n  $this sflo:payloadSlug ?s .\n  FILTER(LCASE(STR(?s)) = \"index.html\")\n}"
+      }
+    },
+    {
+      "@id": "PreferredPayloadFileSlugShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "preferredPayloadFileSlug",
+      "rdfs:comment": "Validates sflo:preferredPayloadFileSlug token constraints (filename stem preference).",
+      "sh:targetClass": "sflo:AbstractArtifact/",
+      "sh:property": [
+        {
+          "sh:path": "sflo:preferredPayloadFileSlug/",
+          "sh:maxCount": 1,
+          "sh:datatype": "xsd:string",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, sflo:preferredPayloadFileSlug MUST be a single xsd:string."
+        },
+        {
+          "sh:path": "sflo:preferredPayloadFileSlug/",
+          "sh:pattern": "^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, sflo:preferredPayloadFileSlug SHOULD be a portable filename stem token (ASCII letters/digits with . _ -)."
+        }
+      ]
+    },
+    {
+      "@id": "PreferredPayloadFileSlugIndexBanShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "preferredPayloadFileSlug should avoid index",
+      "rdfs:comment": "Best-effort guardrail to prevent generating index.html unintentionally.",
+      "sh:targetSubjectsOf": "sflo:preferredPayloadFileSlug/",
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "sflo:preferredPayloadFileSlug SHOULD NOT be 'index' or 'index.html' (index.html is reserved for ResourcePage files).",
+        "sh:severity": "sh:Warning",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology/>\nSELECT $this WHERE {\n  $this sflo:preferredPayloadFileSlug ?s .\n  BIND(LCASE(STR(?s)) AS ?lc)\n  FILTER(?lc = \"index\" || ?lc = \"index.html\")\n}"
+      }
+    },
+    {
+      "@id": "DeprecatedPreferredPayloadSlugUseShape/",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "preferredPayloadSlug is deprecated",
+      "rdfs:comment": "Warn when deprecated sflo:preferredPayloadSlug is used.",
+      "sh:targetSubjectsOf": "sflo:preferredPayloadSlug/",
+      "sh:property": {
+        "sh:path": "sflo:preferredPayloadSlug/",
+        "sh:severity": "sh:Warning",
+        "sh:message": "sflo:preferredPayloadSlug is deprecated. Use sflo:payloadSlug (immutable identifier segment) and sflo:preferredPayloadFileSlug (mutable filename preference)."
+      }
     }
   ]
 }

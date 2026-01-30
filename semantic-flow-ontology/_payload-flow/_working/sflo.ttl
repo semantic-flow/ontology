@@ -404,17 +404,17 @@
 <MeshInventoryArtifact/> a rdfs:Class ;
   rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
   rdfs:label "Mesh inventory artifact" ;
-  rdfs:comment "Optional derived index for explorability at the mesh level (may be large/sharded)." .
+  rdfs:comment "Index for explorability at the mesh level." .
 
 <KnopInventoryArtifact/> a rdfs:Class ;
   rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
   rdfs:label "Knop inventory artifact" ;
-  rdfs:comment "Optional derived index for explorability at the knop level (may be large/sharded)." .
+  rdfs:comment "Index for explorability at the knop level." .
 
 <NomenInventoryArtifact/> a rdfs:Class ;
   rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
   rdfs:label "Nomen inventory artifact" ;
-  rdfs:comment "Optional derived index for explorability at the nomen level (may be large/sharded)." .
+  rdfs:comment "Index for explorability at the nomen level." .
 
 <containsMeshInventoryArtifact/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsSemanticFlowResource/> ;
