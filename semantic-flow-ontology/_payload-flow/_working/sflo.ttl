@@ -20,69 +20,119 @@
   vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-ontology/> .
 
 #################################################################
-#################################################################
-# General-purpose Vocabulary
-#################################################################
+# General-purpose vocabulary
 #################################################################
 
 <DigitalArtifact/> a rdfs:Class ;
   rdfs:label "Digital artifact" ;
-  rdfs:comment "A digital-artifact identity that may exist inside or outside any Semantic Flow mesh." .
+  rdfs:comment "A file-like digital object (documents, specifications, datasets, pages, binary assets), whether abstract or location-specific. A DigitalArtifact may exist inside or outside any Semantic Flow mesh." .
 
 <ArtifactContainer/> a rdfs:Class ;
   rdfs:label "Artifact container" ;
-  rdfs:comment "A resource that hosts/contains artifacts and other structural resources. Not itself an artifact identity." .
+  rdfs:comment "A resource that hosts/contains artifacts and other structural resources. Not itself required to be a DigitalArtifact." .
 
-<Realizable/> a rdfs:Class ;
-  rdfs:label "Realizable" ;
-  rdfs:comment "A content-bearing resource that can be realized in one or more representations (e.g., abstract files/streams and their retrieval endpoints). Examples include SimpleArtifacts (where the identity is itself the content bearer) and Slices (revision states of a FlowArtifact). FlowArtifacts are identity anchors and are not themselves realizable revision states." .
+#################################################################
+# Artifact facet lattice
+#################################################################
 
-<Realization/> a rdfs:Class ;
-  rdfs:label "Realization" ;
-  rdfs:comment "A representation/encoding specification for a realizable content (e.g., an abstract file or stream), independent of any particular retrieval endpoint." .
+<narrowerFacet/> a owl:ObjectProperty, owl:TransitiveProperty ;
+  rdfs:domain <DigitalArtifact/> ;
+  rdfs:range <DigitalArtifact/> ;
+  rdfs:label "narrower facet" ;
+  rdfs:comment "Relates a broader DigitalArtifact to a narrower DigitalArtifact facet within the same artifact structure. Intended to be closed (tree-shaped) within a mesh-managed Flow, but may be used more loosely for external artifacts." .
+
+<broaderFacet/> a owl:ObjectProperty ;
+  owl:inverseOf <narrowerFacet/> ;
+  rdfs:domain <DigitalArtifact/> ;
+  rdfs:range <DigitalArtifact/> ;
+  rdfs:label "broader facet" ;
+  rdfs:comment "Inverse of narrowerFacet." .
+
+#################################################################
+# Core artifact model (AbstractArtifact / Flow / State / AbstractFile / LocatedFile)
+#################################################################
+
+<AbstractArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <DigitalArtifact/> ;
+  rdfs:label "Abstract artifact" ;
+  rdfs:comment "The primary, whole-artifact identity. In a Semantic Mesh, each AbstractArtifact has exactly one Flow that supplies its working and historical states." .
+
+<Flow/> a rdfs:Class ;
+  rdfs:subClassOf <DigitalArtifact/> ;
+  rdfs:label "Flow" ;
+  rdfs:comment "The over-time identity for an AbstractArtifact. A Flow relates one working State and zero or more historical States." .
+
+<State/> a rdfs:Class ;
+  rdfs:subClassOf <DigitalArtifact/> ;
+  rdfs:label "State" ;
+  rdfs:comment "A single-state content identity within a Flow. States may be mutable (working) or immutable (historical)." .
+
+<WorkingState/> a rdfs:Class ;
+  rdfs:subClassOf <State/> ;
+  rdfs:label "Working state" ;
+  rdfs:comment "The mutable working state for a Flow. By convention in meshes, this is surfaced at a reserved '_working' path segment." .
+
+<HistoricalState/> a rdfs:Class ;
+  rdfs:subClassOf <State/> ;
+  rdfs:label "Historical state" ;
+  rdfs:comment "An immutable published snapshot state for a Flow." .
 
 <AbstractFile/> a rdfs:Class ;
-  rdfs:subClassOf <Realization/> ;
+  rdfs:subClassOf <DigitalArtifact/> ;
   rdfs:label "Abstract file" ;
-  rdfs:comment "A file-form realization specification (format/syntax/canonicalization/bundling)." .
-
-<AbstractStream/> a rdfs:Class ;
-  rdfs:subClassOf <Realization/> ;
-  rdfs:label "Abstract stream" ;
-  rdfs:comment "A non-file realization specification (e.g., a stream or service-like packaging), reserved for future use." .
-
-<hasAbstractFile/> a owl:ObjectProperty ;
-  rdfs:domain <Realizable/> ;
-  rdfs:range <AbstractFile/> ;
-  rdfs:label "has abstract file" ;
-  rdfs:comment "Links a Realizable resource to one of its AbstractFiles." .
-
-<hasAbstractStream/> a owl:ObjectProperty ;
-  rdfs:domain <Realizable/> ;
-  rdfs:range <AbstractStream/> ;
-  rdfs:label "has abstract stream" ;
-  rdfs:comment "Links a Realizable resource to one of its AbstractStreams." .
+  rdfs:comment "A file-level identity for a particular State: a specific file variant (e.g., TTL vs JSON-LD, zipped vs unzipped, or distinct build/canonicalization choices) whose bytes may be served from one or more LocatedFiles. Multiple AbstractFiles may exist for the same State, including multiple variants within the same media type or extension. In mesh file layouts that reserve direct State children for AbstractFiles, AbstractFile identifiers MUST NOT start with '_' and SHOULD NOT be 'index.html'." .
 
 <LocatedFile/> a rdfs:Class ;
+  rdfs:subClassOf <DigitalArtifact/> ;
   rdfs:label "Located file" ;
-  rdfs:comment "A retrievable bytes endpoint (typically with an extension)." .
+  rdfs:comment "A retrievable bytes identity (typically with an extension). A LocatedFile may be used as a facet of broader artifacts (AbstractFile, State, Flow, AbstractArtifact) and may also be treated as an AbstractArtifact in external/collapsed cases." .
 
-<LocatedStream/> a rdfs:Class ;
-  rdfs:label "Located stream" ;
-  rdfs:comment "A bytes endpoint that is not file-like (e.g., a stream or service-like packaging)" .
+#################################################################
+# Core structural relations (also participate in narrowerFacet)
+#################################################################
+
+<hasFlow/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <narrowerFacet/> ;
+  rdfs:domain <AbstractArtifact/> ;
+  rdfs:range <Flow/> ;
+  rdfs:label "has flow" ;
+  rdfs:comment "Relates an AbstractArtifact to its Flow. Mesh convention: exactly one Flow per AbstractArtifact." .
+
+<hasWorkingState/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <narrowerFacet/> ;
+  rdfs:domain <Flow/> ;
+  rdfs:range <WorkingState/> ;
+  rdfs:label "has working state" ;
+  rdfs:comment "Relates a Flow to its working (mutable) State. Mesh convention: exactly one working state per Flow." .
+
+<hasHistoricalState/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <narrowerFacet/> ;
+  rdfs:domain <Flow/> ;
+  rdfs:range <HistoricalState/> ;
+  rdfs:label "has historical state" ;
+  rdfs:comment "Relates a Flow to a published historical State." .
+
+<previousState/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:wasRevisionOf ;
+  rdfs:domain <State/> ;
+  rdfs:range <State/> ;
+  rdfs:label "previous state" ;
+  rdfs:comment "Links a State to an immediately preceding State in a revision lineage." .
+
+<hasAbstractFile/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <narrowerFacet/> ;
+  rdfs:domain <State/> ;
+  rdfs:range <AbstractFile/> ;
+  rdfs:label "has abstract file" ;
+  rdfs:comment "Relates a State to one of its AbstractFile variants." .
 
 <hasLocatedFile/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <narrowerFacet/> ;
   rdfs:domain <AbstractFile/> ;
   rdfs:range <LocatedFile/> ;
   owl:inverseOf <locatesAbstractFile/> ;
   rdfs:label "has located file" ;
-  rdfs:comment "Links an AbstractFile to one or more LocatedFiles that provide retrievable bytes." .
-
-<hasLocatedStream/> a owl:ObjectProperty ;
-  rdfs:domain <AbstractStream/> ;
-  rdfs:range <LocatedStream/> ;
-  rdfs:label "has located stream" ;
-  rdfs:comment "Links an AbstractStream to one or more LocatedStreams that provide streamable bytes." .
+  rdfs:comment "Relates an AbstractFile to one or more LocatedFiles that provide retrievable bytes." .
 
 <locatesAbstractFile/> a owl:ObjectProperty ;
   rdfs:domain <LocatedFile/> ;
@@ -92,78 +142,33 @@
   rdfs:comment "Navigation: links a LocatedFile to an AbstractFile whose bytes it provides." .
 
 #################################################################
-# Artifact kinds
+# Optional skip-links (structural narrowing shortcuts)
 #################################################################
 
-<FlowArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact/> ;
-  rdfs:label "Flow artifact" ;
-  rdfs:comment "A DigitalArtifact whose content evolves over time through Slices. The FlowArtifact is an identity anchor, not itself a realizable revision state." .
+<locatedFileForState/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <narrowerFacet/> ;
+  rdfs:domain <State/> ;
+  rdfs:range <LocatedFile/> ;
+  rdfs:label "located file for state" ;
+  rdfs:comment "Optional shortcut relating a State directly to a LocatedFile. When present in mesh-managed data, it SHOULD be consistent with the chain: hasAbstractFile / hasLocatedFile." .
 
-<SimpleArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact/>, <Realizable/> ;
-  rdfs:label "Simple artifact" ;
-  rdfs:comment "A DigitalArtifact treated as a single content unit with no revision history. The SimpleArtifact resource itself is the realizable content bearer." .
+#################################################################
+# Content kinds
+#################################################################
 
 <RdfDataset/> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact/>, dcat:Dataset ;
   rdfs:label "RDF dataset" ;
-  rdfs:comment "A DigitalArtifact whose content is an RDF dataset (default graph + 0..n named graphs)." .
-
-
-#################################################################
-# Slices
-#################################################################
-
-<Slice/> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact/>, <Realizable/> ;
-  rdfs:label "Slice" ;
-  rdfs:comment "A realizable state of a FlowArtifact, either the working draft (WorkingSlice) or a historical revision (HistoricalSlice). Each Slice has its own DigitalArtifact identity distinct from the FlowArtifact identity." .
-
-<WorkingSlice/> a rdfs:Class ;
-  rdfs:subClassOf <Slice/> ;
-  rdfs:label "Working slice" ;
-  rdfs:comment "Mutable current state for a FlowArtifact." .
-
-<HistoricalSlice/> a rdfs:Class ;
-  rdfs:subClassOf <Slice/> ;
-  rdfs:label "Historical slice" ;
-  rdfs:comment "Immutable published snapshot for a FlowArtifact." .
-
-<hasSlice/> a owl:ObjectProperty ;
-  rdfs:domain <FlowArtifact/> ;
-  rdfs:range <Slice/> ;
-  rdfs:label "has slice" ;
-  rdfs:comment "Associates a FlowArtifact with one of its Slices." .
-
-<currentSlice/> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <hasSlice/> ;
-  rdfs:domain <FlowArtifact/> ;
-  rdfs:range <WorkingSlice/> ;
-  rdfs:label "current slice" ;
-  rdfs:comment "Associates a FlowArtifact with its current Slice." .
-
-<previousSlice/> a owl:ObjectProperty ;
-  rdfs:subPropertyOf prov:wasRevisionOf ;
-  rdfs:domain <Slice/> ;
-  rdfs:range <Slice/> ;
-  rdfs:label "previous slice" ;
-  rdfs:comment "Links to the immediately-preceding Slice of this Slice." .
-
-<nextSliceSequenceNumber/> a owl:DatatypeProperty ;
-  rdfs:domain <FlowArtifact/> ;
-  rdfs:range xsd:integer ;
-  rdfs:label "next slice sequence number" ;
-  rdfs:comment "Monotonic integer providing the next allocatable sequence number for a FlowArtifact." .
+  rdfs:comment "A DigitalArtifact whose content is an RDF dataset (default graph + 0..n named graphs). May be used to type an AbstractArtifact, a Flow, or specific State(s), depending on modeling needs." .
 
 #################################################################
-# Resource pages
+# Web presentation
 #################################################################
 
 <ResourcePage/> a rdfs:Class ;
   rdfs:subClassOf <LocatedFile/>, schema:WebPage ;
   rdfs:label "Resource page file" ;
-  rdfs:comment "An HTML page that presents a resource." .
+  rdfs:comment "An HTML page that presents a resource. By convention, resource pages are located at a reserved 'index.html' located-file name. Mesh layout invariant: reserve 'index.html' for ResourcePages; other artifact facets SHOULD NOT use 'index.html' as their identifier token." .
 
 <hasResourcePage/> a owl:ObjectProperty ;
   rdfs:domain rdfs:Resource ;
@@ -240,14 +245,12 @@
   rdfs:comment "Agent responsible for the most recent verification of this reference link." .
 
 #################################################################
-#################################################################
-# Semantic Flow Resources
-#################################################################
+# Semantic Flow resources (mesh governance + naming)
 #################################################################
 
 <SemanticFlowResource/> a rdfs:Class ;
   rdfs:label "Semantic Flow resource" ;
-  rdfs:comment "A resource governed by Semantic Flow conventions." .
+  rdfs:comment "A resource modeled using Semantic Flow conventions and vocabulary. Semantic Flow resources may exist inside or outside a mesh." .
 
 <containsSemanticFlowResource/> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;
@@ -299,15 +302,14 @@
   rdfs:label "designates" ;
   rdfs:comment "Optional asserted designatum for the Nomen's designator token. If absent, the Nomen may be anchored only via ReferenceLinks (or used purely for token management)." .
 
-
 #################################################################
-# Knops + Payloads
+# Knops + payload artifacts
 #################################################################
 
 <Knop/> a rdfs:Class ;
   rdfs:subClassOf <SemanticFlowResource/>, <ArtifactContainer/> ;
   rdfs:label "Knop" ;
-  rdfs:comment "A container for payload artifacts and supporting artifacts." .
+  rdfs:comment "A container for primary payload artifacts and supporting artifacts." .
 
 <containsKnop/> a owl:ObjectProperty ;
   rdfs:domain <Mesh/> ;
@@ -316,113 +318,158 @@
   rdfs:label "contains knop"@en ;
   rdfs:comment "Asserts that a Knop is a member of (and is inventoried by) a Mesh. This is a semantic containment/inventory assertion, not a filesystem directory listing, and can apply to meshes that exist only in memory."@en .
 
-<FlowPayload/> a rdfs:Class ;
-  rdfs:subClassOf <FlowArtifact/>, <SemanticFlowResource/> ;
-  rdfs:label "Payload flow" ;
-  rdfs:comment "The primary FlowArtifact hosted by a Knop." .
-
-<SimplePayload/> a rdfs:Class ;
-  rdfs:subClassOf <SimpleArtifact/>, <SemanticFlowResource/> ;
+<PayloadArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <AbstractArtifact/>, <SemanticFlowResource/> ;
   rdfs:label "Payload artifact" ;
-  rdfs:comment "A primary (simple) artifact hosted directly by a Knop, for cases where the payload is not managed as a FlowArtifact." .
+  rdfs:comment "A primary AbstractArtifact hosted by a Knop." .
 
-<containsFlowPayload/> a owl:ObjectProperty ;
+<containsPayloadArtifact/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsSemanticFlowResource/> ;
   rdfs:domain <Knop/> ;
-  rdfs:range <FlowPayload/> ;
-  rdfs:label "contains flow payload" ;
-  rdfs:comment "Links a Knop to its payload when the payload is modeled as a FlowArtifact (FlowPayload)." .
+  rdfs:range <PayloadArtifact/> ;
+  rdfs:label "contains payload artifact" ;
+  rdfs:comment "Links a Knop to its primary payload AbstractArtifact." .
 
-<containsSimplePayload/> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <containsSemanticFlowResource/> ;
-  rdfs:domain <Knop/> ;
-  rdfs:range <SimplePayload/> ;
-  rdfs:label "contains simple payload" ;
-  rdfs:comment "Links a Knop to its payload when the payload is modeled as a SimpleArtifact (SimplePayload)." .
+<payloadSlug/> a owl:DatatypeProperty ;
+  rdfs:domain <AbstractArtifact/> ;
+  rdfs:range xsd:string ;
+  rdfs:label "payload slug" ;
+  rdfs:comment "Stable, immutable slug used as an AbstractArtifact's identifier path segment in a mesh file layout (folder name). Changing it changes IRIs and should be treated as minting a new AbstractArtifact. Mesh invariant: payloadSlug MUST NOT be 'index.html' and SHOULD NOT start with '_' (reserved for structural items)." .
+
+<preferredPayloadFileSlug/> a owl:DatatypeProperty ;
+  rdfs:domain <AbstractArtifact/> ;
+  rdfs:range xsd:string ;
+  rdfs:label "preferred payload file slug" ;
+  rdfs:comment "Mutable filename-stem preference for LocatedFiles (e.g., 'alice-bio'). Generators may ignore/sanitize it and must resolve collisions mechanically (e.g., suffix or hash). Mesh invariant: should avoid values that would result in a LocatedFile named 'index.html'." .
 
 <preferredPayloadSlug/> a owl:DatatypeProperty ;
+  owl:deprecated true ;
   rdfs:domain <Knop/> ;
   rdfs:range xsd:string ;
   rdfs:label "preferred payload slug" ;
-  rdfs:comment "Optional human-friendly file-stem hint for naming payload distribution files (e.g., 'alice-profile'). Not an identifier; does not affect IRIs or designator paths. Generators may sanitize/ignore it and must resolve collisions mechanically (e.g., suffix or hash)." .
-
+  rdfs:comment "DEPRECATED. Replaced by payloadSlug (immutable identifier segment) and preferredPayloadFileSlug (mutable filename preference)." .
 
 #################################################################
-# Metadata artifacts
+# Metadata payload artifacts
 #################################################################
 
-<KnopMetadataFlow/> a rdfs:Class ;
-  rdfs:subClassOf <FlowArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
-  rdfs:label "Knop metadata flow" ;
-  rdfs:comment "Small, discoverable: structure/pointers/summary inventory for the Knop." .
+<KnopMetadataArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:label "Knop metadata artifact" ;
+  rdfs:comment "Small, discoverable: structure/pointers/summary inventory for the Knop. Modeled as an AbstractArtifact with a Flow and States." .
 
-<MeshMetadataFlow/> a rdfs:Class ;
-  rdfs:subClassOf <FlowArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
-  rdfs:label "Mesh metadata flow" ;
-  rdfs:comment "Optional mesh-level operational metadata/config." .
+<MeshMetadataArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:label "Mesh metadata artifact" ;
+  rdfs:comment "Optional mesh-level operational metadata/config. Modeled as an AbstractArtifact with a Flow and States." .
 
-<NomenMetadataFlow/> a rdfs:Class ;
-  rdfs:subClassOf <FlowArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
-  rdfs:label "Nomen metadata flow" ;
-  rdfs:comment "Metadata about a Nomen; may remain WorkingSlice-only until history is recorded." .
+<NomenMetadataArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:label "Nomen metadata artifact" ;
+  rdfs:comment "Metadata about a Nomen. Modeled as an AbstractArtifact with a Flow and States." .
 
-<containsKnopMetadataFlow/> a owl:ObjectProperty ;
+<containsKnopMetadataArtifact/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsSemanticFlowResource/> ;
   rdfs:domain <Knop/> ;
-  rdfs:range <KnopMetadataFlow/> ;
-  rdfs:label "contains knop metadata flow" ;
-  rdfs:comment "Links a Knop to its knop metadata flow (if present)." .
+  rdfs:range <KnopMetadataArtifact/> ;
+  rdfs:label "contains knop metadata artifact" ;
+  rdfs:comment "Links a Knop to its knop metadata artifact (if present)." .
 
-<containsMeshMetadataFlow/> a owl:ObjectProperty ;
+<containsMeshMetadataArtifact/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsSemanticFlowResource/> ;
   rdfs:domain <Mesh/> ;
-  rdfs:range <MeshMetadataFlow/> ;
-  rdfs:label "contains mesh metadata flow" ;
-  rdfs:comment "Links a Mesh to its mesh metadata flow (if present)." .
+  rdfs:range <MeshMetadataArtifact/> ;
+  rdfs:label "contains mesh metadata artifact" ;
+  rdfs:comment "Links a Mesh to its mesh metadata artifact (if present)." .
 
-<containsNomenMetadataFlow/> a owl:ObjectProperty ;
+<containsNomenMetadataArtifact/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsSemanticFlowResource/> ;
   rdfs:domain <Nomen/> ;
-  rdfs:range <NomenMetadataFlow/> ;
-  rdfs:label "contains nomen metadata flow" ;
-  rdfs:comment "Links a Nomen to its nomen metadata flow (if present)." .
+  rdfs:range <NomenMetadataArtifact/> ;
+  rdfs:label "contains nomen metadata artifact" ;
+  rdfs:comment "Links a Nomen to its nomen metadata artifact (if present)." .
 
 #################################################################
-# Inventory artifacts 
+# Inventory artifacts
 #################################################################
 
-<MeshInventoryDataset/> a rdfs:Class ;
-  rdfs:subClassOf <RdfDataset/>, <SimpleArtifact/>, <SemanticFlowResource/> ;
-  rdfs:label "Mesh inventory dataset" ;
-  rdfs:comment "Optional derived index for explorability at the mesh level (non-flow; may be large/sharded)." .
+<MeshInventoryArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:label "Mesh inventory artifact" ;
+  rdfs:comment "Optional derived index for explorability at the mesh level (may be large/sharded)." .
 
-<KnopInventoryDataset/> a rdfs:Class ;
-  rdfs:subClassOf <RdfDataset/>, <SimpleArtifact/>, <SemanticFlowResource/> ;
-  rdfs:label "Knop inventory dataset" ;
-  rdfs:comment "Optional derived index for explorability at the knop level (non-flow; may be large/sharded)." .
+<KnopInventoryArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:label "Knop inventory artifact" ;
+  rdfs:comment "Optional derived index for explorability at the knop level (may be large/sharded)." .
 
-<NomenInventoryDataset/> a rdfs:Class ;
-  rdfs:subClassOf <RdfDataset/>, <SimpleArtifact/>, <SemanticFlowResource/> ;
-  rdfs:label "Nomen inventory dataset" ;
-  rdfs:comment "Optional derived index for explorability at the nomen level (non-flow; may be large/sharded)." .
+<NomenInventoryArtifact/> a rdfs:Class ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:label "Nomen inventory artifact" ;
+  rdfs:comment "Optional derived index for explorability at the nomen level (may be large/sharded)." .
 
-<containsMeshInventoryDataset/> a owl:ObjectProperty ;
+<containsMeshInventoryArtifact/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsSemanticFlowResource/> ;
   rdfs:domain <Mesh/> ;
-  rdfs:range <MeshInventoryDataset/> ;
-  rdfs:label "contains mesh inventory dataset" ;
-  rdfs:comment "Links a Mesh to zero or more derived MeshInventoryDatasets (may be large and/or sharded)." .
+  rdfs:range <MeshInventoryArtifact/> ;
+  rdfs:label "contains mesh inventory artifact" ;
+  rdfs:comment "Links a Mesh to zero or more derived MeshInventoryArtifacts (may be large and/or sharded)." .
 
-<containsKnopInventoryDataset/> a owl:ObjectProperty ;
+<containsKnopInventoryArtifact/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsSemanticFlowResource/> ;
   rdfs:domain <Knop/> ;
-  rdfs:range <KnopInventoryDataset/> ;
-  rdfs:label "contains knop inventory dataset" ;
-  rdfs:comment "Links a Knop to zero or more derived KnopInventoryDatasets (may be large and/or sharded)." .
+  rdfs:range <KnopInventoryArtifact/> ;
+  rdfs:label "contains knop inventory artifact" ;
+  rdfs:comment "Links a Knop to zero or more derived KnopInventoryArtifacts (may be large and/or sharded)." .
 
-<containsNomenInventoryDataset/> a owl:ObjectProperty ;
+<containsNomenInventoryArtifact/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <containsSemanticFlowResource/> ;
   rdfs:domain <Nomen/> ;
-  rdfs:range <NomenInventoryDataset/> ;
-  rdfs:label "contains nomen inventory dataset" ;
-  rdfs:comment "Links a Nomen to zero or more derived NomenInventoryDatasets (may be large and/or sharded)." .
+  rdfs:range <NomenInventoryArtifact/> ;
+  rdfs:label "contains nomen inventory artifact" ;
+  rdfs:comment "Links a Nomen to zero or more derived NomenInventoryArtifacts (may be large and/or sharded)." .
+
+#################################################################
+# Deprecated prior model terms
+#################################################################
+
+<FlowArtifact/> a rdfs:Class ;
+  owl:deprecated true ;
+  rdfs:subClassOf <DigitalArtifact/> ;
+  rdfs:label "Flow artifact" ;
+  rdfs:comment "DEPRECATED. Replaced by the AbstractArtifact/Flow/State model." .
+
+<Slice/> a rdfs:Class ;
+  owl:deprecated true ;
+  rdfs:subClassOf <DigitalArtifact/> ;
+  rdfs:label "Slice" ;
+  rdfs:comment "DEPRECATED. Replaced by State (WorkingState/HistoricalState)." .
+
+<WorkingSlice/> a rdfs:Class ;
+  owl:deprecated true ;
+  rdfs:subClassOf <Slice/> ;
+  rdfs:label "Working slice" ;
+  rdfs:comment "DEPRECATED. Replaced by WorkingState." .
+
+<HistoricalSlice/> a rdfs:Class ;
+  owl:deprecated true ;
+  rdfs:subClassOf <Slice/> ;
+  rdfs:label "Historical slice" ;
+  rdfs:comment "DEPRECATED. Replaced by HistoricalState." .
+
+<hasSlice/> a owl:ObjectProperty ;
+  owl:deprecated true ;
+  rdfs:domain <FlowArtifact/> ;
+  rdfs:range <Slice/> ;
+  rdfs:label "has slice" ;
+  rdfs:comment "DEPRECATED. Replaced by hasWorkingState/hasHistoricalState." .
+
+<currentSlice/> a owl:ObjectProperty ;
+  owl:deprecated true ;
+  rdfs:label "current slice" ;
+  rdfs:comment "DEPRECATED. Replaced by hasWorkingState." .
+
+<nextSliceSequenceNumber/> a owl:DatatypeProperty ;
+  owl:deprecated true ;
+  rdfs:label "next slice sequence number" ;
+  rdfs:comment "DEPRECATED. Prefer flow-specific state/version sequencing in Flow metadata." .
