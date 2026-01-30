@@ -112,12 +112,20 @@
   rdfs:label "has historical state" ;
   rdfs:comment "Relates a Flow to a published historical State." .
 
-<previousState/> a owl:ObjectProperty ;
+<previousHistoricalState/> a owl:ObjectProperty ;
   rdfs:subPropertyOf prov:wasRevisionOf ;
-  rdfs:domain <State/> ;
-  rdfs:range <State/> ;
-  rdfs:label "previous state" ;
-  rdfs:comment "Links a State to an immediately preceding State in a revision lineage." .
+  rdfs:domain <HistoricalState/> ;
+  rdfs:range <HistoricalState/> ;
+  rdfs:label "previous historical state" ;
+  rdfs:comment "Links a HistoricalState to the immediately preceding HistoricalState in its published revision lineage." .
+
+<latestHistoricalState/> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <hasHistoricalState/> ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:domain <Flow/> ;
+  rdfs:range <HistoricalState/> ;
+  rdfs:label "latest historical state" ;
+  rdfs:comment "Optional convenience pointer from a Flow to its latest (most recently published) HistoricalState. This is a logical pointer in RDF and does not imply any filesystem aliasing." .
 
 <hasAbstractFile/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet/> ;
@@ -429,47 +437,3 @@
   rdfs:label "contains nomen inventory artifact" ;
   rdfs:comment "Links a Nomen to zero or more derived NomenInventoryArtifacts (may be large and/or sharded)." .
 
-#################################################################
-# Deprecated prior model terms
-#################################################################
-
-<FlowArtifact/> a rdfs:Class ;
-  owl:deprecated true ;
-  rdfs:subClassOf <DigitalArtifact/> ;
-  rdfs:label "Flow artifact" ;
-  rdfs:comment "DEPRECATED. Replaced by the AbstractArtifact/Flow/State model." .
-
-<Slice/> a rdfs:Class ;
-  owl:deprecated true ;
-  rdfs:subClassOf <DigitalArtifact/> ;
-  rdfs:label "Slice" ;
-  rdfs:comment "DEPRECATED. Replaced by State (WorkingState/HistoricalState)." .
-
-<WorkingSlice/> a rdfs:Class ;
-  owl:deprecated true ;
-  rdfs:subClassOf <Slice/> ;
-  rdfs:label "Working slice" ;
-  rdfs:comment "DEPRECATED. Replaced by WorkingState." .
-
-<HistoricalSlice/> a rdfs:Class ;
-  owl:deprecated true ;
-  rdfs:subClassOf <Slice/> ;
-  rdfs:label "Historical slice" ;
-  rdfs:comment "DEPRECATED. Replaced by HistoricalState." .
-
-<hasSlice/> a owl:ObjectProperty ;
-  owl:deprecated true ;
-  rdfs:domain <FlowArtifact/> ;
-  rdfs:range <Slice/> ;
-  rdfs:label "has slice" ;
-  rdfs:comment "DEPRECATED. Replaced by hasWorkingState/hasHistoricalState." .
-
-<currentSlice/> a owl:ObjectProperty ;
-  owl:deprecated true ;
-  rdfs:label "current slice" ;
-  rdfs:comment "DEPRECATED. Replaced by hasWorkingState." .
-
-<nextSliceSequenceNumber/> a owl:DatatypeProperty ;
-  owl:deprecated true ;
-  rdfs:label "next slice sequence number" ;
-  rdfs:comment "DEPRECATED. Prefer flow-specific state/version sequencing in Flow metadata." .
