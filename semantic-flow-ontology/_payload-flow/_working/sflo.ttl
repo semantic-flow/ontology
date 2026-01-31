@@ -57,23 +57,23 @@
   rdfs:label "Abstract artifact" ;
   rdfs:comment "The primary, whole-artifact identity. In a Semantic Mesh, each AbstractArtifact has exactly one Flow that supplies its working and historical states." .
 
-<Flow/> a rdfs:Class ;
+<ArtifactFlow/> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact/> ;
   rdfs:label "Flow" ;
-  rdfs:comment "The over-time identity for an AbstractArtifact. A Flow relates one working State and zero or more historical States." .
+  rdfs:comment "The over-time identity for an AbstractArtifact. An ArtifactFlow relates one WorkingArtifactState and zero or more HistoricalArtifactStates." .
 
-<State/> a rdfs:Class ;
+<ArtifactState/> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact/> ;
   rdfs:label "State" ;
-  rdfs:comment "A single-state content identity within a Flow. States may be mutable (working) or immutable (historical)." .
+  rdfs:comment "A single-state content identity within a Flow. ArtifactStates may be mutable (working) or immutable (historical)." .
 
 <WorkingState/> a rdfs:Class ;
-  rdfs:subClassOf <State/> ;
+  rdfs:subClassOf <ArtifactState/> ;
   rdfs:label "Working state" ;
   rdfs:comment "The mutable working state for a Flow. By convention in meshes, this is surfaced at a reserved '_working' path segment." .
 
 <HistoricalState/> a rdfs:Class ;
-  rdfs:subClassOf <State/> ;
+  rdfs:subClassOf <ArtifactState/> ;
   rdfs:label "Historical state" ;
   rdfs:comment "An immutable published snapshot state for a Flow." .
 
@@ -94,20 +94,20 @@
 <hasFlow/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet/> ;
   rdfs:domain <AbstractArtifact/> ;
-  rdfs:range <Flow/> ;
+  rdfs:range <ArtifactFlow/> ;
   rdfs:label "has flow" ;
   rdfs:comment "Relates an AbstractArtifact to its Flow. Mesh convention: exactly one Flow per AbstractArtifact." .
 
 <hasWorkingState/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet/> ;
-  rdfs:domain <Flow/> ;
+  rdfs:domain <ArtifactFlow/> ;
   rdfs:range <WorkingState/> ;
   rdfs:label "has working state" ;
   rdfs:comment "Relates a Flow to its working (mutable) State. Mesh convention: exactly one working state per Flow." .
 
 <hasHistoricalState/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet/> ;
-  rdfs:domain <Flow/> ;
+  rdfs:domain <ArtifactFlow/> ;
   rdfs:range <HistoricalState/> ;
   rdfs:label "has historical state" ;
   rdfs:comment "Relates a Flow to a published historical State." .
@@ -122,14 +122,14 @@
 <latestHistoricalState/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <hasHistoricalState/> ;
   rdf:type owl:FunctionalProperty ;
-  rdfs:domain <Flow/> ;
+  rdfs:domain <ArtifactFlow/> ;
   rdfs:range <HistoricalState/> ;
   rdfs:label "latest historical state" ;
   rdfs:comment "Optional convenience pointer from a Flow to its latest (most recently published) HistoricalState. This is a logical pointer in RDF and does not imply any filesystem aliasing." .
 
 <hasAbstractFile/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet/> ;
-  rdfs:domain <State/> ;
+  rdfs:domain <ArtifactState/> ;
   rdfs:range <AbstractFile/> ;
   rdfs:label "has abstract file" ;
   rdfs:comment "Relates a State to one of its AbstractFile variants." .
@@ -155,7 +155,7 @@
 
 <locatedFileForState/> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet/> ;
-  rdfs:domain <State/> ;
+  rdfs:domain <ArtifactState/> ;
   rdfs:range <LocatedFile/> ;
   rdfs:label "located file for state" ;
   rdfs:comment "Optional shortcut relating a State directly to a LocatedFile. When present in mesh-managed data, it SHOULD be consistent with the chain: hasAbstractFile / hasLocatedFile." .
@@ -302,7 +302,7 @@
   rdfs:domain <Nomen/> ;
   rdfs:range xsd:string ;
   rdfs:label "designator path" ;
-  rdfs:comment "Mesh-relative path token for the Nomen's designator. Interpreted relative to the mesh base. Use no leading slash. The empty string denotes the mesh root Nomen." .
+  rdfs:comment "Path token for the Nomen's designator. Interpreted relative to the mesh base. Use no leading slash. The empty string denotes the mesh root Nomen." .
 
 <designates/> a owl:ObjectProperty ;
   rdfs:domain <Nomen/> ;

@@ -5,321 +5,210 @@
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "sh": "http://www.w3.org/ns/shacl#",
-    "dcat": "http://www.w3.org/ns/dcat#",
     "dcterms": "http://purl.org/dc/terms/",
-    "schema": "https://schema.org/",
-    "formats": "http://www.w3.org/ns/formats/",
     "vann": "http://purl.org/vocab/vann/",
-    "sflo": "https://semantic-flow.github.io/ontology/semantic-flow-ontology/"
+    "sflo": "https://semantic-flow.github.io/semantic-flow-ontology/",
+    "rdfs:subClassOf": {
+      "@type": "@id"
+    },
+    "rdfs:subPropertyOf": {
+      "@type": "@id"
+    },
+    "rdfs:domain": {
+      "@type": "@id"
+    },
+    "rdfs:range": {
+      "@type": "@id"
+    },
+    "owl:imports": {
+      "@type": "@id"
+    },
+    "owl:inverseOf": {
+      "@type": "@id"
+    }
   },
   "@graph": [
     {
       "@id": "",
       "@type": "owl:Ontology",
-      "dcterms:title": "Semantic Flow knop configuration Ontology",
-      "dcterms:description": "Configuration properties for Semantic Flow mesh entities. Defines configurable properties that apply directly to mesh knops (operational config) and through inheritable config. Used by configuration files and sflo-host ontology for setting defaults.",
+      "dcterms:title": "Semantic Flow Configuration Ontology",
+      "dcterms:description": "Vocabulary for describing configuration artifacts used by Semantic Flow resources. This ontology intentionally does not define key-level merge semantics; resolution is application-defined.",
       "dcterms:creator": "Semantic Flow Project",
-      "owl:versionInfo": "0.1.0",
+      "owl:imports": [
+        "https://semantic-flow.github.io/semantic-flow-ontology/"
+      ],
+      "owl:versionInfo": "0.2.1",
       "vann:preferredNamespacePrefix": "conf",
       "vann:alternateNamespacePrefix": [
         "sflo-conf"
-      ]
-    },
-    {
-      "@id": "ConfigurationClass/",
-      "@type": "rdfs:Class",
-      "rdfs:label": "Configuration Class",
-      "rdfs:comment": "Abstract parent class for classes that structure configuration information."
-    },
-    {
-      "@id": "KnopNodeConfig/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": [
-        {
-          "@id": "sflo:PlatformElement/"
-        },
-        {
-          "@id": "dcat:Dataset"
-        }
       ],
-      "rdfs:label": "knop config dataset",
-      "rdfs:comment": "Dataset containing KnopNode configuration data."
+      "vann:preferredNamespaceUri": "https://semantic-flow.github.io/ontology/sflo-config/"
     },
     {
-      "@id": "hasLocalConfig/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "sflo:KnopNode/"
-      },
-      "rdfs:range": {
-        "@id": "KnopNodeConfig/"
-      },
-      "rdfs:label": "local config",
-      "rdfs:comment": "Links KnopNodes to a local config."
+      "@id": "Config/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        "sflo:AbstractArtifact/",
+        "sflo:RdfDataset/"
+      ],
+      "rdfs:label": "Config",
+      "rdfs:comment": "An RDF configuration artifact (always an RDF dataset) used to control or parameterize Semantic Flow behavior. Configs are managed using the AbstractArtifact→Flow→State model from the core ontology. This ontology does not define how multiple configs are merged at the key level."
     },
     {
-      "@id": "hasInheritableConfig/",
+      "@id": "hasConfig/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "sflo:KnopNode/"
-      },
-      "rdfs:range": {
-        "@id": "KnopNodeConfig/"
-      },
-      "rdfs:label": "inheritable config",
-      "rdfs:comment": "Links KnopNodes to an inheritable config."
+      "rdfs:domain": "rdfs:Resource",
+      "rdfs:range": "Config/",
+      "owl:inverseOf": "configFor/",
+      "rdfs:label": "has config",
+      "rdfs:comment": "Associates any resource with one or more Config artifacts. Precedence is application-defined (and may be expressed via specialized subproperties in other ontologies such as sflo-host)."
+    },
+    {
+      "@id": "configFor/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "Config/",
+      "rdfs:range": "rdfs:Resource",
+      "owl:inverseOf": "hasConfig/",
+      "rdfs:label": "config for",
+      "rdfs:comment": "Inverse of hasConfig: identifies the resource a Config is intended to configure."
+    },
+    {
+      "@id": "hasMeshConfig/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "hasConfig/",
+      "rdfs:domain": "sflo:Mesh/",
+      "rdfs:range": "Config/",
+      "rdfs:label": "has mesh config",
+      "rdfs:comment": "Associates a Mesh with one or more mesh-level Config artifacts."
+    },
+    {
+      "@id": "hasKnopConfig/",
+      "@type": "owl:ObjectProperty",
+      "rdfs:subPropertyOf": "hasConfig/",
+      "rdfs:domain": "sflo:Knop/",
+      "rdfs:range": "Config/",
+      "rdfs:label": "has knop config",
+      "rdfs:comment": "Associates a Knop with one or more per-knop Config artifacts. Knops are not hierarchical, so there is no inheritable knop config chain."
     },
     {
       "@id": "hasEffectiveConfig/",
       "@type": "owl:ObjectProperty",
-      "rdfs:domain": {
-        "@id": "sflo:KnopNode/"
-      },
-      "rdfs:range": {
-        "@id": "KnopNodeConfig/"
-      },
-      "rdfs:label": "effective config",
-      "rdfs:comment": "Links KnopNodes to their effective config. Shouldn't be persisted, only computed at runtime."
+      "rdfs:subPropertyOf": "hasConfig/",
+      "rdfs:domain": "rdfs:Resource",
+      "rdfs:range": "Config/",
+      "rdfs:label": "has effective config",
+      "rdfs:comment": "Associates a resource with a computed effective Config. This SHOULD NOT be persisted as authoritative data; it is intended for runtime views, caches, or debugging output."
     },
     {
       "@id": "TemplateMappingSet/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "ConfigurationClass/"
-      },
-      "rdfs:label": "Template Mappings",
-      "rdfs:comment": "Collection of template mappings."
+      "@type": "owl:Class",
+      "rdfs:label": "Template mapping set",
+      "rdfs:comment": "A collection of TemplateMappings used for resource page generation."
     },
     {
       "@id": "TemplateMapping/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": {
-        "@id": "ConfigurationClass/"
-      },
-      "rdfs:label": "Template Mapping",
-      "rdfs:comment": "Template configuration mapping for resource page generation. A template mapping applies only if all specified target conditions (via mappingTargetClassRegex and mappingTargetSlugRegex) are satisfied. If a mapping specifies no class or slug conditions, it is applicable to all knops. Since mappings may come from multiple sources and may be multiple even from a single source, mappingPriority is used to resolve conflicts when multiple mappings apply to the same knop."
-    },
-    {
-      "@id": "knopNodeConfigInheritanceEnabled/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "KnopNode config inheritance enabled",
-      "rdfs:comment": "Whether this knop should accept inherited configuration from parent knops. Set in local KnopNodeConfig to disable inheritance resolution for this KnopNode. Set in InheritaleKnopNodeConfig to disable inheritance for child knops. Set in application KnopNodeConfig to disable inheritance (if not otherwise specified) for knops within that application.",
-      "rdfs:domain": {
-        "@id": "KnopNodeConfig/"
-      },
-      "rdfs:range": {
-        "@id": "xsd:boolean"
-      }
+      "@type": "owl:Class",
+      "rdfs:label": "Template mapping",
+      "rdfs:comment": "A mapping that selects templates/assets for generating resource pages. A mapping applies only if all specified target conditions are satisfied. When multiple mappings apply, mappingPriority may be used to resolve conflicts."
     },
     {
       "@id": "hasTemplateMappingSet/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "has template mappings",
-      "rdfs:comment": "Collection of template mappings for resource page generation",
-      "rdfs:domain": {
-        "@id": "KnopNodeConfig/"
-      },
-      "rdfs:range": {
-        "@id": "TemplateMappingSet/"
-      }
+      "rdfs:domain": "Config/",
+      "rdfs:range": "TemplateMappingSet/",
+      "rdfs:label": "has template mapping set",
+      "rdfs:comment": "Associates a Config with a TemplateMappingSet used during resource page generation."
     },
     {
       "@id": "hasTemplateMapping/",
       "@type": "owl:ObjectProperty",
+      "rdfs:domain": "TemplateMappingSet/",
+      "rdfs:range": "TemplateMapping/",
       "rdfs:label": "has template mapping",
-      "rdfs:comment": "Individual template mapping within a set of template mappings. ",
-      "rdfs:domain": {
-        "@id": "TemplateMappingSet/"
-      },
-      "rdfs:range": {
-        "@id": "TemplateMapping/"
-      }
+      "rdfs:comment": "Associates a TemplateMappingSet with one of its TemplateMappings."
     },
-
     {
       "@id": "InnerTemplate/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "ContainerResource/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        "sflo:AbstractArtifact/"
+      ],
       "rdfs:label": "Inner template",
-      "rdfs:comment": "A template resource that can evolve via Flow/Version and is rendered as one or more AbstractFiles."
+      "rdfs:comment": "A template artifact used as an inner page template. As an AbstractArtifact, it may evolve via Flow/State and be realized as one or more AbstractFiles."
     },
     {
       "@id": "OuterTemplate/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "ContainerResource/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        "sflo:AbstractArtifact/"
+      ],
       "rdfs:label": "Outer template",
-      "rdfs:comment": "A template resource that can evolve via Flow/Version and is rendered as one or more AbstractFiles."
+      "rdfs:comment": "A template artifact used as an outer page template. As an AbstractArtifact, it may evolve via Flow/State and be realized as one or more AbstractFiles."
     },
     {
       "@id": "Stylesheet/",
-      "@type": "rdfs:Class",
-      "rdfs:subClassOf": "ContainerResource/",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        "sflo:AbstractArtifact/"
+      ],
       "rdfs:label": "Stylesheet",
-      "rdfs:comment": "A stylesheet resource that can evolve via Flow/Version and is rendered as one or more AbstractFiles."
+      "rdfs:comment": "A stylesheet artifact referenced by resource pages. As an AbstractArtifact, it may evolve via Flow/State and be realized as one or more AbstractFiles."
     },
     {
       "@id": "innerTemplate/",
       "@type": "owl:ObjectProperty",
+      "rdfs:domain": "TemplateMapping/",
+      "rdfs:range": "InnerTemplate/",
       "rdfs:label": "inner template",
-      "rdfs:comment": "Inner template for resource pages",
-      "rdfs:domain": {
-        "@id": "TemplateMapping/"
-      },
-      "rdfs:range": {
-        "@id": "InnerTemplate/"
-      }
+      "rdfs:comment": "Inner template for generated resource pages."
     },
     {
       "@id": "outerTemplate/",
       "@type": "owl:ObjectProperty",
+      "rdfs:domain": "TemplateMapping/",
+      "rdfs:range": "OuterTemplate/",
       "rdfs:label": "outer template",
-      "rdfs:comment": "Outer template for resource pages",
-      "rdfs:domain": {
-        "@id": "TemplateMapping/"
-      },
-      "rdfs:range": {
-        "@id": "OuterTemplate/"
-      }
+      "rdfs:comment": "Outer template for generated resource pages."
     },
     {
       "@id": "stylesheet/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "stylesheet path",
-      "rdfs:comment": "Path to CSS stylesheet for generated pages",
-      "rdfs:domain": {
-        "@id": "TemplateMapping/"
-      },
-      "rdfs:range": {
-        "@id": "Stylesheet/"
-      }
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": "TemplateMapping/",
+      "rdfs:range": "Stylesheet/",
+      "rdfs:label": "stylesheet",
+      "rdfs:comment": "Stylesheet artifact to include in generated resource pages."
     },
     {
       "@id": "mappingPriority/",
       "@type": "owl:DatatypeProperty",
+      "rdfs:domain": "TemplateMapping/",
+      "rdfs:range": "xsd:integer",
       "rdfs:label": "mapping priority",
-      "rdfs:comment": "Integer priority for resolving conflicts between template mappings. Higher values SHOULD take precedence when multiple mappings apply to the same knop.",
-      "rdfs:domain": {
-        "@id": "TemplateMapping/"
-      },
-      "rdfs:range": {
-        "@id": "xsd:integer"
-      }
+      "rdfs:comment": "Integer priority for resolving conflicts between applicable template mappings. Higher values SHOULD take precedence."
     },
     {
       "@id": "mappingTargetClassRegex/",
       "@type": "owl:DatatypeProperty",
+      "rdfs:domain": "TemplateMapping/",
+      "rdfs:range": "xsd:string",
       "rdfs:label": "mapping target class regex",
-      "rdfs:comment": "Regular expression for attaching mappings to target knops based on their class identifier.",
-      "rdfs:domain": {
-        "@id": "TemplateMapping/"
-      },
-      "rdfs:range": {
-        "@id": "xsd:string"
-      }
+      "rdfs:comment": "Regular expression for matching target resources by class identifier (e.g., an rdf:type IRI string). Interpretation is application-defined."
     },
     {
       "@id": "mappingTargetSlugRegex/",
       "@type": "owl:DatatypeProperty",
+      "rdfs:domain": "TemplateMapping/",
+      "rdfs:range": "xsd:string",
       "rdfs:label": "mapping target slug regex",
-      "rdfs:comment": "Regular expression for attaching mappings to target knops based on their 'local name' slug",
-      "rdfs:domain": {
-        "@id": "TemplateMapping/"
-      },
-      "rdfs:range": {
-        "@id": "xsd:string"
-      }
+      "rdfs:comment": "Regular expression for matching target resources by a slug-like token (e.g., payloadSlug, designatorPath, or other application-defined token)."
     },
     {
       "@id": "generateResourcePages/",
       "@type": "owl:DatatypeProperty",
+      "rdfs:domain": "Config/",
+      "rdfs:range": "xsd:boolean",
       "rdfs:label": "generate resource pages",
-      "rdfs:comment": "Whether to (re-)generate HTML resource pages during weave",
-      "rdfs:domain": {
-        "@id": "KnopNodeConfig/"
-      },
-      "rdfs:range": {
-        "@id": "xsd:boolean"
-      }
-    },
-    {
-      "@id": "folderToken/",
-      "@type": "owl:AnnotationProperty",
-      "rdfs:label": "Folder token",
-      "rdfs:comment": "Useful in folder naming.",
-      "rdfs:domain": [
-        {
-          "@id": "sflo:PlatformElement/"
-        }
-      ],
-      "rdfs:range": {
-        "@id": "xsd:string"
-      }
-    },
-    {
-      "@id": "fileToken/",
-      "@type": "owl:AnnotationProperty",
-      "rdfs:label": "Flow token",
-      "rdfs:comment": "Useful in distribution file naming.",
-      "rdfs:domain": {
-        "@id": "sflo:PlatformElement/"
-      },
-      "rdfs:range": {
-        "@id": "xsd:string"
-      }
-    },
-    {
-      "@id": "workingToken/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "Flow token",
-      "rdfs:comment": "Used in determining working folder naming.",
-      "rdfs:domain": [
-        {
-          "@id": "KnopNodeConfig/"
-        }
-      ],
-      "rdfs:range": {
-        "@id": "xsd:string"
-      }
-    },
-    {
-      "@id": "retainNumSlices/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "retain number of slices",
-      "rdfs:comment": "Number of previous FlowSlices to retain when weaving. Not defined means retain all.",
-      "rdfs:domain": {
-        "@id": "KnopNodeConfig/"
-      },
-      "rdfs:range": {
-        "@id": "xsd:integer"
-      }
-    },
-    {
-      "@id": "anticipatedAbsoluteIri/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "anticipated absolute IRI",
-      "rdfs:comment": "The anticipated absolute IRI of this knop within a published mesh, based on its Knop identifier, its path location, and the hosting platform.",
-      "rdfs:domain": [
-        {
-          "@id": "sflo:PlatformElement/"
-        }
-      ]
-    },
-    {
-      "@id": "parentKnop/",
-      "@type": "owl:ObjectProperty",
-      "rdfs:label": "parent knop",
-      "rdfs:comment": "indicates that this knop is contained in another knop. Should only be used in operational KnopConfig.",
-      "rdfs:domain": "Knop/",
-      "rdfs:range": "Knop/"
-    },
-    {
-      "@id": "rootKnop/",
-      "@type": "owl:DatatypeProperty",
-      "rdfs:label": "root knop",
-      "rdfs:comment": "indicates that this is a root knop. Should only be used in operational KnopConfig.",
-      "rdfs:domain": "Knop/",
-      "rdfs:range": "xsd:boolean"
+      "rdfs:comment": "Whether to (re-)generate HTML resource pages during weave."
     }
   ]
 }
