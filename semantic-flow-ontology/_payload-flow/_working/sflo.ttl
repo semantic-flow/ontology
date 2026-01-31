@@ -164,10 +164,10 @@
 # Content kinds
 #################################################################
 
-<RdfDataset/> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact/>, dcat:Dataset ;
-  rdfs:label "RDF dataset" ;
-  rdfs:comment "A DigitalArtifact whose content is an RDF dataset (default graph + 0..n named graphs). May be used to type an AbstractArtifact, a Flow, or specific State(s), depending on modeling needs." .
+<RdfDocument/> a rdfs:Class ;
+  rdfs:subClassOf dcat:Dataset ;
+  rdfs:label "RDF document" ;
+  rdfs:comment "A DigitalArtifact whose content is at least one RDF graph concrete bytes are an RDF document in an RDF serialization (e.g., Turtle, JSON-LD, TriG, N-Quads). May be used to type an AbstractArtifact, a Flow, specific State(s), an AbstractFile, or a LocatedFile, depending on modeling needs." .
 
 #################################################################
 # Web presentation
@@ -362,17 +362,17 @@
 #################################################################
 
 <KnopMetadataArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDocument/>, <SemanticFlowResource/> ;
   rdfs:label "Knop metadata artifact" ;
   rdfs:comment "Small, discoverable: structure/pointers/summary inventory for the Knop. Modeled as an AbstractArtifact with a Flow and States." .
 
 <MeshMetadataArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDocument/>, <SemanticFlowResource/> ;
   rdfs:label "Mesh metadata artifact" ;
   rdfs:comment "Optional mesh-level operational metadata/config. Modeled as an AbstractArtifact with a Flow and States." .
 
 <NomenMetadataArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDocument/>, <SemanticFlowResource/> ;
   rdfs:label "Nomen metadata artifact" ;
   rdfs:comment "Metadata about a Nomen. Modeled as an AbstractArtifact with a Flow and States." .
 
@@ -402,17 +402,17 @@
 #################################################################
 
 <MeshInventoryArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDocument/>, <SemanticFlowResource/> ;
   rdfs:label "Mesh inventory artifact" ;
   rdfs:comment "Index for explorability at the mesh level." .
 
 <KnopInventoryArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDocument/>, <SemanticFlowResource/> ;
   rdfs:label "Knop inventory artifact" ;
   rdfs:comment "Index for explorability at the knop level." .
 
 <NomenInventoryArtifact/> a rdfs:Class ;
-  rdfs:subClassOf <AbstractArtifact/>, <RdfDataset/>, <SemanticFlowResource/> ;
+  rdfs:subClassOf <AbstractArtifact/>, <RdfDocument/>, <SemanticFlowResource/> ;
   rdfs:label "Nomen inventory artifact" ;
   rdfs:comment "Index for explorability at the nomen level." .
 
