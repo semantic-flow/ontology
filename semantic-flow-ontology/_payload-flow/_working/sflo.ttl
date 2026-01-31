@@ -1,13 +1,13 @@
-@base <https://semantic-flow.github.io/semantic-flow-ontology> .
+@base <https://semantic-flow.github.io/semantic-flow-ontology/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix schema: <https://schema.org> .
-@prefix vann: <http://purl.org/vocab/vann> .
+@prefix schema: <https://schema.org/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 
 <> a owl:Ontology ;
@@ -17,7 +17,7 @@
   owl:versionInfo "0.0.1" ;
   owl:versionIRI <https://semantic-flow.github.io/semantic-flow-ontology/_knops/_payload/_working/sflo.ttl/sflo.ttl> ;
   vann:preferredNamespacePrefix "sflo" ;
-  vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-ontology> .
+  vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-ontology/> .
 
 #################################################################
 #################################################################
@@ -84,6 +84,10 @@
   rdfs:label "Historical state" ;
   rdfs:comment "An immutable published snapshot state for a Flow." .
 
+<CurrentStatePointer> a rdfs:Class ;
+  rdfs:label "Current state pointer" ;
+  rdfs:comment "A stable, dereferenceable pointer resource whose purpose is to name the current published state of some artifact flow. The pointer may be updated over time; consumers that need a fixed snapshot SHOULD cite the target HistoricalState IRI instead." .
+
 <AbstractFile> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact> ;
   rdfs:label "Abstract file" ;
@@ -134,6 +138,20 @@
   rdfs:label "latest historical state" ;
   rdfs:comment "Optional convenience pointer from a Flow to its latest (most recently published) HistoricalState. This is a logical pointer in RDF and does not imply any filesystem aliasing." .
 
+<latestHistoricalState> owl:propertyChainAxiom ( <hasCurrentStatePointer> <pointsToHistoricalState> ) .
+
+<pointsToHistoricalState> a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:domain <CurrentStatePointer> ;
+  rdfs:range <HistoricalState> ;
+  rdfs:label "points to historical state" ;
+  rdfs:comment "Resolves this pointer to exactly one HistoricalState, representing the current published state under the mesh's chosen policy." .
+
+<hasCurrentStatePointer> a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:domain <ArtifactFlow> ;
+  rdfs:range <CurrentStatePointer> ;
+  rdfs:label "has current state pointer" ;
+  rdfs:comment "Associates a Flow with its CurrentStatePointer, which can be used as a stable name for the flow's current published state." .
+
 <hasAbstractFile> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet> ;
   rdfs:domain <ArtifactState> ;
@@ -172,9 +190,9 @@
 #################################################################
 
 <RdfDocument> a rdfs:Class ;
-  rdfs:subClassOf dcat:Dataset ;
+  rdfs:subClassOf <DigitalArtifact> ;
   rdfs:label "RDF document" ;
-  rdfs:comment "A DigitalArtifact whose content is at least one RDF graph concrete bytes are an RDF document in an RDF serialization (e.g., Turtle, JSON-LD, TriG, N-Quads). May be used to type an AbstractArtifact, a Flow, specific State(s), an AbstractFile, or a LocatedFile, depending on modeling needs." .
+  rdfs:comment "A DigitalArtifact whose content is at least one RDF graph. Concrete bytes are an RDF document in an RDF serialization (e.g., Turtle, JSON-LD, TriG, N-Quads). May be used to type an AbstractArtifact, a Flow, specific State(s), an AbstractFile, or a LocatedFile, depending on modeling needs." .
 
 #################################################################
 # Web presentation
@@ -257,7 +275,9 @@
   rdfs:comment "Agent responsible for the most recent verification of this reference link." .
 
 #################################################################
-# Semantic Flow resources (mesh governance + naming)
+#################################################################
+# Semantic Flow resources
+#################################################################
 #################################################################
 
 <SemanticFlowResource> a rdfs:Class ;
