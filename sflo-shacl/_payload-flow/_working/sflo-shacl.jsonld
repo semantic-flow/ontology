@@ -454,6 +454,22 @@
         "sh:severity": "sh:Warning",
         "sh:message": "sflo:preferredPayloadSlug is deprecated. Use sflo:payloadSlug (immutable identifier segment) and sflo:preferredPayloadFileSlug (mutable filename preference)."
       }
+    },
+    {
+      "@id": "WorkingStateSingleAbstractFileShape",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "WorkingState single AbstractFile shape",
+      "rdfs:comment": "Enforces the mesh authoring convention that a sflo:WorkingState has exactly one sflo:AbstractFile representation for consistency of editing workflows.",
+      "sh:targetClass": "sflo:WorkingState",
+      "sh:property": [
+        {
+          "sh:path": "sflo:hasAbstractFile",
+          "sh:class": "sflo:AbstractFile",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:severity": "sh:Violation"
+        }
+      ]
     }
   ]
 }

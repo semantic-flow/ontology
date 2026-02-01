@@ -67,26 +67,27 @@
 <ArtifactFlow> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact> ;
   rdfs:label "Flow" ;
-  rdfs:comment "The over-time identity for an AbstractArtifact. An ArtifactFlow relates one WorkingArtifactState and zero or more HistoricalArtifactStates." .
+  rdfs:comment "The over-time identity for an DigitalArtifact. An ArtifactFlow relates exactly one WorkingState, exactly one CurrentState, and zero or more HistoricalStates." .
 
 <ArtifactState> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact> ;
   rdfs:label "State" ;
-  rdfs:comment "A single-state content identity within a Flow. ArtifactStates may be mutable (working) or immutable (historical)." .
+  rdfs:comment "A single-state content identity within a DigitalArtifact. ArtifactStates may be mutable (working) or immutable (historical)." .
+
+<CurrentState> a rdfs:Class ;
+  rdfs:subClassOf <ArtifactState> ;
+  rdfs:label "Current state" ;
+  rdfs:comment "The mutable-at-weave current state for a DigitalArtifact. By convention in meshes, this is surfaced at a reserved '_current' path segment." .
 
 <WorkingState> a rdfs:Class ;
   rdfs:subClassOf <ArtifactState> ;
   rdfs:label "Working state" ;
-  rdfs:comment "The mutable working state for a Flow. By convention in meshes, this is surfaced at a reserved '_working' path segment." .
+  rdfs:comment "The always-mutable working state for a DigitalArtifact. By convention in meshes, this is surfaced at a reserved '_working' path segment." .
 
 <HistoricalState> a rdfs:Class ;
   rdfs:subClassOf <ArtifactState> ;
   rdfs:label "Historical state" ;
-  rdfs:comment "An immutable published snapshot state for a Flow." .
-
-<CurrentStatePointer> a rdfs:Class ;
-  rdfs:label "Current state pointer" ;
-  rdfs:comment "A stable, dereferenceable pointer resource whose purpose is to name the current published state of some artifact flow. The pointer may be updated over time; consumers that need a fixed snapshot SHOULD cite the target HistoricalState IRI instead." .
+  rdfs:comment "An immutable snapshot state for a DigitalArtifact." .
 
 <AbstractFile> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact> ;
@@ -102,28 +103,43 @@
 # Core structural relations (also participate in narrowerFacet)
 #################################################################
 
-<hasFlow> a owl:ObjectProperty ;
+<hasFlow> a owl:ObjectProperty, owl:FunctionalProperty ;
   rdfs:subPropertyOf <narrowerFacet> ;
   rdfs:domain <AbstractArtifact> ;
   rdfs:range <ArtifactFlow> ;
   rdfs:label "has flow" ;
   rdfs:comment "Relates an AbstractArtifact to its Flow. Mesh convention: exactly one Flow per AbstractArtifact." .
 
-<hasWorkingState> a owl:ObjectProperty ;
+<hasState> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet> ;
+  rdfs:domain <ArtifactFlow> ;
+  rdfs:range <ArtifactState> ;
+  rdfs:label "has state" ;
+  rdfs:comment "Relates a Flow to one of its States." .
+
+<hasCurrentState> a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:subPropertyOf <narrowerFacet>, <hasState> ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:domain <ArtifactFlow> ;
+  rdfs:range <CurrentState> ;
+  rdfs:label "has current state" ;
+  rdfs:comment "Relates a Flow to its current (mutable-at-weave) State. Mesh convention: exactly one current state per Flow." .
+  
+<hasWorkingState> a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:subPropertyOf <narrowerFacet>, <hasState> ;
   rdfs:domain <ArtifactFlow> ;
   rdfs:range <WorkingState> ;
   rdfs:label "has working state" ;
   rdfs:comment "Relates a Flow to its working (mutable) State. Mesh convention: exactly one working state per Flow." .
 
 <hasHistoricalState> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <narrowerFacet> ;
+  rdfs:subPropertyOf <narrowerFacet>, <hasState> ;
   rdfs:domain <ArtifactFlow> ;
   rdfs:range <HistoricalState> ;
   rdfs:label "has historical state" ;
   rdfs:comment "Relates a Flow to a published historical State." .
 
-<previousHistoricalState> a owl:ObjectProperty ;
+<previousHistoricalState> a owl:ObjectProperty, owl:FunctionalProperty ;
   rdfs:subPropertyOf prov:wasRevisionOf ;
   rdfs:domain <HistoricalState> ;
   rdfs:range <HistoricalState> ;
@@ -137,20 +153,6 @@
   rdfs:range <HistoricalState> ;
   rdfs:label "latest historical state" ;
   rdfs:comment "Optional convenience pointer from a Flow to its latest (most recently published) HistoricalState. This is a logical pointer in RDF and does not imply any filesystem aliasing." .
-
-<latestHistoricalState> owl:propertyChainAxiom ( <hasCurrentStatePointer> <pointsToHistoricalState> ) .
-
-<pointsToHistoricalState> a owl:ObjectProperty, owl:FunctionalProperty ;
-  rdfs:domain <CurrentStatePointer> ;
-  rdfs:range <HistoricalState> ;
-  rdfs:label "points to historical state" ;
-  rdfs:comment "Resolves this pointer to exactly one HistoricalState, representing the current published state under the mesh's chosen policy." .
-
-<hasCurrentStatePointer> a owl:ObjectProperty, owl:FunctionalProperty ;
-  rdfs:domain <ArtifactFlow> ;
-  rdfs:range <CurrentStatePointer> ;
-  rdfs:label "has current state pointer" ;
-  rdfs:comment "Associates a Flow with its CurrentStatePointer, which can be used as a stable name for the flow's current published state." .
 
 <hasAbstractFile> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet> ;
