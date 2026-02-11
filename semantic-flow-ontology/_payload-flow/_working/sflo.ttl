@@ -32,7 +32,7 @@
 
 <DigitalArtifact> a rdfs:Class ;
   rdfs:label "Digital artifact" ;
-  rdfs:comment "A file-like digital object (documents, specifications, datasets, pages, binary assets), whether abstract or location-specific. A DigitalArtifact may exist inside or outside any Semantic Flow mesh." .
+  rdfs:comment "A multi-faceted digital artifact that can have content facets (diachronic or synchronic) and representation facets (bytes that may be retrievable from one or more locations). Used for documents, datasets, pages, binary assets, and their abstract/located variants." .
 
 <ArtifactContainer> a rdfs:Class ;
   rdfs:label "Artifact container" ;
@@ -152,7 +152,7 @@
   rdfs:domain <ArtifactFlow> ;
   rdfs:range <HistoricalState> ;
   rdfs:label "latest historical state" ;
-  rdfs:comment "Optional convenience pointer from a Flow to its latest (most recently published) HistoricalState. This is a logical pointer in RDF and does not imply any filesystem aliasing." .
+  rdfs:comment "Operational metadata convenience pointer to the most recently published HistoricalState. MUST NOT be asserted into immutable historical snapshots/distributions." .
 
 <hasAbstractFile> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet> ;
@@ -284,7 +284,7 @@
 
 <SemanticFlowResource> a rdfs:Class ;
   rdfs:label "Semantic Flow resource" ;
-  rdfs:comment "A resource modeled using Semantic Flow conventions and vocabulary. Semantic Flow resources may exist inside or outside a mesh." .
+  rdfs:comment "A primary constituent of a Mesh modeled using Semantic Flow conventions (Mesh, Nomen, Knop, and mesh-hosted artifacts such as payload, metadata, inventory, and overlay artifacts)." .
 
 <containsSemanticFlowResource> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;
@@ -328,7 +328,7 @@
   rdfs:domain <Nomen> ;
   rdfs:range xsd:string ;
   rdfs:label "designator path" ;
-  rdfs:comment "Path token for the Nomen's designator. Interpreted relative to the mesh base. Use no leading slash. The empty string denotes the mesh root Nomen." .
+  rdfs:comment "Relative path token for the Nomen's designator, interpreted relative to the mesh base. Use no leading slash. The empty string denotes the mesh root designator. A trailing slash MAY be included to explicitly designate a slash-terminates IRI." .
 
 <designates> a owl:ObjectProperty ;
   rdfs:domain <Nomen> ;
