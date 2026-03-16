@@ -1,5 +1,5 @@
-# Semantic Flow Ontology
+# Semantic Flow Ontologies
 
-An ontology to support the Semantic Flow framework and semantic meshes in general
+A set of ontologies to support the Semantic Flow framework and semantic meshes in general
 
 
