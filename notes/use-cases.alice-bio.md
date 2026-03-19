@@ -19,7 +19,7 @@ This sketch assumes:
 
 | designator | referent | classes |
 | --- | --- | --- |
-| `_mesh/` | The mesh surface for this Alice example | `sflo:Mesh` |
+| `_mesh/` | The mesh surface for this Alice example | `sflo:SemanticMesh` |
 | `_mesh/.semantic-mesh-metadata.ttl` | Located Turtle file providing bytes for the mesh metadata artifact | `sflo:MeshMetadata`, `sflo:LocatedFile`, `sflo:RdfDocument` |
 | `_mesh/.semantic-mesh-inventory.ttl` | Located Turtle file providing bytes for the mesh inventory artifact | `sflo:MeshInventory`, `sflo:LocatedFile`, `sflo:RdfDocument` |
 | `alice/` | Alice the person | `schema:Person` |

@@ -2,7 +2,7 @@
 id: 0vwvn9y166clpweuy52ob10
 title: Core Ontology Summary
 desc: ''
-updated: 1773756893178
+updated: 1773881981246
 created: 1773756686863
 ---
 
@@ -14,11 +14,29 @@ Use it to stay aligned with the live core vocabulary and to avoid reintroducing 
 
 ## Core Mental Model
 
-- A `Mesh` is the Semantic Flow surface, not the entire host filesystem or workspace.
-- A public designator like `D/` denotes the referent.
-- `D/_knop/` denotes the mesh-managed `Knop` associated with that designator.
-- A `Knop` is the identifier handle/container. It may be purely referential, or it may also host a payload artifact.
+- A `SemanticMesh` is a namespace region together with its supporting resources, typically overlaid onto a file tree or filesystem region.
+- A public Semantic Flow identifier IRI like `D/` denotes the referent.
+- A `Knop` is the mesh-managed handle-container associated one-to-one with a Semantic Flow identifier. It has a `designatorPath`, may optionally `designates` its referent explicitly, and may also host a payload artifact.
+  - `D/_knop/` denotes the mesh-managed `Knop` associated with that designator.
 - Not every file in a host hierarchy is part of the mesh. Only explicitly integrated mesh resources are.
+
+## Designators And IRIs
+
+Current terminology in these notes:
+
+- `IRI` means any IRI.
+- A `designator` is the mesh-relative designating form, typically path-like.
+- A `Semantic Flow identifier` is a special kind of IRI: an IRI formed in mesh context from a mesh base plus a designator, and associated one-to-one with a `Knop`.
+- In the current core direction, the Knop carries the explicit `designatorPath`; there is no separate generic identifier-handle class.
+
+Examples:
+
+- designator: `alice/bio/`
+- Semantic Flow identifier IRI: `https://example.org/alice/bio/`
+- corresponding Knop IRI: `https://example.org/alice/bio/_knop/`
+
+Use `designator` when you mean the softer mesh-relative form.
+Use `Semantic Flow identifier` when you mean the full IRI that participates in the one-Knop-per-identifier rule.
 
 ## Artifact Facet Model
 
@@ -31,8 +49,8 @@ The main facet chain is:
 Interpretation:
 
 - `AbstractArtifact`: the whole-artifact, over-time identity
-- `HistoricalState`: an immutable published snapshot
-- `ArtifactManifestation`: a concrete variant of the artifact or state
+- `HistoricalState`: an immutable version representing the content of the artifact at a particular point
+- `ArtifactManifestation`: a concrete variant of the artifact or state whose bytes may be provided by one or more `LocatedFile`s
 - `LocatedFile`: retrievable bytes at some location
 
 Sparse cases are explicitly supported:
@@ -44,9 +62,9 @@ Use `narrowerFacet` / `broaderFacet` for artifact-facet structure.
 
 ## Mesh Structure
 
-- `Mesh` contains `Knop`s and mesh-level support resources.
-- `Knop` contains support resources and may contain one primary payload resource.
-- `containsSemanticFlowResource` is semantic containment/inventory, not a raw filesystem listing.
+- `SemanticMesh` has `Knop`s and mesh-level support resources.
+- `Knop` has support resources and may have one primary payload resource.
+- The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
 
 Current path conventions:
 
@@ -56,7 +74,7 @@ Current path conventions:
 
 ## Role Classes
 
-These are role classes over `DigitalArtifact` facets, not separate artifact species:
+These are "Mesh role" classes over `DigitalArtifact` facets, not separate artifact species:
 
 - `PayloadArtifact`
 - `KnopMetadata`
@@ -79,10 +97,10 @@ Important consequence:
 ## Other Important Vocabulary
 
 - `RdfDocument` is a content-kind class that can apply at multiple artifact-facet levels.
-- `ResourcePage` is a `LocatedFile` subclass for human-facing HTML resource pages.
-- `payloadSlug` is the stable identifier path segment for an `AbstractArtifact`.
+- `ResourcePage` is a `LocatedFile` subclass for the human-facing HTML resource pages that should accompany every `SemanticFlowResource`
+- `designatorPath` is the mesh-relative path-like designator carried by a `Knop`.
+- `designates` is an optional explicit link from a `Knop` to the referent of its associated Semantic Flow identifier.
 - `preferredPayloadFileSlug` is the mutable filename preference.
-- `preferredPayloadSlug` is deprecated.
 
 ## Things To Not Reintroduce
 
@@ -95,6 +113,7 @@ These are not part of the current core surface:
 - `ArtifactState`
 - `AbstractFile`
 - `FileExpression`
+- `payloadSlug`
 
 Also do not assume:
 

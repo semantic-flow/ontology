@@ -221,13 +221,13 @@
   rdfs:label "reference URI literal" ;
   rdfs:comment "If present, a retrievable location for reference data (without asserting denotation). May be used alongside referenceTarget or alone." .
 
-<lastVerifiedAt> a owl:DatatypeProperty ;
+<verifiedAt> a owl:DatatypeProperty ;
   rdfs:domain <ReferenceLink> ;
   rdfs:range xsd:dateTimeStamp ;
   rdfs:label "last verified at" ;
   rdfs:comment "Most recent verification timestamp for this reference link." .
 
-<lastVerifiedBy> a owl:ObjectProperty ;
+<verifiedBy> a owl:ObjectProperty ;
   rdfs:domain <ReferenceLink> ;
   rdfs:range dcterms:Agent ;
   rdfs:label "last verified by" ;
@@ -241,26 +241,19 @@
 
 <SemanticFlowResource> a rdfs:Class ;
   rdfs:label "Semantic Flow resource" ;
-  rdfs:comment "A primary constituent of a Mesh modeled using Semantic Flow conventions (Mesh, Knop, and mesh-hosted artifacts such as payload, metadata, inventory, and overlay artifacts)." .
-
-<containsSemanticFlowResource> a owl:ObjectProperty ;
-  rdfs:subPropertyOf dcterms:hasPart ;
-  rdfs:domain <ArtifactContainer> ;
-  rdfs:range <SemanticFlowResource> ;
-  rdfs:label "contains Semantic Flow resource" ;
-  rdfs:comment "Structural containment relation for Semantic Flow resources, asserted from an artifact-hosting resource (Mesh or Knop)." .
+  rdfs:comment "A constituent of a SemanticMesh modeled using Semantic Flow conventions (SemanticMesh, Knop, and mesh-hosted artifacts such as payload, metadata, and inventory)." .
 
 #################################################################
 # Semantic Meshes
 #################################################################
 
-<Mesh> a rdfs:Class ;
+<SemanticMesh> a rdfs:Class ;
   rdfs:subClassOf <SemanticFlowResource>, <ArtifactContainer> ;
-  rdfs:label "Mesh" ;
-  rdfs:comment "A servable filesystem region (conventionally surfaced via a reserved _mesh/ handle) that contains Semantic Flow resources and other supporting resources." .
+  rdfs:label "Semantic Mesh" ;
+  rdfs:comment "A namespace region, conventionally exposed via a reserved _mesh/ handle and, in filesystem-backed serializations, represented by a filesystem region, that has Semantic Flow resources and other supporting resources." .
 
 <meshBase> a owl:DatatypeProperty ;
-  rdfs:domain <Mesh> ;
+  rdfs:domain <SemanticMesh> ;
   rdfs:range xsd:anyURI ;
   rdfs:label "mesh base" ;
   rdfs:comment "A mesh's canonical BASE (publish location). Represented as a URI literal to avoid asserting anything about the denoted thing." .
@@ -272,32 +265,38 @@
 <Knop> a rdfs:Class ;
   rdfs:subClassOf <SemanticFlowResource>, <ArtifactContainer> ;
   rdfs:label "Knop" ;
-  rdfs:comment "A mesh-managed identifier handle/container that may host a primary payload artifact plus supporting artifacts." .
+  rdfs:comment "A mesh-managed handle-container associated one-to-one with a Semantic Flow identifier. A Knop has exactly one mesh-relative designatorPath and may host a primary payload artifact plus supporting artifacts." .
 
-<containsKnop> a owl:ObjectProperty ;
-  rdfs:domain <Mesh> ;
+<hasKnop> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:domain <SemanticMesh> ;
   rdfs:range <Knop> ;
-  rdfs:subPropertyOf <containsSemanticFlowResource> ;
-  rdfs:label "contains knop"@en ;
-  rdfs:comment "Asserts that a Knop is a member of (and is inventoried by) a Mesh. This is a semantic containment/inventory assertion, not a filesystem directory listing, and can apply to meshes that exist only in memory."@en .
+  rdfs:label "has knop"@en ;
+  rdfs:comment "Associates a SemanticMesh with a Knop that participates in its Semantic Flow surface. This is a semantic membership relation, not a filesystem directory listing, and can apply to meshes that exist only in memory."@en .
+
+<designatorPath> a owl:DatatypeProperty ;
+  rdfs:domain <Knop> ;
+  rdfs:range xsd:string ;
+  rdfs:label "designator path" ;
+  rdfs:comment "Relative mesh designator path for the Knop's associated Semantic Flow identifier, interpreted relative to the mesh base. Use no leading slash. The empty string denotes the mesh root designator. A trailing slash MAY be included to explicitly designate a slash-terminates IRI." .
+
+<designates> a owl:ObjectProperty ;
+  rdfs:domain <Knop> ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "designates" ;
+  rdfs:comment "Optional asserted referent for the Knop's associated Semantic Flow identifier. If absent, the Knop may be anchored only via ReferenceLinks or other support data." .
 
 <PayloadArtifact> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact>, <SemanticFlowResource> ;
   rdfs:label "Payload artifact" ;
   rdfs:comment "Role class applied to the primary DigitalArtifact facet hosted by a Knop. This role may be carried by an AbstractArtifact, an ArtifactManifestation, or a LocatedFile in sparse or collapsed cases." .
 
-<containsPayloadArtifact> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <containsSemanticFlowResource> ;
+<hasPayloadArtifact> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
   rdfs:domain <Knop> ;
   rdfs:range <PayloadArtifact> ;
-  rdfs:label "contains payload artifact" ;
-  rdfs:comment "Links a Knop to its primary contained PayloadArtifact resource when the Knop carries a mesh-managed digital payload." .
-
-<payloadSlug> a owl:DatatypeProperty ;
-  rdfs:domain <AbstractArtifact> ;
-  rdfs:range xsd:string ;
-  rdfs:label "payload slug" ;
-  rdfs:comment "Stable, immutable slug used as an AbstractArtifact's identifier path segment in a mesh file layout (folder name). Changing it changes IRIs and should be treated as minting a new AbstractArtifact. Mesh invariant: payloadSlug MUST NOT be 'index.html' and SHOULD NOT start with '_' (reserved for structural items)." .
+  rdfs:label "has payload artifact" ;
+  rdfs:comment "Links a Knop to its primary PayloadArtifact resource when the Knop carries a mesh-managed digital payload." .
 
 <preferredPayloadFileSlug> a owl:DatatypeProperty ;
   rdfs:domain <AbstractArtifact> ;
@@ -305,12 +304,6 @@
   rdfs:label "preferred payload file slug" ;
   rdfs:comment "Mutable filename-stem preference for LocatedFiles (e.g., 'alice-bio'). Generators may ignore/sanitize it and must resolve collisions mechanically (e.g., suffix or hash). Mesh invariant: should avoid values that would result in a LocatedFile named 'index.html'." .
 
-<preferredPayloadSlug> a owl:DatatypeProperty ;
-  owl:deprecated true ;
-  rdfs:domain <Knop> ;
-  rdfs:range xsd:string ;
-  rdfs:label "preferred payload slug" ;
-  rdfs:comment "DEPRECATED. Replaced by payloadSlug (immutable identifier segment) and preferredPayloadFileSlug (mutable filename preference)." .
 
 #################################################################
 # Metadata roles
@@ -324,21 +317,21 @@
 <MeshMetadata> a rdfs:Class ;
   rdfs:subClassOf <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Mesh metadata" ;
-  rdfs:comment "Role class applied to a DigitalArtifact facet that serves as metadata for a Mesh. This role may be carried by a collapsed LocatedFile, an ArtifactManifestation, or an AbstractArtifact." .
+  rdfs:comment "Role class applied to a DigitalArtifact facet that serves as metadata for a SemanticMesh. This role may be carried by a collapsed LocatedFile, an ArtifactManifestation, or an AbstractArtifact." .
 
-<containsKnopMetadata> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <containsSemanticFlowResource> ;
+<hasKnopMetadata> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
   rdfs:domain <Knop> ;
   rdfs:range <KnopMetadata> ;
-  rdfs:label "contains knop metadata" ;
-  rdfs:comment "Links a Knop to its primary contained KnopMetadata resource (if present). The directly contained resource may be a collapsed LocatedFile or a broader artifact facet." .
+  rdfs:label "has knop metadata" ;
+  rdfs:comment "Links a Knop to its primary KnopMetadata resource (if present). The directly associated resource may be a collapsed LocatedFile or a broader artifact facet." .
 
-<containsMeshMetadata> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <containsSemanticFlowResource> ;
-  rdfs:domain <Mesh> ;
+<hasMeshMetadata> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:domain <SemanticMesh> ;
   rdfs:range <MeshMetadata> ;
-  rdfs:label "contains mesh metadata" ;
-  rdfs:comment "Links a Mesh to its primary contained MeshMetadata resource (if present). The directly contained resource may be a collapsed LocatedFile or a broader artifact facet." .
+  rdfs:label "has mesh metadata" ;
+  rdfs:comment "Links a SemanticMesh to its primary MeshMetadata resource (if present). The directly associated resource may be a collapsed LocatedFile or a broader artifact facet." .
 
 #################################################################
 # Inventory roles
@@ -347,23 +340,23 @@
 <MeshInventory> a rdfs:Class ;
   rdfs:subClassOf <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Mesh inventory" ;
-  rdfs:comment "Role class applied to a DigitalArtifact facet that serves as inventory for a Mesh. This role may be carried by a collapsed LocatedFile, an ArtifactManifestation, or an AbstractArtifact." .
+  rdfs:comment "Role class applied to a DigitalArtifact facet that serves as inventory for a SemanticMesh. This role may be carried by a collapsed LocatedFile, an ArtifactManifestation, or an AbstractArtifact." .
 
 <KnopInventory> a rdfs:Class ;
   rdfs:subClassOf <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Knop inventory" ;
   rdfs:comment "Role class applied to a DigitalArtifact facet that serves as inventory for a Knop. This role may be carried by a collapsed LocatedFile, an ArtifactManifestation, or an AbstractArtifact." .
 
-<containsMeshInventory> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <containsSemanticFlowResource> ;
-  rdfs:domain <Mesh> ;
+<hasMeshInventory> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:domain <SemanticMesh> ;
   rdfs:range <MeshInventory> ;
-  rdfs:label "contains mesh inventory" ;
-  rdfs:comment "Links a Mesh to its contained MeshInventory resource." .
+  rdfs:label "has mesh inventory" ;
+  rdfs:comment "Links a SemanticMesh to its MeshInventory resource." .
 
-<containsKnopInventory> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <containsSemanticFlowResource> ;
+<hasKnopInventory> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
   rdfs:domain <Knop> ;
   rdfs:range <KnopInventory> ;
-  rdfs:label "contains knop inventory" ;
-  rdfs:comment "Links a Knop to its contained KnopInventory resource." .
+  rdfs:label "has knop inventory" ;
+  rdfs:comment "Links a Knop to its KnopInventory resource." .
