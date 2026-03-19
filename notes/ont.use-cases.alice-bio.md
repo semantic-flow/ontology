@@ -2,7 +2,7 @@
 id: ls7gy1x4oj43fpgctvsqbp3
 title: Alice Bio
 desc: ''
-updated: 1773889169458
+updated: 1773891622424
 created: 1773730267525
 ---
 
@@ -41,5 +41,5 @@ This sketch assumes:
 | `alice/bio/_knop/_history/h1/bio-md` | Markdown artifact manifestation for historical state `h1` | `sflo:ArtifactManifestation` |
 | `alice/bio/_knop/_history/h1/bio-md/bio.md` | Located markdown file providing bytes for `alice/bio/_knop/_history/h1/bio-md` | `sflo:LocatedFile` |
 | `alice/bio/bio.md` | Working located markdown file currently associated directly with `alice/bio` | `sflo:LocatedFile` |
-| `alice/bio.md` | one (of infinite) alternate located markdown file locations that could be associated with `alice/bio` | `sflo:LocatedFile` |
+| `alice/bio.md` | one (of infinite) less-preferred alternate located markdown file locations that could be associated with `alice/bio` | `sflo:LocatedFile` |
 

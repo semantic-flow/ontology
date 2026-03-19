@@ -32,26 +32,30 @@
 
 <DigitalArtifact> a rdfs:Class ;
   rdfs:label "Digital artifact" ;
-  rdfs:comment "A multi-faceted digital artifact that can have content facets (diachronic or synchronic) and representation facets (bytes that may be retrievable from one or more locations). Used for documents, datasets, pages, binary assets, and their abstract/located variants." .
+  rdfs:comment "A conceptual digital artifact considered across its multiple facets. In the current Semantic Flow model, instantiated artifact-side resources are typically modeled as DigitalArtifactFacets." .
 
 <ArtifactContainer> a rdfs:Class ;
   rdfs:label "Artifact container" ;
   rdfs:comment "A resource that hosts/contains artifacts and other structural resources. Not itself required to be a DigitalArtifact." .
+
+<DigitalArtifactFacet> a rdfs:Class ;
+  rdfs:label "Digital artifact facet" ;
+  rdfs:comment "A Semantic Flow facet of a DigitalArtifact." .
 
 #################################################################
 # Artifact facet lattice
 #################################################################
 
 <narrowerFacet> a owl:ObjectProperty, owl:TransitiveProperty ;
-  rdfs:domain <DigitalArtifact> ;
-  rdfs:range <DigitalArtifact> ;
+  rdfs:domain <DigitalArtifactFacet> ;
+  rdfs:range <DigitalArtifactFacet> ;
   rdfs:label "narrower facet" ;
-  rdfs:comment "Relates a broader DigitalArtifact to a narrower DigitalArtifact facet within the same artifact structure. Intended to be closed (tree-shaped) within a mesh-managed Flow, but may be used more loosely for external artifacts." .
+  rdfs:comment "Relates a broader DigitalArtifactFacet to a narrower DigitalArtifactFacet within the same artifact structure. Intended to be closed (tree-shaped) within a mesh-managed Flow, but may be used more loosely for external artifacts." .
 
 <broaderFacet> a owl:ObjectProperty ;
   owl:inverseOf <narrowerFacet> ;
-  rdfs:domain <DigitalArtifact> ;
-  rdfs:range <DigitalArtifact> ;
+  rdfs:domain <DigitalArtifactFacet> ;
+  rdfs:range <DigitalArtifactFacet> ;
   rdfs:label "broader facet" ;
   rdfs:comment "Inverse of narrowerFacet." .
 
@@ -60,22 +64,22 @@
 #################################################################
 
 <AbstractArtifact> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact> ;
+  rdfs:subClassOf <DigitalArtifactFacet> ;
   rdfs:label "Abstract artifact" ;
-  rdfs:comment "The primary, whole-artifact and over-time identity for a DigitalArtifact. In the current core model, an AbstractArtifact may link directly to zero or more HistoricalStates and optionally to one working LocatedFile." .
+  rdfs:comment "The primary, whole-artifact and over-time identity facet for a DigitalArtifact. In the current core model, an AbstractArtifact may link directly to zero or more HistoricalStates and optionally to one working LocatedFile." .
 
 <HistoricalState> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact> ;
+  rdfs:subClassOf <DigitalArtifactFacet> ;
   rdfs:label "Historical state" ;
-  rdfs:comment "An immutable snapshot state for a DigitalArtifact." .
+  rdfs:comment "An immutable snapshot facet for a DigitalArtifact." .
 
 <ArtifactManifestation> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact> ;
+  rdfs:subClassOf <DigitalArtifactFacet> ;
   rdfs:label "Artifact manifestation" ;
   rdfs:comment "A concrete artifact manifestation: a specific variant (e.g., Markdown vs PDF, Turtle vs JSON-LD, zipped vs unzipped, or distinct build/canonicalization choices) whose bytes may be served from one or more LocatedFiles. ArtifactManifestations are typically linked from HistoricalStates, but may also be linked directly from an AbstractArtifact in sparse cases where no HistoricalState is materialized." .
 
 <LocatedFile> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact> ;
+  rdfs:subClassOf <DigitalArtifactFacet> ;
   rdfs:label "Located file" ;
   rdfs:comment "A retrievable bytes identity (typically with an extension). A LocatedFile may be used as a facet of broader artifacts (ArtifactManifestation, HistoricalState, AbstractArtifact) and may also be treated as an AbstractArtifact in external/collapsed cases." .
 
@@ -89,6 +93,13 @@
   rdfs:range <HistoricalState> ;
   rdfs:label "has historical state" ;
   rdfs:comment "Relates an AbstractArtifact to a published historical State." .
+
+<hasAbstractFacet> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <broaderFacet> ;
+  rdfs:domain <DigitalArtifactFacet> ;
+  rdfs:range <AbstractArtifact> ;
+  rdfs:label "has abstract facet" ;
+  rdfs:comment "Shortcut linking an artifact facet to its governing AbstractArtifact for discoverability. When asserted, it SHOULD agree with the broaderFacet chain." .
 
 <previousHistoricalState> a owl:ObjectProperty, owl:FunctionalProperty ;
   rdfs:subPropertyOf prov:wasRevisionOf ;
@@ -116,7 +127,7 @@
   rdfs:subPropertyOf <narrowerFacet> ;
   rdfs:range <ArtifactManifestation> ;
   rdfs:label "has manifestation" ;
-  rdfs:comment "Relates a DigitalArtifact to one of its ArtifactManifestations. In the current core model this is used primarily from HistoricalState and optionally from AbstractArtifact in sparse cases." .
+  rdfs:comment "Relates a DigitalArtifactFacet to one of its ArtifactManifestations. In the current core model this is used primarily from HistoricalState and optionally from AbstractArtifact in sparse cases." .
 
 <hasLocatedFile> a owl:ObjectProperty ;
   rdfs:subPropertyOf <narrowerFacet> ;
@@ -149,9 +160,9 @@
 #################################################################
 
 <RdfDocument> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact> ;
+  rdfs:subClassOf <DigitalArtifactFacet> ;
   rdfs:label "RDF document" ;
-  rdfs:comment "A DigitalArtifact whose content is at least one RDF graph. Concrete bytes are an RDF document in an RDF serialization (e.g., Turtle, JSON-LD, TriG, N-Quads). May be used to type an AbstractArtifact, specific HistoricalState(s), an ArtifactManifestation, or a LocatedFile, depending on modeling needs." .
+  rdfs:comment "A DigitalArtifactFacet whose content is at least one RDF graph. Concrete bytes are an RDF document in an RDF serialization (e.g., Turtle, JSON-LD, TriG, N-Quads). May be used to type an AbstractArtifact, specific HistoricalState(s), an ArtifactManifestation, or a LocatedFile, depending on modeling needs. RDF document facets SHOULD be discoverably linked back to their governing AbstractArtifact, typically via hasAbstractFacet." .
 
 #################################################################
 # Web presentation
@@ -298,9 +309,9 @@
   rdfs:comment "Associates a Knop with the Nomen that carries the mesh-relative naming semantics for the same Semantic Flow identifier." .
 
 <PayloadArtifact> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact>, <SemanticFlowResource> ;
+  rdfs:subClassOf <DigitalArtifactFacet>, <SemanticFlowResource> ;
   rdfs:label "Payload artifact" ;
-  rdfs:comment "Role class applied to the primary DigitalArtifact facet hosted by a Knop. This role may be carried by an AbstractArtifact, an ArtifactManifestation, or a LocatedFile in sparse or collapsed cases." .
+  rdfs:comment "Role class applied to the primary DigitalArtifactFacet hosted by a Knop. This role may be carried by an AbstractArtifact, an ArtifactManifestation, or a LocatedFile in sparse or collapsed cases." .
 
 <hasPayloadArtifact> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;

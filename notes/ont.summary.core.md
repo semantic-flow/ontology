@@ -2,7 +2,7 @@
 id: 0vwvn9y166clpweuy52ob10
 title: Core Ontology Summary
 desc: ''
-updated: 1773889577851
+updated: 1773890897593
 created: 1773756686863
 ---
 
@@ -35,7 +35,7 @@ Current terminology in these notes:
 Examples:
 
 - Nomen designatorPath: `alice/bio`
-- Semantic Flow identifier IRI: `https://example.org/alice/bio`
+- Semantic Flow identifier/IRI: `https://example.org/alice/bio`
 - corresponding Nomen IRI: `https://example.org/alice/bio/_nomen`
 - corresponding Knop IRI: `https://example.org/alice/bio/_knop`
 
@@ -52,7 +52,9 @@ Use `Semantic Flow identifier` when you mean the full IRI minted from a mesh bas
 
 ## Artifact Facet Model
 
-`DigitalArtifact` is the umbrella class.
+`DigitalArtifact` is the conceptual umbrella class.
+
+`DigitalArtifactFacet` is the instantiated facet-side superclass in the current model.
 
 The main facet chain is:
 
@@ -70,7 +72,7 @@ Sparse cases are explicitly supported:
 - an `AbstractArtifact` may have a `hasWorkingLocatedFile` without materializing a working state
 - an `AbstractArtifact` may link directly to an `ArtifactManifestation` when no `HistoricalState` is materialized
 
-Use `narrowerFacet` / `broaderFacet` for artifact-facet structure.
+Use `narrowerFacet` / `broaderFacet` for artifact-facet structure, and `hasAbstractFacet` when you want a direct discoverability link back to the governing `AbstractArtifact`.
 
 ## Mesh Structure
 
@@ -111,6 +113,7 @@ Important consequence:
 ## Other Important Vocabulary
 
 - `RdfDocument` is a content-kind class that can apply at multiple artifact-facet levels.
+- `DigitalArtifactFacet` is the common superclass for `AbstractArtifact`, `HistoricalState`, `ArtifactManifestation`, and `LocatedFile`.
 - `ResourcePage` is a `LocatedFile` subclass for the human-facing HTML resource pages that should accompany every `SemanticFlowResource`
 - `Nomen` is the thin mesh-relative naming class associated with a Semantic Flow identifier.
 - `hasNomen` links a `Knop` to its `Nomen`.
