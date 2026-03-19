@@ -8,7 +8,7 @@ created: 1773882065989
 
 ## Why This Ontology Exists
 
-- To define a shared semantic model for Semantic Flow identifiers, `Knop`s, `SemanticMesh`es, and digital-artifact structure.
+- To define a shared semantic model for Semantic Flow identifiers, `Nomen`s, `Knop`s, `SemanticMesh`es, and digital-artifact structure.
 - To make the core concepts explicit enough that multiple tools, generators, and humans can mean the same thing when they talk about the same resource.
 - To separate the conceptual model from any one serialization strategy, so the same structure can be represented in filesystem-backed, generated, or mixed environments.
 - To give Semantic Flow identifiers a machine-readable relationship to their support structures, payloads, metadata, inventory, and history.
