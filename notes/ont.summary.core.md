@@ -52,27 +52,27 @@ Use `Semantic Flow identifier` when you mean the full IRI minted from a mesh bas
 
 ## Artifact Facet Model
 
-`DigitalArtifact` is the conceptual umbrella class.
+`DigitalArtifact` is the governing artifact-level class in the current model.
 
-`DigitalArtifactFacet` is the instantiated facet-side superclass in the current model.
+`DigitalArtifactFacet` is the facet-side superclass for states, manifestations, and retrievable files.
 
 The main facet chain is:
 
-`AbstractArtifact -> HistoricalState -> ArtifactManifestation -> LocatedFile`
+`DigitalArtifact -> HistoricalState -> ArtifactManifestation -> LocatedFile`
 
 Interpretation:
 
-- `AbstractArtifact`: the whole-artifact, over-time identity
+- `DigitalArtifact`: the governing over-time artifact-level resource
 - `HistoricalState`: an immutable version representing the content of the artifact at a particular point
 - `ArtifactManifestation`: a concrete variant of the artifact or state whose bytes may be provided by one or more `LocatedFile`s
 - `LocatedFile`: retrievable bytes at some location
 
 Sparse cases are explicitly supported:
 
-- an `AbstractArtifact` may have a `hasWorkingLocatedFile` without materializing a working state
-- an `AbstractArtifact` may link directly to an `ArtifactManifestation` when no `HistoricalState` is materialized
+- a `DigitalArtifact` may have a `hasWorkingLocatedFile` without materializing a working state
+- a `DigitalArtifact` may link directly to an `ArtifactManifestation` when no `HistoricalState` is materialized
 
-Use `narrowerFacet` / `broaderFacet` for artifact-facet structure, and `hasAbstractFacet` when you want a direct discoverability link back to the governing `AbstractArtifact`.
+Use the explicit structural relations `hasHistoricalState`, `hasManifestation`, `hasLocatedFile`, and `hasWorkingLocatedFile` for artifact/facet structure.
 
 ## Mesh Structure
 
@@ -90,7 +90,7 @@ Current path conventions:
 
 ## Role Classes
 
-These are "Mesh role" classes over `DigitalArtifact` facets, not separate artifact species:
+These are artifact-level mesh role classes, not members of the facet lattice:
 
 - `PayloadArtifact`
 - `KnopMetadata`
@@ -100,20 +100,20 @@ These are "Mesh role" classes over `DigitalArtifact` facets, not separate artifa
 
 Important consequence:
 
-- a role may be carried by an `AbstractArtifact`, an `ArtifactManifestation`, or a `LocatedFile`
-- support artifacts can have artifact structure without needing their own `Knop`
+- a role classifies a `DigitalArtifact`
+- a support artifact can still have its own historical states, manifestations, and located files because those hang off the `DigitalArtifact`, not off the role class and not off a separate `Knop`
 
 ## Historical And Working Model
 
 - `HistoricalState` is the only explicit state class in the current core.
-- `latestHistoricalState` is a convenience pointer from `AbstractArtifact`.
+- `latestHistoricalState` is a convenience pointer from `DigitalArtifact`.
 - `hasWorkingLocatedFile` is the sparse working-surface hook.
 - `locatedFileForState` is an optional shortcut that should agree with `hasManifestation / hasLocatedFile`.
 
 ## Other Important Vocabulary
 
-- `RdfDocument` is a content-kind class that can apply at multiple artifact-facet levels.
-- `DigitalArtifactFacet` is the common superclass for `AbstractArtifact`, `HistoricalState`, `ArtifactManifestation`, and `LocatedFile`.
+- `RdfDocument` is an orthogonal content-kind classification that may be applied selectively to a `DigitalArtifact` or to a specific `DigitalArtifactFacet`.
+- `DigitalArtifactFacet` is the common superclass for `HistoricalState`, `ArtifactManifestation`, and `LocatedFile`.
 - `ResourcePage` is a `LocatedFile` subclass for the human-facing HTML resource pages that should accompany every `SemanticFlowResource`
 - `Nomen` is the thin mesh-relative naming class associated with a Semantic Flow identifier.
 - `hasNomen` links a `Knop` to its `Nomen`.
@@ -130,6 +130,7 @@ These are not part of the current core surface:
 - `WorkingState`
 - `CurrentState`
 - `ArtifactState`
+- `AbstractArtifact`
 - `AbstractFile`
 - `FileExpression`
 - `payloadSlug`

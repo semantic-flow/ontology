@@ -73,11 +73,11 @@
       }
     },
     {
-      "@id": "AbstractArtifactHistoryShape",
+      "@id": "DigitalArtifactHistoryShape",
       "@type": "sh:NodeShape",
-      "rdfs:label": "AbstractArtifact historical and working surface",
-      "rdfs:comment": "AbstractArtifacts may point directly to historical states and at most one working LocatedFile.",
-      "sh:targetClass": "sflo:AbstractArtifact",
+      "rdfs:label": "DigitalArtifact historical and working surface",
+      "rdfs:comment": "DigitalArtifacts may point directly to historical states and at most one working LocatedFile.",
+      "sh:targetClass": "sflo:DigitalArtifact",
       "sh:property": [
         {
           "sh:path": "sflo:hasHistoricalState",
@@ -100,7 +100,7 @@
           "sh:nodeKind": "sh:IRI",
           "sh:class": "sflo:LocatedFile",
           "sh:severity": "sh:Violation",
-          "sh:message": "An AbstractArtifact may have at most one sflo:hasWorkingLocatedFile, and it must be an IRI typed sflo:LocatedFile."
+          "sh:message": "A DigitalArtifact may have at most one sflo:hasWorkingLocatedFile, and it must be an IRI typed sflo:LocatedFile."
         }
       ]
     },
@@ -108,11 +108,11 @@
       "@id": "LatestHistoricalStateIsMemberShape",
       "@type": "sh:NodeShape",
       "rdfs:label": "latestHistoricalState must be among hasHistoricalState",
-      "rdfs:comment": "If latestHistoricalState is asserted, it must also be asserted as a hasHistoricalState of the same AbstractArtifact.",
-      "sh:targetClass": "sflo:AbstractArtifact",
+      "rdfs:comment": "If latestHistoricalState is asserted, it must also be asserted as a hasHistoricalState of the same DigitalArtifact.",
+      "sh:targetClass": "sflo:DigitalArtifact",
       "sh:sparql": {
         "@type": "sh:SPARQLConstraint",
-        "sh:message": "If an AbstractArtifact has sflo:latestHistoricalState, that value MUST also appear among sflo:hasHistoricalState values.",
+        "sh:message": "If a DigitalArtifact has sflo:latestHistoricalState, that value MUST also appear among sflo:hasHistoricalState values.",
         "sh:severity": "sh:Violation",
         "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology>\nSELECT $this WHERE {\n  $this sflo:latestHistoricalState ?s .\n  FILTER NOT EXISTS { $this sflo:hasHistoricalState ?s }\n}"
       }
@@ -312,7 +312,7 @@
       "@type": "sh:NodeShape",
       "rdfs:label": "preferredPayloadFileSlug",
       "rdfs:comment": "Validates sflo:preferredPayloadFileSlug token constraints (filename stem preference).",
-      "sh:targetClass": "sflo:AbstractArtifact",
+      "sh:targetClass": "sflo:PayloadArtifact",
       "sh:property": [
         {
           "sh:path": "sflo:preferredPayloadFileSlug",
