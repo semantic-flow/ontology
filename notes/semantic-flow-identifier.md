@@ -10,10 +10,10 @@ created: 1773890727274
 
 ## Definition
 
-A `Semantic Flow identifier` is a public IRI minted in the context of a `SemanticMesh` from:
+A `Semantic Flow identifier` is a public IRI formed in the context of a `SemanticMesh` from:
 
 - the mesh's `meshBase`
-- a `Nomen`'s `designatorPath`
+- a `Knop`'s `designatorPath`
 
 That public IRI denotes the referent.
 
@@ -21,48 +21,41 @@ That public IRI denotes the referent.
 
 A Semantic Flow identifier is the thing people cite, dereference, and use in RDF statements about the referent.
 
-It is the public-facing identifier in the model, while the paired `Nomen` and `Knop` provide supporting structure around it.
+It is the public-facing identifier in the model, while its associated `Knop` provides supporting structure around it.
 
 ## Formation
 
 In the current core model:
 
-- a `Nomen` carries a mesh-relative `designatorPath`
+- a `Knop` carries a mesh-relative `designatorPath`
 - a `SemanticMesh` carries a `meshBase`
 - the Semantic Flow identifier is formed from `meshBase + designatorPath`
 
 Example:
 
 - `meshBase`: `https://example.org/`
-- `Nomen.designatorPath`: `alice/bio`
+- `Knop.designatorPath`: `alice/bio`
 - Semantic Flow identifier: `https://example.org/alice/bio`
 
 ## Related Concepts
 
 The Semantic Flow identifier is not the same thing as its paired support resources:
 
-- `Nomen`
-  - the thin mesh-relative naming resource
-  - conventionally exposed at `D/_nomen`
-  - carries `designatorPath` and optional `designates`
 - `Knop`
   - the mesh-managed support object
   - conventionally exposed at `D/_knop`
-  - carries payload, metadata, inventory, and other support structure
+  - carries `designatorPath`, payload, metadata, inventory, and other support structure
 
-Each Semantic Flow identifier is associated one-to-one with:
-
-- one `Nomen`
-- one `Knop`
+Each Semantic Flow identifier is associated one-to-one with one `Knop`.
 
 ## What It Is Not
 
 - It is not just any IRI.
-- It is not the same thing as a `Nomen`.
 - It is not the same thing as a `Knop`.
 - It is not just a raw string path; the modeled path value is `designatorPath`.
+- It is not just a designator; the designator is the mesh-local path form, while the Semantic Flow identifier is the full IRI.
 
-In prose, `designator` can be used as shorthand for the mesh-relative naming form, but the ontology-level node is `Nomen` and the modeled value is `designatorPath`.
+In prose, `designator` can be used as shorthand for the mesh-relative naming form, and the modeled value is `Knop.designatorPath`.
 
 ## Dereferencing
 

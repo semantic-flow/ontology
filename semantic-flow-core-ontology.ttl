@@ -221,7 +221,7 @@
 
 <SemanticFlowResource> a rdfs:Class ;
   rdfs:label "Semantic Flow resource" ;
-  rdfs:comment "A constituent of a SemanticMesh modeled using Semantic Flow conventions (SemanticMesh, Nomen, Knop, and mesh-hosted artifacts such as payload, metadata, and inventory)." .
+  rdfs:comment "A constituent of a SemanticMesh modeled using Semantic Flow conventions (SemanticMesh, Knop, and mesh-hosted artifacts such as payload, metadata, and inventory)." .
 
 #################################################################
 # Semantic Meshes
@@ -239,13 +239,8 @@
   rdfs:comment "A mesh's canonical BASE (publish location). Represented as a URI literal to avoid asserting anything about the denoted thing." .
 
 #################################################################
-# Nomina + Knops + payload artifacts
+# Knops + payload artifacts
 #################################################################
-
-<Nomen> a rdfs:Class ;
-  rdfs:subClassOf <SemanticFlowResource> ;
-  rdfs:label "Nomen" ;
-  rdfs:comment "A thin mesh-managed naming resource associated one-to-one with a Semantic Flow identifier. By convention, the Nomen for `D/` is exposed at `D/_nomen/` in hierarchy-backed serializations." .
 
 <hasKnop> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;
@@ -255,27 +250,15 @@
   rdfs:comment "Associates a SemanticMesh with a Knop that participates in its Semantic Flow surface. This is a semantic membership relation, not a filesystem directory listing, and can apply to meshes that exist only in memory."@en .
 
 <designatorPath> a owl:DatatypeProperty ;
-  rdfs:domain <Nomen> ;
+  rdfs:domain <Knop> ;
   rdfs:range xsd:string ;
   rdfs:label "designator path" ;
-  rdfs:comment "Relative mesh designator path for the Nomen's associated Semantic Flow identifier, interpreted relative to the mesh base. Use no leading slash. The empty string denotes the mesh root designator. A trailing slash MAY be included to explicitly designate a slash-terminates IRI." .
-
-<designates> a owl:ObjectProperty ;
-  rdfs:domain <Nomen> ;
-  rdfs:range rdfs:Resource ;
-  rdfs:label "designates" ;
-  rdfs:comment "Optional asserted referent for the Nomen's associated Semantic Flow identifier. If absent, the Nomen may be anchored only via ReferenceLinks or other support data." .
+  rdfs:comment "Relative mesh designator path for the Knop's associated Semantic Flow identifier, interpreted relative to the containing mesh's meshBase. Use no leading slash. The empty string denotes the mesh root designator. A trailing slash MAY be included if a mesh intentionally models a slash-terminated identifier IRI." .
 
 <Knop> a rdfs:Class ;
   rdfs:subClassOf <SemanticFlowResource>, <ArtifactContainer> ;
   rdfs:label "Knop" ;
-  rdfs:comment "A mesh-managed support object associated one-to-one with a Semantic Flow identifier through a corresponding Nomen. A Knop may host a primary payload artifact plus supporting artifacts." .
-
-<hasNomen> a owl:ObjectProperty ;
-  rdfs:domain <Knop> ;
-  rdfs:range <Nomen> ;
-  rdfs:label "has nomen" ;
-  rdfs:comment "Associates a Knop with the Nomen that carries the mesh-relative naming semantics for the same Semantic Flow identifier." .
+  rdfs:comment "A mesh-managed support object and naming anchor associated one-to-one with a Semantic Flow identifier. A Knop carries the mesh-relative designatorPath from which that identifier IRI is formed in mesh context, and may host a primary payload artifact plus supporting artifacts." .
 
 <PayloadArtifact> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact>, <SemanticFlowResource> ;

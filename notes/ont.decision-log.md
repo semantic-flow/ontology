@@ -8,6 +8,18 @@ created: 1773896763313
 
 ## Decisions
 
+### 2026-03-21: Adopt a Knop-only naming model
+
+- Decision: Remove `Nomen`, `hasNomen`, `_nomen`, and `designates` from the active core. Each `Knop` carries exactly one `designatorPath`, and a Semantic Flow identifier is the public IRI formed from `meshBase + Knop.designatorPath`.
+- Why:
+  - this avoids keeping a separate naming-handle layer when the active model only needs one resource-side handle
+  - it makes `Knop` the single active naming anchor, support object, and operational handle
+  - it keeps rebasing/composability by preserving `designatorPath` as a mesh-relative value rather than a globally unique identifier
+- Notes:
+  - this supersedes the 2026-03-18 thin-`Nomen` decision
+  - explicit referent linkage via `designates` is dropped from the active core for now
+  - in hierarchy-backed serializations, `D/_knop` remains the active support-resource convention and no `_nomen` handle is part of the active model
+
 ### 2026-03-18: Use `SemanticMesh` as the core mesh concept
 
 - Decision: The core mesh class is `SemanticMesh`, understood as a namespace region together with its supporting resources, conventionally exposed via `_mesh` in hierarchy-backed serializations.
@@ -24,6 +36,7 @@ created: 1773896763313
   - it preserves composability: changing `meshBase` can mint different public IRIs while reusing the same `Nomen` plus `Knop` structure
   - it keeps `Knop` focused on payload/support hosting and mesh management
 - Notes:
+  - superseded on 2026-03-21 by the Knop-only naming model
   - in hierarchy-backed serializations, `D/_nomen` denotes the `Nomen` and `D/_knop` denotes the `Knop`
   - `designator` is prose shorthand only; the modeled value is `Nomen.designatorPath`
 
@@ -34,6 +47,7 @@ created: 1773896763313
   - slashless canonical identifiers are easier to use consistently in Turtle, SPARQL, and examples
   - the identifier should stay distinct from the delivery URL of a static-host resource page
 - Notes:
+  - the formation detail was superseded on 2026-03-21; the active model now uses `meshBase + Knop.designatorPath`
   - hierarchy-backed pages may still be served from folders with `index.html`
   - on static hosts such as GitHub Pages, a trailing-slash URL caused by folder serving is treated as a delivery artifact, not as the canonical identifier
   - generated resource pages should emit canonical links and may use `history.replaceState(...)` to restore the slashless canonical URL in the browser

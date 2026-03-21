@@ -58,18 +58,18 @@
       }
     },
     {
-      "@id": "NomenPathShape",
+      "@id": "KnopDesignatorPathShape",
       "@type": "sh:NodeShape",
-      "rdfs:label": "Nomen designatorPath",
-      "rdfs:comment": "Each Nomen must declare exactly one mesh-relative designatorPath.",
-      "sh:targetClass": "sflo:Nomen",
+      "rdfs:label": "Knop designatorPath",
+      "rdfs:comment": "Each Knop must declare exactly one mesh-relative designatorPath.",
+      "sh:targetClass": "sflo:Knop",
       "sh:property": {
         "sh:path": "sflo:designatorPath",
         "sh:minCount": 1,
         "sh:maxCount": 1,
         "sh:datatype": "xsd:string",
         "sh:severity": "sh:Violation",
-        "sh:message": "A Nomen MUST declare exactly one sflo:designatorPath (xsd:string)."
+        "sh:message": "A Knop MUST declare exactly one sflo:designatorPath (xsd:string)."
       }
     },
     {
@@ -234,22 +234,6 @@
       }
     },
     {
-      "@id": "KnopHasNomenShape",
-      "@type": "sh:NodeShape",
-      "rdfs:label": "Knop nomen link",
-      "rdfs:comment": "Each Knop must point to exactly one Nomen for the same Semantic Flow identifier.",
-      "sh:targetClass": "sflo:Knop",
-      "sh:property": {
-        "sh:path": "sflo:hasNomen",
-        "sh:minCount": 1,
-        "sh:maxCount": 1,
-        "sh:nodeKind": "sh:IRI",
-        "sh:class": "sflo:Nomen",
-        "sh:severity": "sh:Violation",
-        "sh:message": "A Knop MUST have exactly one sflo:hasNomen value typed sflo:Nomen."
-      }
-    },
-    {
       "@id": "KnopSlotsShape",
       "@type": "sh:NodeShape",
       "rdfs:label": "Knop slots",
@@ -340,19 +324,6 @@
         "sh:message": "sflo:preferredPayloadFileSlug SHOULD NOT be 'index' or 'index.html' (index.html is reserved for ResourcePage files).",
         "sh:severity": "sh:Warning",
         "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology>\nSELECT $this WHERE {\n  $this sflo:preferredPayloadFileSlug ?s .\n  BIND(LCASE(STR(?s)) AS ?lc)\n  FILTER(?lc = \"index\" || ?lc = \"index.html\")\n}"
-      }
-    },
-    {
-      "@id": "NomenDesignatesShape",
-      "@type": "sh:NodeShape",
-      "rdfs:label": "Nomen designates cardinality",
-      "rdfs:comment": "If asserted, designates should be single-valued on a Nomen.",
-      "sh:targetClass": "sflo:Nomen",
-      "sh:property": {
-        "sh:path": "sflo:designates",
-        "sh:maxCount": 1,
-        "sh:severity": "sh:Info",
-        "sh:message": "If present, a Nomen SHOULD have at most one sflo:designates value."
       }
     }
   ]

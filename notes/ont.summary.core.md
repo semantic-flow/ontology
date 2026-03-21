@@ -16,32 +16,29 @@ Use it to stay aligned with the live core vocabulary and to avoid reintroducing 
 
 - A `SemanticMesh` is a namespace region together with its supporting resources, typically overlaid onto a file tree or filesystem region.
 - A public Semantic Flow identifier IRI like `D` denotes the referent.
-- A `Nomen` is the thin mesh-relative naming resource for a Semantic Flow identifier.
-  - `D/_nomen` denotes the `Nomen` associated with that identifier in hierarchy-backed serializations.
-- A `Knop` is the mesh-managed support object linked to that same identifier through its `Nomen`.
+- A `Knop` is the mesh-managed support object and naming anchor for a Semantic Flow identifier.
   - `D/_knop` denotes the mesh-managed `Knop` associated with that identifier.
+- A `Knop` carries a mesh-relative `designatorPath` from which the public identifier IRI is formed in mesh context.
 - Not every file in a host hierarchy is part of the mesh. Only explicitly integrated mesh resources are.
 
-## Nomen And IRIs
+## Designator Paths And IRIs
 
 Current terminology in these notes:
 
 - `IRI` means any IRI.
-- A `Nomen` is the thin mesh-relative naming resource for a Semantic Flow identifier.
-- `designatorPath` is the mesh-relative path-like naming value carried by a `Nomen`.
-- A `Semantic Flow identifier` is a special kind of IRI: an IRI formed in mesh context from a mesh base plus a `Nomen`'s `designatorPath`, and associated one-to-one with both a `Nomen` and a `Knop`.
-- In prose, `designator` is just shorthand for a `Nomen`'s `designatorPath`, not a separate ontology class or first-class core node.
+- `designatorPath` is the mesh-relative path-like naming value carried by a `Knop`.
+- A `Semantic Flow identifier` is a special kind of IRI: an IRI formed in mesh context from a mesh base plus a `Knop`'s `designatorPath`.
+- In prose, `designator` is just shorthand for a `Knop`'s `designatorPath`, not a separate ontology class or first-class core node.
 
 Examples:
 
-- Nomen designatorPath: `alice/bio`
+- Knop designatorPath: `alice/bio`
 - Semantic Flow identifier/IRI: `https://example.org/alice/bio`
-- corresponding Nomen IRI: `https://example.org/alice/bio/_nomen`
 - corresponding Knop IRI: `https://example.org/alice/bio/_knop`
 
-Use `designatorPath` when you mean the modeled mesh-relative naming value on a `Nomen`.
+Use `designatorPath` when you mean the modeled mesh-relative naming value on a `Knop`.
 Use `designator` only as informal prose shorthand for that value.
-Use `Semantic Flow identifier` when you mean the full IRI minted from a mesh base plus a `Nomen`'s `designatorPath` and paired one-to-one with a `Nomen` and a `Knop`.
+Use `Semantic Flow identifier` when you mean the full IRI formed from a mesh base plus a `Knop`'s `designatorPath`.
 
 ### Canonical URLs On Static Hosts
 
@@ -77,14 +74,13 @@ Use the explicit structural relations `hasHistoricalState`, `hasManifestation`, 
 ## Mesh Structure
 
 - `SemanticMesh` has `Knop`s and mesh-level support resources.
-- `Knop` has exactly one associated `Nomen`.
+- `Knop` has exactly one `designatorPath`.
 - `Knop` has support resources and may have one primary payload resource.
 - The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
 
 Current path conventions:
 
 - `_mesh` denotes the mesh surface
-- `D/_nomen` denotes the Nomen associated with identifier `D`
 - `D/_knop` denotes the Knop associated with identifier `D`
 - historical material lives under `D/_knop/_history`
 
@@ -115,17 +111,14 @@ Important consequence:
 - `RdfDocument` is an orthogonal content-kind classification that may be applied selectively to a `DigitalArtifact` or to a specific `DigitalArtifactFacet`.
 - `DigitalArtifactFacet` is the common superclass for `HistoricalState`, `ArtifactManifestation`, and `LocatedFile`.
 - `ResourcePage` is a `LocatedFile` subclass for the human-facing HTML resource pages that should accompany every `SemanticFlowResource`
-- `Nomen` is the thin mesh-relative naming class associated with a Semantic Flow identifier.
-- `hasNomen` links a `Knop` to its `Nomen`.
-- `designatorPath` is the mesh-relative path-like naming value carried by a `Nomen`.
-- `designates` is an optional explicit link from a `Nomen` to the referent of its associated Semantic Flow identifier.
+- `designatorPath` is the mesh-relative path-like naming value carried by a `Knop`.
 - `preferredPayloadFileSlug` is the mutable filename preference.
 
 ## Things To Not Reintroduce
 
 These are not part of the current core surface:
 
-- the old heavier `Nomen` model that duplicated Knop responsibilities
+- a separate naming-handle layer distinct from `Knop`
 - `ArtifactFlow`
 - `WorkingState`
 - `CurrentState`
