@@ -26,10 +26,6 @@ workspace:
             fsPath: .
             name: ontology
             selfContained: true
-        -
-            fsPath: .
-            selfContained: true
-            name: ontology
     journal:
         dailyDomain: daily
         name: journal
