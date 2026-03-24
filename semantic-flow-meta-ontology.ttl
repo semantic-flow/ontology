@@ -1,0 +1,143 @@
+@base <https://semantic-flow.github.io/semantic-flow-meta-ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix schema: <https://schema.org/> .
+@prefix sflo: <https://semantic-flow.github.io/semantic-flow-ontology/> .
+
+<> a owl:Ontology ;
+  dcterms:title "Semantic Flow Meta Ontology" ;
+  dcterms:description "The Semantic Flow Meta ontology defines provenance and collaboration vocabulary for Semantic Flow resources and jobs, including provenance contexts, delegation chains, and agent-role assignments." ;
+  dcterms:creator <https://djradon.github.io/ns/djradon> ;
+  owl:versionInfo "0.1.0-draft" ;
+  owl:imports <https://semantic-flow.github.io/semantic-flow-ontology/> ;
+  vann:preferredNamespacePrefix "sfmeta" ;
+  vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-meta-ontology/> .
+
+#################################################################
+#################################################################
+# Provenance context
+#################################################################
+#################################################################
+
+<ProvenanceContext> a rdfs:Class ;
+  rdfs:subClassOf prov:Entity ;
+  rdfs:label "Provenance context" ;
+  rdfs:comment "A relator that captures submission or execution provenance for a Semantic Flow activity or resource, including primary responsibility, delegation chains, and collaborative agent roles." .
+
+<ProvenanceTemplate> a rdfs:Class ;
+  rdfs:label "Provenance template" ;
+  rdfs:comment "A reusable template for constructing ProvenanceContext instances." .
+
+<DelegationChain> a rdfs:Class ;
+  rdfs:label "Delegation chain" ;
+  rdfs:comment "An ordered collection of delegation steps showing how authority or responsibility flowed across agents." .
+
+<DelegationStep> a rdfs:Class ;
+  rdfs:subClassOf prov:Delegation ;
+  rdfs:label "Delegation step" ;
+  rdfs:comment "A single delegation step, typically identifying an acting agent and, when appropriate, an agent on whose behalf the action was taken." .
+
+<AgentRoleCollection> a rdfs:Class ;
+  rdfs:label "Agent role collection" ;
+  rdfs:comment "A collection of agent-role assignments for a collaborative activity or resource." .
+
+<AgentRole> a rdfs:Class ;
+  rdfs:subClassOf prov:Association ;
+  rdfs:label "Agent role" ;
+  rdfs:comment "A relator describing the role played by an agent in a collaborative activity or resource context." .
+
+<RoleType> a rdfs:Class ;
+  rdfs:label "Role type" ;
+  rdfs:comment "A controlled vocabulary of role types that agents may play in Semantic Flow work." .
+
+#################################################################
+# Role types
+#################################################################
+
+<RoleType/DataExtraction> a <RoleType> ;
+  rdfs:label "data extraction" ;
+  rdfs:comment "Responsible for extracting or gathering data." .
+
+<RoleType/QualityAssurance> a <RoleType> ;
+  rdfs:label "quality assurance" ;
+  rdfs:comment "Responsible for validation and quality assurance." .
+
+<RoleType/FinalApproval> a <RoleType> ;
+  rdfs:label "final approval" ;
+  rdfs:comment "Responsible for final review and approval." .
+
+<RoleType/Coordination> a <RoleType> ;
+  rdfs:label "coordination" ;
+  rdfs:comment "Responsible for coordinating between other agents." .
+
+#################################################################
+# Provenance properties
+#################################################################
+
+<forActivity> a owl:ObjectProperty ;
+  rdfs:domain <ProvenanceContext> ;
+  rdfs:range prov:Activity ;
+  rdfs:label "for activity" ;
+  rdfs:comment "Links a ProvenanceContext to the activity it describes." .
+
+<forResource> a owl:ObjectProperty ;
+  rdfs:domain <ProvenanceContext> ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "for resource" ;
+  rdfs:comment "Links a ProvenanceContext to a resource it describes." .
+
+<primaryAgent> a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:wasAttributedTo ;
+  rdfs:domain <ProvenanceContext> ;
+  rdfs:range prov:Agent ;
+  rdfs:label "primary agent" ;
+  rdfs:comment "Identifies the primary responsible agent for a ProvenanceContext." .
+
+<delegationChain> a owl:ObjectProperty ;
+  rdfs:domain <ProvenanceContext> ;
+  rdfs:range <DelegationChain> ;
+  rdfs:label "delegation chain" ;
+  rdfs:comment "Links a ProvenanceContext to a DelegationChain." .
+
+<agentRoles> a owl:ObjectProperty ;
+  rdfs:domain <ProvenanceContext> ;
+  rdfs:range <AgentRoleCollection> ;
+  rdfs:label "agent roles" ;
+  rdfs:comment "Links a ProvenanceContext to a collection of agent-role assignments." .
+
+<hasStep> a owl:ObjectProperty ;
+  rdfs:domain <DelegationChain> ;
+  rdfs:range <DelegationStep> ;
+  rdfs:label "has step" ;
+  rdfs:comment "Associates a DelegationChain with one of its DelegationSteps." .
+
+<stepOrder> a owl:DatatypeProperty ;
+  rdfs:domain <DelegationStep> ;
+  rdfs:range xsd:integer ;
+  rdfs:label "step order" ;
+  rdfs:comment "The order of a DelegationStep within a DelegationChain." .
+
+<hasAgentRole> a owl:ObjectProperty ;
+  rdfs:domain <AgentRoleCollection> ;
+  rdfs:range <AgentRole> ;
+  rdfs:label "has agent role" ;
+  rdfs:comment "Associates an AgentRoleCollection with one of its AgentRole assignments." .
+
+<roleType> a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:hadRole ;
+  rdfs:domain <AgentRole> ;
+  rdfs:range <RoleType> ;
+  rdfs:label "role type" ;
+  rdfs:comment "Assigns a RoleType to an AgentRole." .
+
+<triggeredByActivity> a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:wasInformedBy ;
+  rdfs:domain prov:Activity ;
+  rdfs:range prov:Activity ;
+  rdfs:label "triggered by activity" ;
+  rdfs:comment "Links an automatic or derivative activity to the activity that triggered it." .

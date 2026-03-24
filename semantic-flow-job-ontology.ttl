@@ -1,0 +1,397 @@
+@base <https://semantic-flow.github.io/semantic-flow-job-ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix schema: <https://schema.org/> .
+@prefix sflo: <https://semantic-flow.github.io/semantic-flow-ontology/> .
+@prefix sfmeta: <https://semantic-flow.github.io/semantic-flow-meta-ontology/> .
+
+<> a owl:Ontology ;
+  dcterms:title "Semantic Flow Job Ontology" ;
+  dcterms:description "The Semantic Flow Job ontology defines public Semantic Flow API vocabulary for jobs, targets, progress, results, errors, and job events." ;
+  dcterms:creator <https://djradon.github.io/ns/djradon> ;
+  owl:versionInfo "0.1.0-draft" ;
+  owl:imports <https://semantic-flow.github.io/semantic-flow-ontology/>, <https://semantic-flow.github.io/semantic-flow-meta-ontology/> ;
+  vann:preferredNamespacePrefix "sfjob" ;
+  vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-job-ontology/> .
+
+#################################################################
+#################################################################
+# Core job model
+#################################################################
+#################################################################
+
+<Job> a rdfs:Class ;
+  rdfs:subClassOf prov:Activity, schema:Action ;
+  rdfs:label "Job" ;
+  rdfs:comment "A durable Semantic Flow API execution resource representing submitted work such as mesh creation, knop creation, reference-link addition, integration, versioning, validation, generation, or high-level weave orchestration." .
+
+<JobKind> a rdfs:Class ;
+  rdfs:label "Job kind" ;
+  rdfs:comment "A controlled vocabulary of Semantic Flow job kinds." .
+
+<JobStatus> a rdfs:Class ;
+  rdfs:label "Job status" ;
+  rdfs:comment "A controlled vocabulary of durable job lifecycle states." .
+
+<JobTarget> a rdfs:Class ;
+  rdfs:label "Job target" ;
+  rdfs:comment "A Semantic Flow-scoped target selector for a Job. Targets are expressed in mesh/domain terms such as meshBase, mesh handle identity, and designatorPath rather than host filesystem paths." .
+
+<JobProgress> a rdfs:Class ;
+  rdfs:label "Job progress" ;
+  rdfs:comment "A progress snapshot for a running Job." .
+
+<JobResult> a rdfs:Class ;
+  rdfs:label "Job result" ;
+  rdfs:comment "A structured result summary for a successfully completed Job." .
+
+<JobError> a rdfs:Class ;
+  rdfs:label "Job error" ;
+  rdfs:comment "A structured error summary attached to a failed Job." .
+
+#################################################################
+# Job kinds
+#################################################################
+
+<JobKind/MeshCreate> a <JobKind> ;
+  rdfs:label "mesh create" ;
+  rdfs:comment "Create a new SemanticMesh." .
+
+<JobKind/KnopCreate> a <JobKind> ;
+  rdfs:label "knop create" ;
+  rdfs:comment "Create a new Knop and its initial mesh-managed support resources." .
+
+<JobKind/KnopAddReference> a <JobKind> ;
+  rdfs:label "knop add reference" ;
+  rdfs:comment "Add a ReferenceLink to a targeted Knop or other targeted Semantic Flow resource." .
+
+<JobKind/Integrate> a <JobKind> ;
+  rdfs:label "integrate" ;
+  rdfs:comment "Integrate candidate resources into a mesh-managed Semantic Flow surface." .
+
+<JobKind/Version> a <JobKind> ;
+  rdfs:label "version" ;
+  rdfs:comment "Materialize new historical states for changed managed artifacts." .
+
+<JobKind/Validate> a <JobKind> ;
+  rdfs:label "validate" ;
+  rdfs:comment "Validate targeted Semantic Flow resources or generated outputs." .
+
+<JobKind/Generate> a <JobKind> ;
+  rdfs:label "generate" ;
+  rdfs:comment "Generate or refresh derived outputs such as resource pages, reports, or other managed artifacts." .
+
+<JobKind/Weave> a <JobKind> ;
+  rdfs:label "weave" ;
+  rdfs:comment "A high-level orchestration job that may integrate, version, validate, and generate over a selected scope." .
+
+#################################################################
+# Job statuses
+#################################################################
+
+<JobStatus/Accepted> a <JobStatus> ;
+  rdfs:label "accepted" ;
+  rdfs:comment "The Job has been accepted for execution but has not yet started running." .
+
+<JobStatus/Running> a <JobStatus> ;
+  rdfs:label "running" ;
+  rdfs:comment "The Job is currently executing." .
+
+<JobStatus/Succeeded> a <JobStatus> ;
+  rdfs:label "succeeded" ;
+  rdfs:comment "The Job completed successfully." .
+
+<JobStatus/Failed> a <JobStatus> ;
+  rdfs:label "failed" ;
+  rdfs:comment "The Job terminated unsuccessfully." .
+
+<JobStatus/Cancelled> a <JobStatus> ;
+  rdfs:label "cancelled" ;
+  rdfs:comment "The Job was cancelled before completion." .
+
+#################################################################
+# Core job properties
+#################################################################
+
+<hasJobKind> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range <JobKind> ;
+  rdfs:label "has job kind" ;
+  rdfs:comment "Associates a Job with its JobKind." .
+
+<hasJobStatus> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range <JobStatus> ;
+  rdfs:label "has job status" ;
+  rdfs:comment "Associates a Job with its current durable lifecycle status." .
+
+<submittedAt> a owl:DatatypeProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range xsd:dateTimeStamp ;
+  rdfs:label "submitted at" ;
+  rdfs:comment "Timestamp at which the Job was submitted or accepted for execution." .
+
+<submittedBy> a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:wasAssociatedWith ;
+  rdfs:domain <Job> ;
+  rdfs:range prov:Agent ;
+  rdfs:label "submitted by" ;
+  rdfs:comment "If present, identifies the submitting Agent for a Job." .
+
+<submittedByLiteral> a owl:DatatypeProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range xsd:string ;
+  rdfs:label "submitted by literal" ;
+  rdfs:comment "Fallback submitter text for a Job when no stable Agent resource is available." .
+
+<hasProvenanceContext> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range sfmeta:ProvenanceContext ;
+  rdfs:label "has provenance context" ;
+  rdfs:comment "Links a Job to a richer provenance context resource, such as one describing delegation chains, agent roles, or collaborative execution context." .
+
+<startedAt> a owl:DatatypeProperty ;
+  rdfs:subPropertyOf prov:startedAtTime ;
+  rdfs:domain <Job> ;
+  rdfs:range xsd:dateTimeStamp ;
+  rdfs:label "started at" ;
+  rdfs:comment "Timestamp at which the Job began execution." .
+
+<finishedAt> a owl:DatatypeProperty ;
+  rdfs:subPropertyOf prov:endedAtTime ;
+  rdfs:domain <Job> ;
+  rdfs:range xsd:dateTimeStamp ;
+  rdfs:label "finished at" ;
+  rdfs:comment "Timestamp at which the Job reached a terminal state." .
+
+<hasTarget> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range <JobTarget> ;
+  rdfs:label "has target" ;
+  rdfs:comment "Associates a Job with its Semantic Flow-scoped target selector." .
+
+<hasProgress> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range <JobProgress> ;
+  rdfs:label "has progress" ;
+  rdfs:comment "Associates a Job with its latest known JobProgress snapshot." .
+
+<hasResult> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range <JobResult> ;
+  rdfs:label "has result" ;
+  rdfs:comment "Associates a succeeded Job with a JobResult summary." .
+
+<hasError> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range <JobError> ;
+  rdfs:label "has error" ;
+  rdfs:comment "Associates a failed Job with a structured JobError summary." .
+
+<hasEventStream> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "has event stream" ;
+  rdfs:comment "Links a Job to a public event-stream resource that may emit JobEvent instances. The concrete transport is defined by an API binding, not by this ontology." .
+
+#################################################################
+# Target properties
+#################################################################
+
+<targetMesh> a owl:ObjectProperty ;
+  rdfs:domain <JobTarget> ;
+  rdfs:range sflo:SemanticMesh ;
+  rdfs:label "target mesh" ;
+  rdfs:comment "If present, identifies the targeted SemanticMesh resource itself, conventionally the mesh handle resolved as `_mesh` against a meshBase." .
+
+<targetMeshBase> a owl:DatatypeProperty ;
+  rdfs:domain <JobTarget> ;
+  rdfs:range xsd:anyURI ;
+  rdfs:label "target mesh base" ;
+  rdfs:comment "If present, identifies the canonical base IRI used to form Semantic Flow identifiers within the targeted mesh." .
+
+<targetDesignatorPath> a owl:DatatypeProperty ;
+  rdfs:domain <JobTarget> ;
+  rdfs:range xsd:string ;
+  rdfs:label "target designator path" ;
+  rdfs:comment "A mesh-relative designatorPath identifying a targeted Knop or resource scope in Semantic Flow terms." .
+
+<targetRecursive> a owl:DatatypeProperty ;
+  rdfs:domain <JobTarget> ;
+  rdfs:range xsd:boolean ;
+  rdfs:label "target recursive" ;
+  rdfs:comment "If true, the Job target should be interpreted recursively over the selected scope." .
+
+<targetPattern> a owl:DatatypeProperty ;
+  rdfs:domain <JobTarget> ;
+  rdfs:range xsd:string ;
+  rdfs:label "target pattern" ;
+  rdfs:comment "An implementation-neutral pattern or selector expression further constraining a JobTarget." .
+
+#################################################################
+# Progress properties
+#################################################################
+
+<progressPhase> a owl:DatatypeProperty ;
+  rdfs:domain <JobProgress> ;
+  rdfs:range xsd:string ;
+  rdfs:label "progress phase" ;
+  rdfs:comment "A coarse phase label for Job progress, such as scanning, integrating, validating, or generating." .
+
+<progressMessage> a owl:DatatypeProperty ;
+  rdfs:domain <JobProgress> ;
+  rdfs:range xsd:string ;
+  rdfs:label "progress message" ;
+  rdfs:comment "A human-readable status message associated with a JobProgress snapshot." .
+
+<progressPercent> a owl:DatatypeProperty ;
+  rdfs:domain <JobProgress> ;
+  rdfs:range xsd:decimal ;
+  rdfs:label "progress percent" ;
+  rdfs:comment "An optional percentage estimate between 0 and 100 inclusive." .
+
+#################################################################
+# Result properties
+#################################################################
+
+<createdResource> a owl:ObjectProperty ;
+  rdfs:domain <JobResult> ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "created resource" ;
+  rdfs:comment "Identifies a resource created by a Job." .
+
+<updatedResource> a owl:ObjectProperty ;
+  rdfs:domain <JobResult> ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "updated resource" ;
+  rdfs:comment "Identifies a resource updated by a Job." .
+
+<reportResource> a owl:ObjectProperty ;
+  rdfs:domain <JobResult> ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "report resource" ;
+  rdfs:comment "Identifies a report resource emitted by a Job, such as a validation report." .
+
+<outputResource> a owl:ObjectProperty ;
+  rdfs:domain <JobResult> ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "output resource" ;
+  rdfs:comment "Identifies an output resource emitted by a Job." .
+
+#################################################################
+# Error properties
+#################################################################
+
+<problemType> a owl:DatatypeProperty ;
+  rdfs:domain <JobError> ;
+  rdfs:range xsd:anyURI ;
+  rdfs:label "problem type" ;
+  rdfs:comment "A URI identifying the problem type associated with a JobError." .
+
+<httpStatusCode> a owl:DatatypeProperty ;
+  rdfs:domain <JobError> ;
+  rdfs:range xsd:integer ;
+  rdfs:label "HTTP status code" ;
+  rdfs:comment "An HTTP status code associated with a JobError when the Job is conveyed over an HTTP binding." .
+
+<problemTitle> a owl:DatatypeProperty ;
+  rdfs:domain <JobError> ;
+  rdfs:range xsd:string ;
+  rdfs:label "problem title" ;
+  rdfs:comment "A short summary title for a JobError." .
+
+<problemDetail> a owl:DatatypeProperty ;
+  rdfs:domain <JobError> ;
+  rdfs:range xsd:string ;
+  rdfs:label "problem detail" ;
+  rdfs:comment "A longer explanatory detail string for a JobError." .
+
+#################################################################
+#################################################################
+# Job events
+#################################################################
+#################################################################
+
+<JobEvent> a rdfs:Class ;
+  rdfs:subClassOf prov:InstantaneousEvent, schema:Event ;
+  rdfs:label "Job event" ;
+  rdfs:comment "A public event resource emitted about a Job." .
+
+<JobAcceptedEvent> a rdfs:Class ;
+  rdfs:subClassOf <JobEvent> ;
+  rdfs:label "Job accepted event" ;
+  rdfs:comment "An event indicating that a Job has been accepted." .
+
+<JobProgressEvent> a rdfs:Class ;
+  rdfs:subClassOf <JobEvent> ;
+  rdfs:label "Job progress event" ;
+  rdfs:comment "An event conveying Job progress." .
+
+<JobSucceededEvent> a rdfs:Class ;
+  rdfs:subClassOf <JobEvent> ;
+  rdfs:label "Job succeeded event" ;
+  rdfs:comment "An event indicating that a Job has completed successfully." .
+
+<JobFailedEvent> a rdfs:Class ;
+  rdfs:subClassOf <JobEvent> ;
+  rdfs:label "Job failed event" ;
+  rdfs:comment "An event indicating that a Job has failed." .
+
+<JobCancelledEvent> a rdfs:Class ;
+  rdfs:subClassOf <JobEvent> ;
+  rdfs:label "Job cancelled event" ;
+  rdfs:comment "An event indicating that a Job has been cancelled." .
+
+<ResourceChangedEvent> a rdfs:Class ;
+  rdfs:subClassOf <JobEvent> ;
+  rdfs:label "Resource changed event" ;
+  rdfs:comment "An event indicating that one or more Semantic Flow resources changed during or after Job execution." .
+
+<hasEvent> a owl:ObjectProperty ;
+  rdfs:domain <Job> ;
+  rdfs:range <JobEvent> ;
+  owl:inverseOf <eventForJob> ;
+  rdfs:label "has event" ;
+  rdfs:comment "Associates a Job with one of its emitted JobEvents." .
+
+<eventForJob> a owl:ObjectProperty ;
+  rdfs:domain <JobEvent> ;
+  rdfs:range <Job> ;
+  owl:inverseOf <hasEvent> ;
+  rdfs:label "event for job" ;
+  rdfs:comment "Identifies the Job that a JobEvent is about." .
+
+<emittedAt> a owl:DatatypeProperty ;
+  rdfs:domain <JobEvent> ;
+  rdfs:range xsd:dateTimeStamp ;
+  rdfs:label "emitted at" ;
+  rdfs:comment "Timestamp at which a JobEvent was emitted." .
+
+<eventStatus> a owl:ObjectProperty ;
+  rdfs:domain <JobEvent> ;
+  rdfs:range <JobStatus> ;
+  rdfs:label "event status" ;
+  rdfs:comment "If present, the JobStatus being reported by a JobEvent." .
+
+<eventProgress> a owl:ObjectProperty ;
+  rdfs:domain <JobEvent> ;
+  rdfs:range <JobProgress> ;
+  rdfs:label "event progress" ;
+  rdfs:comment "If present, the JobProgress snapshot conveyed by a JobEvent." .
+
+<changedResource> a owl:ObjectProperty ;
+  rdfs:domain <ResourceChangedEvent> ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "changed resource" ;
+  rdfs:comment "A resource reported as changed by a ResourceChangedEvent." .
+
+<changedDesignatorPath> a owl:DatatypeProperty ;
+  rdfs:domain <ResourceChangedEvent> ;
+  rdfs:range xsd:string ;
+  rdfs:label "changed designator path" ;
+  rdfs:comment "A mesh-relative designatorPath reported as changed by a ResourceChangedEvent." .
