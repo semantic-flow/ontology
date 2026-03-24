@@ -21,6 +21,8 @@ The primary current use case is figuring out a `Knop`'s config.
 
 Secondarily, the same modernization should probably support mesh-level config, especially where a mesh provides defaults or broader output-generation policy.
 
+There is also a distinct but closely related `IntegrationConfig` aspect: configuration that governs how raw candidate artifacts are recognized, claimed, mapped into `Knop`s, and initialized during `weave integrate`.
+
 ## Working Goal
 
 Define a modern config model that fits the current core ontology and can answer:
@@ -29,6 +31,7 @@ Define a modern config model that fits the current core ontology and can answer:
 - what config applies to this `SemanticMesh`?
 - what explicitly authored config artifacts exist?
 - what effective config was computed for debugging or runtime inspection?
+- what integration config applies when a candidate artifact is being considered for mesh integration?
 
 ## Current Direction
 
@@ -45,6 +48,11 @@ The likely shape is:
 - named reusable config should be modeled as a `DigitalArtifact`, probably also an `RdfDocument`
 - config can attach directly to a `SemanticMesh`, `Knop`, and possibly a `DigitalArtifact`
 - computed effective config remains explicitly non-authoritative runtime/debugging data
+
+It may be useful to distinguish at least two major config families:
+
+- presentation or publication-oriented config, especially for ResourcePage generation
+- integration-oriented config, governing how external or in-tree artifacts become mesh-managed `Knop`s and `DigitalArtifact`s
 
 This means the old “config as Flow/Distribution” framing should be dropped rather than translated literally. The current core decision is that `DigitalArtifact` is the governing artifact-level resource and that `AbstractArtifact`, `ArtifactFlow`, `ArtifactState`, `WorkingState`, and `CurrentState` are not part of the active core.
 
@@ -81,6 +89,7 @@ That likely includes:
 - config attached to `Knop`
 - possibly config attached to `DigitalArtifact`
 - template-mapping vocabulary, likely still ResourcePage-focused in this pass
+- integration-config vocabulary, whether in the same ontology or a closely related module
 - effective-config vocabulary
 
 This task should not automatically assume that integration-template modeling belongs in exactly the same ontology pass.
@@ -95,6 +104,21 @@ It also should not automatically conflate:
 
 There is a related but somewhat different need: describing how candidate `DigitalArtifact`s should be integrated into `Knop`s.
 
+It may be better to speak not only of "integration templates" but of an `IntegrationConfig` family, because the concern is broader than a single reusable template object. This area seems to include both:
+
+- reusable integration patterns or templates
+- resolved effective config used by `weave integrate` for a specific target, scope, or candidate
+
+The March 14 `weave integrate` discussion points toward config that can drive:
+
+- scoped subtree or target resolution
+- candidate matching and claim rules
+- designator-path derivation
+- knop creation rules
+- metadata-template assignment
+- handling of external working sources like paths outside the tree or URLs
+- history vs no-history behavior at integration time
+
 That probably wants vocabulary for things like:
 
 - integration pattern or template
@@ -106,7 +130,7 @@ That probably wants vocabulary for things like:
 
 This feels adjacent to config, but not obviously identical to output-template mapping.
 
-Current instinct: treat integration-template design as a linked second phase unless a very small shared core falls out naturally.
+Current instinct: treat `IntegrationConfig` as a real part of the config modernization problem, even if the full integration-pattern vocabulary lands as a linked second phase.
 
 ## Open Questions
 
@@ -114,6 +138,8 @@ Current instinct: treat integration-template design as a linked second phase unl
 - Should mesh config and knop config share the same generic attachment property plus subproperties, or have more explicit separate properties from the start?
 - Should output-template mapping live under config, or should it become its own small ontology/module?
 - Should the mapping vocabulary stay explicitly ResourcePage-oriented for now, with broader “output” terms deferred until there is a second concrete output family?
+- Should `IntegrationConfig` be a named subclass or role of `Config`, or just a recognized concern addressed by particular config properties?
+- Should integration-oriented config live in the same ontology as presentation config, or in a closely related companion module?
 - Should config targeting stay regex-oriented, or move toward more semantic selectors aligned with current API targeting ideas?
 - How much of integration-template modeling belongs in this task versus a follow-up task?
 
@@ -122,6 +148,7 @@ Current instinct: treat integration-template design as a linked second phase unl
 - a modern `semantic-flow-config-ontology.ttl`
 - a migration note from old config terms to new terms
 - one worked example showing mesh config plus knop config
+- one worked example showing enough `IntegrationConfig` to drive a realistic `weave integrate`
 - optional follow-up task for integration-template modeling
 
 ## Suggested Plan
@@ -130,4 +157,4 @@ Current instinct: treat integration-template design as a linked second phase unl
 2. Decide whether named config should be modeled as a role on `DigitalArtifact` or as a parallel class hierarchy.
 3. Define the minimal modern config ontology for `SemanticMesh`, `Knop`, and `DigitalArtifact`.
 4. Decide whether template vocabulary should stay ResourcePage-specific, and rename `InnerTemplate` / `OuterTemplate` accordingly.
-5. Decide whether integration templates are in scope for this pass or spun into a second task.
+5. Decide the minimal shape of `IntegrationConfig`, even if the richer integration-pattern vocabulary becomes a second task.
