@@ -76,7 +76,7 @@ Use the explicit structural relations `hasHistoricalState`, `hasManifestation`, 
 - `SemanticMesh` has `Knop`s and mesh-level support resources.
 - `Knop` has exactly one `designatorPath`.
 - `Knop` has support resources and may have one primary payload resource.
-- The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
+- The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasReferentMetadata`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
 
 Current path conventions:
 
@@ -84,11 +84,12 @@ Current path conventions:
 - `D/_knop` denotes the Knop associated with identifier `D`
 - historical material lives under `D/_knop/_history`
 
-## Role Classes
+## Artifact-Level Mesh Types
 
-These are artifact-level mesh role classes, not members of the facet lattice:
+These are artifact-level classes used for primary and support artifacts in the mesh surface, not members of the facet lattice:
 
 - `PayloadArtifact`
+- `ReferentMetadata`
 - `KnopMetadata`
 - `KnopInventory`
 - `MeshMetadata`
@@ -96,8 +97,8 @@ These are artifact-level mesh role classes, not members of the facet lattice:
 
 Important consequence:
 
-- a role classifies a `DigitalArtifact`
-- a support artifact can still have its own historical states, manifestations, and located files because those hang off the `DigitalArtifact`, not off the role class and not off a separate `Knop`
+- each of these classes classifies a `DigitalArtifact`
+- a support artifact can still have its own historical states, manifestations, and located files because those hang off the `DigitalArtifact`, not off a separate artifact-lattice branch and not off a separate `Knop`
 
 ## Historical And Working Model
 

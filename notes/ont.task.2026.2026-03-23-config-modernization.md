@@ -46,7 +46,8 @@ The likely shape is:
 
 - `Config` remains an RDF configuration resource
 - named reusable config should be modeled as a `DigitalArtifact`, probably also an `RdfDocument`
-- config can attach directly to a `SemanticMesh`, `Knop`, and possibly a `DigitalArtifact`
+- config can attach directly to a `SemanticMesh` and `Knop`
+- if config needs its own persistent identity, history, or reuse, the config resource itself may be modeled as a `DigitalArtifact`
 - computed effective config remains explicitly non-authoritative runtime/debugging data
 
 It may be useful to distinguish at least two major config families:
@@ -54,13 +55,13 @@ It may be useful to distinguish at least two major config families:
 - presentation or publication-oriented config, especially for ResourcePage generation
 - integration-oriented config, governing how external or in-tree artifacts become mesh-managed `Knop`s and `DigitalArtifact`s
 
-This means the old “config as Flow/Distribution” framing should be dropped rather than translated literally. The current core decision is that `DigitalArtifact` is the governing artifact-level resource and that `AbstractArtifact`, `ArtifactFlow`, `ArtifactState`, `WorkingState`, and `CurrentState` are not part of the active core.
+This means the old “config as Flow/Distribution” framing should be dropped rather than translated literally. The [current core decision](ont.decision-log.md) is that `DigitalArtifact` is the governing artifact-level resource and that the old named classes `AbstractArtifact`, `ArtifactFlow`, `ArtifactState`, `WorkingState`, and `CurrentState` are not part of the active core as such. Their concerns are now handled more explicitly through the current structure: `ArtifactState` is roughly replaced by `HistoricalState`, `CurrentState` is approximated operationally by `latestHistoricalState`, and `WorkingState` is replaced by `hasWorkingLocatedFile`.
 
 ## Likely Term Mapping
 
 - `sflo:Mesh` -> `sflo:SemanticMesh`
 - `sflo:AbstractArtifact` -> `sflo:DigitalArtifact`
-- `hasAbstractArtifactConfig` -> likely `hasDigitalArtifactConfig`
+- `hasAbstractArtifactConfig` -> probably drop rather than rename directly, unless a narrower non-`Knop` attachment point reemerges
 - `TemplateMappingSet` -> maybe `ResourcePageTemplateMappingSet`, unless the scope truly broadens beyond ResourcePages
 - `TemplateMapping` -> maybe `ResourcePageTemplateMapping`, unless the scope truly broadens beyond ResourcePages
 - `InnerTemplate` -> probably `InnerResourcePageTemplate` or `ResourcePageBodyTemplate`
@@ -69,7 +70,7 @@ This means the old “config as Flow/Distribution” framing should be dropped r
 
 ## ResourcePage vs Browser Layer
 
-Recent ResourcePage discussion suggests a useful boundary for the config work:
+[Recent ResourcePage discussion](../../sflo-dendron-notes/sflo.conv.2026.2026-03-13_2159-chrome-on-static-sites-codex-2.md) suggests a useful boundary for the config work:
 
 - woven `index.html` pages should remain real standalone HTML with meaningful content
 - shared chrome like global nav/search/header can be emitted separately and loaded by the browser
@@ -87,7 +88,6 @@ That likely includes:
 
 - config attached to `SemanticMesh`
 - config attached to `Knop`
-- possibly config attached to `DigitalArtifact`
 - template-mapping vocabulary, likely still ResourcePage-focused in this pass
 - integration-config vocabulary, whether in the same ontology or a closely related module
 - effective-config vocabulary
@@ -109,7 +109,7 @@ It may be better to speak not only of "integration templates" but of an `Integra
 - reusable integration patterns or templates
 - resolved effective config used by `weave integrate` for a specific target, scope, or candidate
 
-The March 14 `weave integrate` discussion points toward config that can drive:
+The [March 14 `weave integrate` discussion](../../sflo-dendron-notes/sflo.conv.2026.2026-03-14_0958-existing-solutions-that-could-be-extended-with-weave-codex.md) points toward config that can drive:
 
 - scoped subtree or target resolution
 - candidate matching and claim rules
@@ -136,6 +136,7 @@ Current instinct: treat `IntegrationConfig` as a real part of the config moderni
 
 - Should `Config` itself be a first-class class distinct from `DigitalArtifact`, with named reusable configs modeled as a config role on `DigitalArtifact`?
 - Should mesh config and knop config share the same generic attachment property plus subproperties, or have more explicit separate properties from the start?
+- If some artifact-directed policy still feels necessary, should it attach to the `Knop` as publication or integration policy rather than directly to a `DigitalArtifact`?
 - Should output-template mapping live under config, or should it become its own small ontology/module?
 - Should the mapping vocabulary stay explicitly ResourcePage-oriented for now, with broader “output” terms deferred until there is a second concrete output family?
 - Should `IntegrationConfig` be a named subclass or role of `Config`, or just a recognized concern addressed by particular config properties?
@@ -155,6 +156,6 @@ Current instinct: treat `IntegrationConfig` as a real part of the config moderni
 
 1. Audit old config terms and mark each as keep, rename, replace, or drop.
 2. Decide whether named config should be modeled as a role on `DigitalArtifact` or as a parallel class hierarchy.
-3. Define the minimal modern config ontology for `SemanticMesh`, `Knop`, and `DigitalArtifact`.
+3. Define the minimal modern config ontology for `SemanticMesh` and `Knop`, while deciding how named reusable config artifacts relate to `DigitalArtifact`.
 4. Decide whether template vocabulary should stay ResourcePage-specific, and rename `InnerTemplate` / `OuterTemplate` accordingly.
 5. Decide the minimal shape of `IntegrationConfig`, even if the richer integration-pattern vocabulary becomes a second task.

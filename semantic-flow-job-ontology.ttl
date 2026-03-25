@@ -8,14 +8,14 @@
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix schema: <https://schema.org/> .
 @prefix sflo: <https://semantic-flow.github.io/semantic-flow-ontology/> .
-@prefix sfmeta: <https://semantic-flow.github.io/semantic-flow-meta-ontology/> .
+@prefix sfprov: <https://semantic-flow.github.io/semantic-flow-prov-ontology/> .
 
 <> a owl:Ontology ;
   dcterms:title "Semantic Flow Job Ontology" ;
   dcterms:description "The Semantic Flow Job ontology defines public Semantic Flow API vocabulary for jobs, targets, progress, results, errors, and job events." ;
   dcterms:creator <https://djradon.github.io/ns/djradon> ;
   owl:versionInfo "0.1.0-draft" ;
-  owl:imports <https://semantic-flow.github.io/semantic-flow-ontology/>, <https://semantic-flow.github.io/semantic-flow-meta-ontology/> ;
+  owl:imports <https://semantic-flow.github.io/semantic-flow-ontology/>, <https://semantic-flow.github.io/semantic-flow-prov-ontology/> ;
   vann:preferredNamespacePrefix "sfjob" ;
   vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-job-ontology/> .
 
@@ -149,10 +149,10 @@
   rdfs:label "submitted by literal" ;
   rdfs:comment "Fallback submitter text for a Job when no stable Agent resource is available." .
 
-<hasProvenanceContext> a owl:ObjectProperty ;
+<hasJobProvenanceContext> a owl:ObjectProperty ;
   rdfs:domain <Job> ;
-  rdfs:range sfmeta:ProvenanceContext ;
-  rdfs:label "has provenance context" ;
+  rdfs:range sfprov:ProvenanceContext ;
+  rdfs:label "has job provenance context" ;
   rdfs:comment "Links a Job to a richer provenance context resource, such as one describing delegation chains, agent roles, or collaborative execution context." .
 
 <startedAt> a owl:DatatypeProperty ;

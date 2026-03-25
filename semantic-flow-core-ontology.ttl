@@ -15,7 +15,7 @@
   dcterms:description "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes and their resources." ;
   dcterms:creator <https://djradon.github.io/ns/djradon> ;
   owl:versionInfo "0.0.1" ;
-  owl:versionIRI <https://semantic-flow.github.io/semantic-flow-ontology/_knops/_payload/_working/sflo.ttl/sflo.ttl> ;
+  owl:versionIRI <https://semantic-flow.github.io/ontology/_knops/_payload/_working/sflo.ttl/sflo.ttl> ;
   vann:preferredNamespacePrefix "sflo" ;
   vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-ontology/> .
 
@@ -263,7 +263,7 @@
 <PayloadArtifact> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact>, <SemanticFlowResource> ;
   rdfs:label "Payload artifact" ;
-  rdfs:comment "Role class applied to the primary DigitalArtifact hosted by a Knop." .
+  rdfs:comment "A DigitalArtifact used as the primary payload hosted by a Knop." .
 
 <hasPayloadArtifact> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;
@@ -280,18 +280,30 @@
 
 
 #################################################################
-# Metadata roles
+# Metadata artifacts
 #################################################################
+
+<ReferentMetadata> a rdfs:Class ;
+  rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
+  rdfs:label "Referent metadata" ;
+  rdfs:comment "A DigitalArtifact RdfDocument used as descriptive metadata about the resource denoted by a Knop's associated Semantic Flow identifier. Especially useful for non-digital referents, but it may also describe digital artifacts." .
 
 <KnopMetadata> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Knop metadata" ;
-  rdfs:comment "Role class applied to a DigitalArtifact that serves as metadata for a Knop." .
+  rdfs:comment "A DigitalArtifact RdfDocument used as metadata about a Knop as a mesh-managed support object." .
 
 <MeshMetadata> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Mesh metadata" ;
-  rdfs:comment "Role class applied to a DigitalArtifact that serves as metadata for a SemanticMesh." .
+  rdfs:comment "A DigitalArtifact RdfDocument used as metadata for a SemanticMesh." .
+
+<hasReferentMetadata> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:domain <Knop> ;
+  rdfs:range <ReferentMetadata> ;
+  rdfs:label "has referent metadata" ;
+  rdfs:comment "Links a Knop to a ReferentMetadata DigitalArtifact resource describing the resource denoted by that Knop's associated Semantic Flow identifier." .
 
 <hasKnopMetadata> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;
@@ -308,18 +320,18 @@
   rdfs:comment "Links a SemanticMesh to its primary MeshMetadata DigitalArtifact resource (if present)." .
 
 #################################################################
-# Inventory roles
+# Inventory artifacts
 #################################################################
 
 <MeshInventory> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Mesh inventory" ;
-  rdfs:comment "Role class applied to a DigitalArtifact that serves as inventory for a SemanticMesh." .
+  rdfs:comment "A DigitalArtifact RdfDocument used as inventory for a SemanticMesh." .
 
 <KnopInventory> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Knop inventory" ;
-  rdfs:comment "Role class applied to a DigitalArtifact that serves as inventory for a Knop." .
+  rdfs:comment "A DigitalArtifact RdfDocument used as inventory for a Knop." .
 
 <hasMeshInventory> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;

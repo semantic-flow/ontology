@@ -1,4 +1,4 @@
-@base <https://semantic-flow.github.io/semantic-flow-meta-ontology/> .
+@base <https://semantic-flow.github.io/semantic-flow-prov-ontology/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -6,17 +6,14 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix schema: <https://schema.org/> .
-@prefix sflo: <https://semantic-flow.github.io/semantic-flow-ontology/> .
 
 <> a owl:Ontology ;
-  dcterms:title "Semantic Flow Meta Ontology" ;
-  dcterms:description "The Semantic Flow Meta ontology defines provenance and collaboration vocabulary for Semantic Flow resources and jobs, including provenance contexts, delegation chains, and agent-role assignments." ;
+  dcterms:title "Semantic Flow Provenance Ontology" ;
+  dcterms:description "The Semantic Flow Meta ontology currently defines optional provenance vocabulary for Semantic Flow resources and jobs, including provenance contexts, delegation chains, and agent-role assignments. It intentionally stays narrow and does not try to define general metadata beyond provenance." ;
   dcterms:creator <https://djradon.github.io/ns/djradon> ;
   owl:versionInfo "0.1.0-draft" ;
-  owl:imports <https://semantic-flow.github.io/semantic-flow-ontology/> ;
-  vann:preferredNamespacePrefix "sfmeta" ;
-  vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-meta-ontology/> .
+  vann:preferredNamespacePrefix "sfprov" ;
+  vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-prov-ontology/> .
 
 #################################################################
 #################################################################
@@ -25,13 +22,8 @@
 #################################################################
 
 <ProvenanceContext> a rdfs:Class ;
-  rdfs:subClassOf prov:Entity ;
   rdfs:label "Provenance context" ;
-  rdfs:comment "A relator that captures submission or execution provenance for a Semantic Flow activity or resource, including primary responsibility, delegation chains, and collaborative agent roles." .
-
-<ProvenanceTemplate> a rdfs:Class ;
-  rdfs:label "Provenance template" ;
-  rdfs:comment "A reusable template for constructing ProvenanceContext instances." .
+  rdfs:comment "A relator-like structure that captures submission or execution provenance for a Semantic Flow activity or resource, including primary responsibility, delegation chains, and collaborative agent roles." .
 
 <DelegationChain> a rdfs:Class ;
   rdfs:label "Delegation chain" ;
@@ -92,7 +84,6 @@
   rdfs:comment "Links a ProvenanceContext to a resource it describes." .
 
 <primaryAgent> a owl:ObjectProperty ;
-  rdfs:subPropertyOf prov:wasAttributedTo ;
   rdfs:domain <ProvenanceContext> ;
   rdfs:range prov:Agent ;
   rdfs:label "primary agent" ;
