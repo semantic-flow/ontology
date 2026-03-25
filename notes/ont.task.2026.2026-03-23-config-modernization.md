@@ -2,7 +2,7 @@
 id: 0cm22gs24b5ufl01qdtw1fg
 title: 2026 03 23 Config Modernization
 desc: ''
-updated: 1774330976647
+updated: 1774411153356
 created: 1774330976647
 ---
 
@@ -19,9 +19,7 @@ The main mismatches are:
 
 The primary current use case is figuring out a `Knop`'s config.
 
-Secondarily, the same modernization should probably support mesh-level config, especially where a mesh provides defaults or broader output-generation policy.
-
-There is also a distinct but closely related `IntegrationConfig` aspect: configuration that governs how raw candidate artifacts are recognized, claimed, mapped into `Knop`s, and initialized during `weave integrate`.
+Secondarily, the same modernization should probably support mesh-level config, especially where a mesh provides both mesh-surface behavior and defaults for contained `Knop`s.
 
 ## Working Goal
 
@@ -31,7 +29,6 @@ Define a modern config model that fits the current core ontology and can answer:
 - what config applies to this `SemanticMesh`?
 - what explicitly authored config artifacts exist?
 - what effective config was computed for debugging or runtime inspection?
-- what integration config applies when a candidate artifact is being considered for mesh integration?
 
 ## Current Direction
 
@@ -44,28 +41,49 @@ The modernized config model should be grounded in current active classes:
 
 The likely shape is:
 
-- `Config` remains an RDF configuration resource
-- named reusable config should be modeled as a `DigitalArtifact`, probably also an `RdfDocument`
-- config can attach directly to a `SemanticMesh` and `Knop`
+- `Config` remains an RDF configuration resource and should probably be a first-class class distinct from `DigitalArtifact`
+- `ConfigFragment` may be useful as a smaller reusable unit for shared config pieces that are not themselves full `MeshConfig` or `KnopConfig` resources
+- named reusable config may also be modeled as a `DigitalArtifact`, probably also an `RdfDocument`
+- config should attach directly to a `SemanticMesh` and `Knop` via explicit mesh/knop config relations rather than a generic attachment property
+- a `SemanticMesh` should probably be able to carry both `MeshConfig` and `KnopConfigDefaults`, so mesh-surface behavior and defaults for contained `Knop`s do not collapse into one bucket
 - if config needs its own persistent identity, history, or reuse, the config resource itself may be modeled as a `DigitalArtifact`
 - computed effective config remains explicitly non-authoritative runtime/debugging data
 
 It may be useful to distinguish at least two major config families:
 
 - presentation or publication-oriented config, especially for ResourcePage generation
-- integration-oriented config, governing how external or in-tree artifacts become mesh-managed `Knop`s and `DigitalArtifact`s
+- integration-oriented config, which can live in the same ontology for now even though the richer integration-support modeling is deferred
 
 This means the old “config as Flow/Distribution” framing should be dropped rather than translated literally. The [current core decision](ont.decision-log.md) is that `DigitalArtifact` is the governing artifact-level resource and that the old named classes `AbstractArtifact`, `ArtifactFlow`, `ArtifactState`, `WorkingState`, and `CurrentState` are not part of the active core as such. Their concerns are now handled more explicitly through the current structure: `ArtifactState` is roughly replaced by `HistoricalState`, `CurrentState` is approximated operationally by `latestHistoricalState`, and `WorkingState` is replaced by `hasWorkingLocatedFile`.
+
+## Current Decisions
+
+- `Config` should probably remain a first-class class distinct from `DigitalArtifact`, even though some named reusable configs may also be modeled as `DigitalArtifact`s.
+- `ConfigFragment` seems worth keeping as a reusable building block for shared config pieces.
+- Mesh config and knop config should probably use explicit attachment relations such as `hasMeshConfig` / `meshConfigFor` and `hasKnopConfig` / `knopConfigFor`, rather than relying on a generic `hasConfig` / `configFor` pair as the main public pattern.
+- `MeshConfig` and `KnopConfig` should probably be the main concrete subclasses immediately rather than postponing that distinction to attachment properties alone.
+- `MeshConfig` and `KnopConfig` should probably stay separate, at least conventionally, even if some shared fragments can be reused across them.
+- The mesh should be the inheritance boundary for now. If you want different config inheritance semantics, declare a new mesh.
+- No direct artifact-directed policy attachment point seems necessary right now. The main exception is integration-oriented policy living on the mesh and providing guardrails for how candidate `DigitalArtifact`s get integrated into `Knop`s.
+- Output-template mapping should stay under config for now.
+- Template mapping should stay explicitly ResourcePage-oriented for now, and possibly permanently unless a second concrete output family emerges.
+- Named reusable config artifacts should probably be typed directly as config subclasses, while also being typed as `DigitalArtifact` / `RdfDocument` when they are persisted as authored artifacts.
+- Integration-oriented config can live in the same ontology as presentation config for now.
+- Inner/outer template terminology should probably stay, with names like `InnerResourcePageTemplate` and `OuterResourcePageTemplate`, rather than switching to body/shell terminology.
+- A `SemanticMesh` should probably be able to carry both `MeshConfig` and `KnopConfigDefaults`.
+- `MeshConfig` should describe mesh-surface behavior, such as whether to generate a ResourcePage for the mesh itself (for example `M/_mesh/index.html`).
+- `KnopConfigDefaults` should describe default behavior for contained `Knop`s, such as `createHistoricalStatesOnWeave` or whether to generate ResourcePages for those `Knop`s.
+- The old `LocalConfig` / `InheritableConfig` split should probably be replaced by mesh-scoped defaults plus explicit knop overrides.
 
 ## Likely Term Mapping
 
 - `sflo:Mesh` -> `sflo:SemanticMesh`
 - `sflo:AbstractArtifact` -> `sflo:DigitalArtifact`
-- `hasAbstractArtifactConfig` -> probably drop rather than rename directly, unless a narrower non-`Knop` attachment point reemerges
-- `TemplateMappingSet` -> maybe `ResourcePageTemplateMappingSet`, unless the scope truly broadens beyond ResourcePages
-- `TemplateMapping` -> maybe `ResourcePageTemplateMapping`, unless the scope truly broadens beyond ResourcePages
-- `InnerTemplate` -> probably `InnerResourcePageTemplate` or `ResourcePageBodyTemplate`
-- `OuterTemplate` -> probably `OuterResourcePageTemplate` or `ResourcePageShellTemplate`
+- `hasAbstractArtifactConfig` -> probably drop rather than rename directly
+- `TemplateMappingSet` -> probably `ResourcePageTemplateMappingSet`
+- `TemplateMapping` -> probably `ResourcePageTemplateMapping`
+- `InnerTemplate` -> probably `InnerResourcePageTemplate`
+- `OuterTemplate` -> probably `OuterResourcePageTemplate`
 - `mappingTargetSlugRegex` -> probably something closer to `mappingTargetDesignatorPathRegex`, or a broader selector term if regex-only targeting feels too narrow
 
 ## ResourcePage vs Browser Layer
@@ -87,75 +105,36 @@ This task should focus first on modernizing the configuration ontology for curre
 That likely includes:
 
 - config attached to `SemanticMesh`
+- knop-default config attached to `SemanticMesh`
 - config attached to `Knop`
 - template-mapping vocabulary, likely still ResourcePage-focused in this pass
-- integration-config vocabulary, whether in the same ontology or a closely related module
 - effective-config vocabulary
-
-This task should not automatically assume that integration-template modeling belongs in exactly the same ontology pass.
 
 It also should not automatically conflate:
 
 - ResourcePage composition rules
 - browser-layer chrome/navigation behavior
-- integration-template logic for mapping arbitrary artifacts into `Knop`s
+- detailed integration-support modeling for mapping arbitrary artifacts into `Knop`s
 
-## Integration Templates
-
-There is a related but somewhat different need: describing how candidate `DigitalArtifact`s should be integrated into `Knop`s.
-
-It may be better to speak not only of "integration templates" but of an `IntegrationConfig` family, because the concern is broader than a single reusable template object. This area seems to include both:
-
-- reusable integration patterns or templates
-- resolved effective config used by `weave integrate` for a specific target, scope, or candidate
-
-The [March 14 `weave integrate` discussion](../../sflo-dendron-notes/sflo.conv.2026.2026-03-14_0958-existing-solutions-that-could-be-extended-with-weave-codex.md) points toward config that can drive:
-
-- scoped subtree or target resolution
-- candidate matching and claim rules
-- designator-path derivation
-- knop creation rules
-- metadata-template assignment
-- handling of external working sources like paths outside the tree or URLs
-- history vs no-history behavior at integration time
-
-That probably wants vocabulary for things like:
-
-- integration pattern or template
-- target mesh or scope
-- candidate artifact selector
-- designator-path mapping
-- default metadata or reference behavior
-- optional generation or validation policy
-
-This feels adjacent to config, but not obviously identical to output-template mapping.
-
-Current instinct: treat `IntegrationConfig` as a real part of the config modernization problem, even if the full integration-pattern vocabulary lands as a linked second phase.
+Detailed integration-support modeling is now deferred to [ont.task.2026-03-24-integration-support.md](./ont.task.2026-03-24-integration-support.md).
 
 ## Open Questions
 
-- Should `Config` itself be a first-class class distinct from `DigitalArtifact`, with named reusable configs modeled as a config role on `DigitalArtifact`?
-- Should mesh config and knop config share the same generic attachment property plus subproperties, or have more explicit separate properties from the start?
-- If some artifact-directed policy still feels necessary, should it attach to the `Knop` as publication or integration policy rather than directly to a `DigitalArtifact`?
-- Should output-template mapping live under config, or should it become its own small ontology/module?
-- Should the mapping vocabulary stay explicitly ResourcePage-oriented for now, with broader “output” terms deferred until there is a second concrete output family?
-- Should `IntegrationConfig` be a named subclass or role of `Config`, or just a recognized concern addressed by particular config properties?
-- Should integration-oriented config live in the same ontology as presentation config, or in a closely related companion module?
-- Should config targeting stay regex-oriented, or move toward more semantic selectors aligned with current API targeting ideas?
-- How much of integration-template modeling belongs in this task versus a follow-up task?
+- Should a single persisted config artifact ever intentionally carry both `MeshConfig` and `KnopConfigDefaults` types, or should that be treated as a smell and split into separate artifacts?
+- Should `KnopConfigDefaults` be modeled as its own class, or as a constrained mesh-attached use of `KnopConfig`?
+- Which properties belong on `MeshConfig` versus `KnopConfigDefaults` as the config surface grows beyond `generateResourcePages` and similar first examples?
+- How much inheritance/merging semantics should be stated in ontology comments versus left entirely to application logic and examples?
 
 ## Candidate Deliverables
 
 - a modern `semantic-flow-config-ontology.ttl`
 - a migration note from old config terms to new terms
-- one worked example showing mesh config plus knop config
-- one worked example showing enough `IntegrationConfig` to drive a realistic `weave integrate`
-- optional follow-up task for integration-template modeling
+- one worked example showing mesh config, knop config defaults, and explicit knop override
 
 ## Suggested Plan
 
 1. Audit old config terms and mark each as keep, rename, replace, or drop.
-2. Decide whether named config should be modeled as a role on `DigitalArtifact` or as a parallel class hierarchy.
-3. Define the minimal modern config ontology for `SemanticMesh` and `Knop`, while deciding how named reusable config artifacts relate to `DigitalArtifact`.
-4. Decide whether template vocabulary should stay ResourcePage-specific, and rename `InnerTemplate` / `OuterTemplate` accordingly.
-5. Decide the minimal shape of `IntegrationConfig`, even if the richer integration-pattern vocabulary becomes a second task.
+2. Define `Config`, `ConfigFragment`, `MeshConfig`, `KnopConfigDefaults`, and `KnopConfig` as the main config classes, with explicit attachment relations.
+3. Define the minimal modern config ontology for `SemanticMesh` and `Knop`, while deciding how named reusable config artifacts relate to `DigitalArtifact` and how mesh-level defaults relate to explicit knop overrides.
+4. Keep template vocabulary ResourcePage-specific, and rename `InnerTemplate` / `OuterTemplate` to `InnerResourcePageTemplate` / `OuterResourcePageTemplate`.
+5. Keep integration-oriented config in the same ontology for now, but defer detailed integration-support modeling to [ont.task.2026-03-24-integration-support.md](./ont.task.2026-03-24-integration-support.md).
