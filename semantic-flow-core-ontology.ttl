@@ -34,9 +34,10 @@
   rdfs:label "Digital artifact" ;
   rdfs:comment "A digital artifact considered as the governing artifact-level resource across its states, manifestations, and retrievable files. In the current Semantic Flow model, payload, metadata, and inventory roles classify DigitalArtifacts directly." .
 
-<ArtifactContainer> a rdfs:Class ;
-  rdfs:label "Artifact container" ;
-  rdfs:comment "A resource that hosts/contains artifacts and other structural resources. Not itself required to be a DigitalArtifact." .
+<ArtifactHistory> a rdfs:Class ;
+  rdfs:subClassOf <SemanticFlowResource> ;
+  rdfs:label "Artifact history" ;
+  rdfs:comment "An explicit history-lineage resource for a DigitalArtifact. It groups published HistoricalStates, carries lineage-level operational metadata such as ordinals, and may have its own ResourcePage." .
 
 <DigitalArtifactFacet> a rdfs:Class ;
   rdfs:label "Digital artifact facet" ;
@@ -47,13 +48,13 @@
 #################################################################
 
 #################################################################
-# Core artifact model (DigitalArtifact / HistoricalState / ArtifactManifestation / LocatedFile)
+# Core artifact model (DigitalArtifact / ArtifactHistory / HistoricalState / ArtifactManifestation / LocatedFile)
 #################################################################
 
 <HistoricalState> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifactFacet> ;
   rdfs:label "Historical state" ;
-  rdfs:comment "An immutable snapshot facet for a DigitalArtifact." .
+  rdfs:comment "An immutable snapshot facet for a DigitalArtifact, normally organized within an ArtifactHistory." .
 
 <ArtifactManifestation> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifactFacet> ;
@@ -70,10 +71,24 @@
 #################################################################
 
 <hasHistoricalState> a owl:ObjectProperty ;
-  rdfs:domain <DigitalArtifact> ;
+  rdfs:domain <ArtifactHistory> ;
   rdfs:range <HistoricalState> ;
   rdfs:label "has historical state" ;
-  rdfs:comment "Relates a DigitalArtifact to a published HistoricalState." .
+  rdfs:comment "Relates an ArtifactHistory to one of its published HistoricalStates." .
+
+<hasArtifactHistory> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:domain <DigitalArtifact> ;
+  rdfs:range <ArtifactHistory> ;
+  rdfs:label "has artifact history" ;
+  rdfs:comment "Relates a DigitalArtifact to one of its explicit ArtifactHistory resources." .
+
+<currentArtifactHistory> a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:subPropertyOf <hasArtifactHistory> ;
+  rdfs:domain <DigitalArtifact> ;
+  rdfs:range <ArtifactHistory> ;
+  rdfs:label "current artifact history" ;
+  rdfs:comment "Convenience pointer from a DigitalArtifact to its current/default explicit ArtifactHistory. When explicit histories are in use, this is the normative target for subsequent weave/version operations." .
 
 <previousHistoricalState> a owl:ObjectProperty, owl:FunctionalProperty ;
   rdfs:subPropertyOf prov:wasRevisionOf ;
@@ -85,10 +100,28 @@
 <latestHistoricalState> a owl:ObjectProperty ;
   rdfs:subPropertyOf <hasHistoricalState> ;
   rdf:type owl:FunctionalProperty ;
-  rdfs:domain <DigitalArtifact> ;
+  rdfs:domain <ArtifactHistory> ;
   rdfs:range <HistoricalState> ;
   rdfs:label "latest historical state" ;
-  rdfs:comment "Operational metadata convenience pointer from a DigitalArtifact to its most recently published HistoricalState. MUST NOT be asserted into immutable historical snapshots/distributions." .
+  rdfs:comment "Operational metadata convenience pointer from an ArtifactHistory to its most recently published HistoricalState. MUST NOT be asserted into immutable historical snapshots/distributions." .
+
+<historyOrdinal> a owl:DatatypeProperty ;
+  rdfs:domain <ArtifactHistory> ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:label "history ordinal" ;
+  rdfs:comment "Machine-oriented ordinal for a numbered default ArtifactHistory resource such as '_history001'." .
+
+<nextHistoryOrdinal> a owl:DatatypeProperty ;
+  rdfs:domain <DigitalArtifact> ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:label "next history ordinal" ;
+  rdfs:comment "Next auto-issued ordinal for generated default ArtifactHistory resources such as '_history001'. When present, it SHOULD reflect the next unused historyOrdinal for this DigitalArtifact." .
+
+<nextStateOrdinal> a owl:DatatypeProperty ;
+  rdfs:domain <ArtifactHistory> ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:label "next state ordinal" ;
+  rdfs:comment "Next auto-issued ordinal for generated default HistoricalState resources such as '_s0001' within an ArtifactHistory." .
 
 <hasManifestation> a owl:ObjectProperty ;
   rdfs:range <ArtifactManifestation> ;
@@ -221,14 +254,14 @@
 
 <SemanticFlowResource> a rdfs:Class ;
   rdfs:label "Semantic Flow resource" ;
-  rdfs:comment "A constituent of a SemanticMesh modeled using Semantic Flow conventions (SemanticMesh, Knop, and mesh-hosted artifacts such as payload, metadata, and inventory)." .
+  rdfs:comment "A constituent of a SemanticMesh modeled using Semantic Flow conventions (SemanticMesh, Knop, ArtifactHistory, and mesh-hosted artifacts such as payload, metadata, and inventory)." .
 
 #################################################################
 # Semantic Meshes
 #################################################################
 
 <SemanticMesh> a rdfs:Class ;
-  rdfs:subClassOf <SemanticFlowResource>, <ArtifactContainer> ;
+  rdfs:subClassOf <SemanticFlowResource> ;
   rdfs:label "Semantic Mesh" ;
   rdfs:comment "A namespace region, conventionally exposed via a reserved _mesh/ handle and, in filesystem-backed serializations, represented by a filesystem region, that has Semantic Flow resources and other supporting resources." .
 
@@ -256,7 +289,7 @@
   rdfs:comment "Relative mesh designator path for the Knop's associated Semantic Flow identifier, interpreted relative to the containing mesh's meshBase. Use no leading slash. The empty string denotes the mesh root designator. A trailing slash MAY be included if a mesh intentionally models a slash-terminated identifier IRI." .
 
 <Knop> a rdfs:Class ;
-  rdfs:subClassOf <SemanticFlowResource>, <ArtifactContainer> ;
+  rdfs:subClassOf <SemanticFlowResource> ;
   rdfs:label "Knop" ;
   rdfs:comment "A mesh-managed support object and naming anchor associated one-to-one with a Semantic Flow identifier. A Knop carries the mesh-relative designatorPath from which that identifier IRI is formed in mesh context, and may host a primary payload artifact plus supporting artifacts." .
 

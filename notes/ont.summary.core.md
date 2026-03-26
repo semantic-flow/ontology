@@ -51,25 +51,28 @@ Use `Semantic Flow identifier` when you mean the full IRI formed from a mesh bas
 
 `DigitalArtifact` is the governing artifact-level class in the current model.
 
-`DigitalArtifactFacet` is the facet-side superclass for states, manifestations, and retrievable files.
+`ArtifactHistory` is the explicit lineage resource used when a mesh materializes one or more history streams for a `DigitalArtifact`.
 
-The main facet chain is:
+`DigitalArtifactFacet` is the facet-side superclass for states, manifestations, and retrievable files. `ArtifactHistory` is not a facet.
 
-`DigitalArtifact -> HistoricalState -> ArtifactManifestation -> LocatedFile`
+The main explicit history chain is:
+
+`DigitalArtifact -> ArtifactHistory -> HistoricalState -> ArtifactManifestation -> LocatedFile`
 
 Interpretation:
 
 - `DigitalArtifact`: the governing over-time artifact-level resource
-- `HistoricalState`: an immutable version representing the content of the artifact at a particular point
+- `ArtifactHistory`: an explicit lineage resource for a digital artifact's published states
+- `HistoricalState`: an immutable version representing the content of the artifact at a particular point within one `ArtifactHistory`
 - `ArtifactManifestation`: a concrete variant of the artifact or state whose bytes may be provided by one or more `LocatedFile`s
 - `LocatedFile`: retrievable bytes at some location
 
 Sparse cases are explicitly supported:
 
-- a `DigitalArtifact` may have a `hasWorkingLocatedFile` without materializing a working state
-- a `DigitalArtifact` may link directly to an `ArtifactManifestation` when no `HistoricalState` is materialized
+- a `DigitalArtifact` may have a `hasWorkingLocatedFile` without materializing an explicit history or working state
+- a `DigitalArtifact` may link directly to an `ArtifactManifestation` when no explicit `ArtifactHistory` / `HistoricalState` structure is materialized
 
-Use the explicit structural relations `hasHistoricalState`, `hasManifestation`, `hasLocatedFile`, and `hasWorkingLocatedFile` for artifact/facet structure.
+Use the explicit structural relations `hasArtifactHistory`, `hasHistoricalState`, `hasManifestation`, `hasLocatedFile`, and `hasWorkingLocatedFile` for artifact/facet structure.
 
 ## Mesh Structure
 
@@ -82,7 +85,8 @@ Current path conventions:
 
 - `_mesh` denotes the mesh surface
 - `D/_knop` denotes the Knop associated with identifier `D`
-- historical material lives under `D/_knop/_history`
+- explicit history resources live under `D/_historyNNN`
+- explicit historical states live under `D/_historyNNN/_sNNNN`
 
 ## Artifact-Level Mesh Types
 
@@ -102,17 +106,23 @@ Important consequence:
 
 ## Historical And Working Model
 
-- `HistoricalState` is the only explicit state class in the current core.
-- `latestHistoricalState` is a convenience pointer from `DigitalArtifact`.
+- `ArtifactHistory` is the explicit lineage resource when a mesh materializes history.
+- `HistoricalState` is the explicit state class within an `ArtifactHistory`.
+- `currentArtifactHistory` is the `DigitalArtifact`-level pointer to the active explicit history.
+- `latestHistoricalState` is a convenience pointer from `ArtifactHistory`.
+- `nextHistoryOrdinal` lives on `DigitalArtifact` for default generated history allocation.
+- `nextStateOrdinal` lives on `ArtifactHistory` for default generated state allocation.
 - `hasWorkingLocatedFile` is the sparse working-surface hook.
 - `locatedFileForState` is an optional shortcut that should agree with `hasManifestation / hasLocatedFile`.
 
 ## Other Important Vocabulary
 
 - `RdfDocument` is an orthogonal content-kind classification that may be applied selectively to a `DigitalArtifact` or to a specific `DigitalArtifactFacet`.
+- `ArtifactHistory` is an explicit lineage resource, not a `DigitalArtifactFacet`.
 - `DigitalArtifactFacet` is the common superclass for `HistoricalState`, `ArtifactManifestation`, and `LocatedFile`.
 - `ResourcePage` is a `LocatedFile` subclass for the human-facing HTML resource pages that should accompany every `SemanticFlowResource`
-- `designatorPath` is the mesh-relative path-like naming value carried by a `Knop`.
+- `designatorPath` is the mesh-relative path-like naming value carried by a `Knop`; it is not a generic path property for every `SemanticFlowResource`.
+- a `Semantic Flow identifier` is the public IRI formed from `meshBase + Knop.designatorPath`; support resources in the mesh may still have ordinary IRIs without thereby being Semantic Flow identifiers.
 - `preferredPayloadFileSlug` is the mutable filename preference.
 
 ## Things To Not Reintroduce
@@ -121,6 +131,7 @@ These are not part of the current core surface:
 
 - a separate naming-handle layer distinct from `Knop`
 - `ArtifactFlow`
+- `ArtifactContainer`
 - `WorkingState`
 - `CurrentState`
 - `ArtifactState`
@@ -137,4 +148,4 @@ Also do not assume:
 
 ## Example
 
-For a concrete sketch of the current model, see [use-cases.alice-bio.md](./use-cases.alice-bio.md).
+For a concrete sketch of the current model, see [ont.use-cases.alice-bio.md](./ont.use-cases.alice-bio.md).

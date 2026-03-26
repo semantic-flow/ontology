@@ -48,6 +48,10 @@ The Semantic Flow identifier is not the same thing as its paired support resourc
 
 Each Semantic Flow identifier is associated one-to-one with one `Knop`.
 
+The mesh may also contain many other IRIs for support resources such as mesh metadata, inventory, Knops, historical states, manifestations, located files, and resource pages.
+
+Those are ordinary IRIs for mesh-managed resources in the serialization surface. They are not Semantic Flow identifiers unless they are the public IRI formed from `meshBase + Knop.designatorPath`.
+
 ## What It Is Not
 
 - It is not just any IRI.

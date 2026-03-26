@@ -75,9 +75,74 @@
     {
       "@id": "DigitalArtifactHistoryShape",
       "@type": "sh:NodeShape",
-      "rdfs:label": "DigitalArtifact historical and working surface",
-      "rdfs:comment": "DigitalArtifacts may point directly to historical states and at most one working LocatedFile.",
+      "rdfs:label": "DigitalArtifact history and working surface",
+      "rdfs:comment": "DigitalArtifacts may point to explicit ArtifactHistory resources, may designate one current ArtifactHistory, may track the nextHistoryOrdinal for default history allocation, and may have at most one working LocatedFile.",
       "sh:targetClass": "sflo:DigitalArtifact",
+      "sh:property": [
+        {
+          "sh:path": "sflo:hasArtifactHistory",
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:ArtifactHistory",
+          "sh:severity": "sh:Info",
+          "sh:message": "If present, values of sflo:hasArtifactHistory must be IRIs typed sflo:ArtifactHistory."
+        },
+        {
+          "sh:path": "sflo:currentArtifactHistory",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:ArtifactHistory",
+          "sh:severity": "sh:Violation",
+          "sh:message": "If present, sflo:currentArtifactHistory must be a single IRI typed sflo:ArtifactHistory."
+        },
+        {
+          "sh:path": "sflo:nextHistoryOrdinal",
+          "sh:maxCount": 1,
+          "sh:datatype": "xsd:nonNegativeInteger",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, sflo:nextHistoryOrdinal SHOULD be a single xsd:nonNegativeInteger."
+        },
+        {
+          "sh:path": "sflo:hasWorkingLocatedFile",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:LocatedFile",
+          "sh:severity": "sh:Violation",
+          "sh:message": "A DigitalArtifact may have at most one sflo:hasWorkingLocatedFile, and it must be an IRI typed sflo:LocatedFile."
+        }
+      ]
+    },
+    {
+      "@id": "ArtifactHasCurrentHistoryShape",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "currentArtifactHistory should usually be present when histories exist",
+      "rdfs:comment": "If a DigitalArtifact explicitly tracks ArtifactHistory resources, it should usually identify one as the current/default history.",
+      "sh:targetClass": "sflo:DigitalArtifact",
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "If a DigitalArtifact has explicit sflo:hasArtifactHistory values, it SHOULD also identify one sflo:currentArtifactHistory.",
+        "sh:severity": "sh:Warning",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology>\nSELECT DISTINCT $this WHERE {\n  $this sflo:hasArtifactHistory ?h .\n  FILTER NOT EXISTS { $this sflo:currentArtifactHistory ?current }\n}"
+      }
+    },
+    {
+      "@id": "CurrentArtifactHistoryIsMemberShape",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "currentArtifactHistory must be among hasArtifactHistory",
+      "rdfs:comment": "If currentArtifactHistory is asserted, it must also be asserted as a hasArtifactHistory of the same DigitalArtifact.",
+      "sh:targetClass": "sflo:DigitalArtifact",
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "If a DigitalArtifact has sflo:currentArtifactHistory, that value MUST also appear among sflo:hasArtifactHistory values.",
+        "sh:severity": "sh:Violation",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology>\nSELECT $this WHERE {\n  $this sflo:currentArtifactHistory ?h .\n  FILTER NOT EXISTS { $this sflo:hasArtifactHistory ?h }\n}"
+      }
+    },
+    {
+      "@id": "ArtifactHistoryShape",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "ArtifactHistory structure",
+      "rdfs:comment": "ArtifactHistory resources may point to published HistoricalStates, designate one latest HistoricalState, and carry history-local ordinal metadata.",
+      "sh:targetClass": "sflo:ArtifactHistory",
       "sh:property": [
         {
           "sh:path": "sflo:hasHistoricalState",
@@ -95,12 +160,18 @@
           "sh:message": "If present, sflo:latestHistoricalState must be a single IRI typed sflo:HistoricalState."
         },
         {
-          "sh:path": "sflo:hasWorkingLocatedFile",
+          "sh:path": "sflo:historyOrdinal",
           "sh:maxCount": 1,
-          "sh:nodeKind": "sh:IRI",
-          "sh:class": "sflo:LocatedFile",
-          "sh:severity": "sh:Violation",
-          "sh:message": "A DigitalArtifact may have at most one sflo:hasWorkingLocatedFile, and it must be an IRI typed sflo:LocatedFile."
+          "sh:datatype": "xsd:nonNegativeInteger",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, sflo:historyOrdinal SHOULD be a single xsd:nonNegativeInteger."
+        },
+        {
+          "sh:path": "sflo:nextStateOrdinal",
+          "sh:maxCount": 1,
+          "sh:datatype": "xsd:nonNegativeInteger",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, sflo:nextStateOrdinal SHOULD be a single xsd:nonNegativeInteger."
         }
       ]
     },
@@ -108,11 +179,11 @@
       "@id": "LatestHistoricalStateIsMemberShape",
       "@type": "sh:NodeShape",
       "rdfs:label": "latestHistoricalState must be among hasHistoricalState",
-      "rdfs:comment": "If latestHistoricalState is asserted, it must also be asserted as a hasHistoricalState of the same DigitalArtifact.",
-      "sh:targetClass": "sflo:DigitalArtifact",
+      "rdfs:comment": "If latestHistoricalState is asserted, it must also be asserted as a hasHistoricalState of the same ArtifactHistory.",
+      "sh:targetClass": "sflo:ArtifactHistory",
       "sh:sparql": {
         "@type": "sh:SPARQLConstraint",
-        "sh:message": "If a DigitalArtifact has sflo:latestHistoricalState, that value MUST also appear among sflo:hasHistoricalState values.",
+        "sh:message": "If an ArtifactHistory has sflo:latestHistoricalState, that value MUST also appear among sflo:hasHistoricalState values.",
         "sh:severity": "sh:Violation",
         "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology>\nSELECT $this WHERE {\n  $this sflo:latestHistoricalState ?s .\n  FILTER NOT EXISTS { $this sflo:hasHistoricalState ?s }\n}"
       }

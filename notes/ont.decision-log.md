@@ -8,6 +8,34 @@ created: 1773896763313
 
 ## Decisions
 
+Superseded decisions are intentionally retained for traceability. When a decision is reversed or replaced, mark it explicitly rather than deleting it.
+
+### 2026-03-26: Introduce explicit `ArtifactHistory` and remove `ArtifactContainer`
+
+- Status: Active
+- Decision: Reintroduce a narrow explicit `ArtifactHistory` resource as the lineage handle for published artifact history, while keeping `ArtifactFlow` out of the active core. A `DigitalArtifact` relates to one or more histories through `hasArtifactHistory`, may identify the active one through functional `currentArtifactHistory`, and may track `nextHistoryOrdinal`. An `ArtifactHistory` owns `hasHistoricalState` and `latestHistoricalState`, may carry `historyOrdinal` and `nextStateOrdinal`, and is typed only as a `SemanticFlowResource`. Remove `ArtifactContainer` from the active core.
+- References: [[ont.task.2026.2026-03-26-ArtifactHistory]], [[sf.conv.2026.2026-03-25_1413-title-mesh-alice-bio-codex]]
+- Why:
+  - a history landing page should correspond to an explicit resource rather than an exceptional page with no paired resource
+  - once multiple histories exist, the current/default lineage must be identified explicitly rather than inferred indirectly from lineage-local latest states
+  - history allocation metadata belongs on the artifact/history pair, not in current-surface inventory
+  - `ArtifactContainer` was too vague and unused to justify keeping it in the active core
+- Notes:
+  - the default generated naming direction is `_historyNNN` for histories and `_sNNNN` for states
+  - history-level metadata remains in `KnopMetadata` for now; do not introduce a dedicated history metadata artifact in this pass
+  - this refines the older simplified artifact model by inserting `ArtifactHistory` between `DigitalArtifact` and `HistoricalState`
+
+### 2026-03-25: Distinguish mesh metadata and mesh inventory document roles
+
+- Status: Active
+- Decision: In hierarchy-backed serializations, `_mesh/_meta/meta.ttl` carries the mesh identity/description and may point to the mesh inventory with `hasMeshInventory`, while `_mesh/_inventory/inventory.ttl` is the self-contained current-surface map and may repeat both `hasMeshMetadata` and `hasMeshInventory`.
+- References: [[wd.task.2026.2026-03-25-mesh-alice-bio]], [[sf.conv.2026.2026-03-25_1413-title-mesh-alice-bio-codex]]
+- Why:
+  - mesh metadata and mesh inventory serve different document roles and should not be treated as interchangeable
+  - inventory benefits from being self-contained because it is the document most directly concerned with the currently present managed surface
+  - metadata should stay lighter and less repetitive while still pointing readers and tools toward the inventory document
+  - this asymmetry is intended as a reusable serialization convention, not just a one-off detail of the Alice Bio fixture
+
 ### 2026-03-21: Adopt a Knop-only naming model
 
 - Decision: Remove `Nomen`, `hasNomen`, `_nomen`, and `designates` from the active core. Each `Knop` carries exactly one `designatorPath`, and a Semantic Flow identifier is the public IRI formed from `meshBase + Knop.designatorPath`.
@@ -30,18 +58,19 @@ created: 1773896763313
 
 ### 2026-03-18: Reintroduce a thin `Nomen` and keep `Knop` as the paired support object
 
+- Status: Superseded on 2026-03-21 by the Knop-only naming model
 - Decision: Use a thin `Nomen` as the mesh-relative naming resource, keep `designatorPath` and optional `designates` on `Nomen`, and link each `Knop` to exactly one `Nomen` with `hasNomen`.
 - Why:
   - this keeps naming semantics separate from support/container semantics without reviving the older heavier `Nomen` model
   - it preserves composability: changing `meshBase` can mint different public IRIs while reusing the same `Nomen` plus `Knop` structure
   - it keeps `Knop` focused on payload/support hosting and mesh management
 - Notes:
-  - superseded on 2026-03-21 by the Knop-only naming model
   - in hierarchy-backed serializations, `D/_nomen` denotes the `Nomen` and `D/_knop` denotes the `Knop`
   - `designator` is prose shorthand only; the modeled value is `Nomen.designatorPath`
 
 ### 2026-03-18: Define Semantic Flow identifiers as slashless canonical IRIs
 
+- Status: Superseded on 2026-03-21 by the Knop-only naming model
 - Decision: A Semantic Flow identifier is the public IRI formed from `meshBase + Nomen.designatorPath`, and canonical examples should use slashless non-file identifiers.
 - Why:
   - slashless canonical identifiers are easier to use consistently in Turtle, SPARQL, and examples
@@ -54,13 +83,15 @@ created: 1773896763313
 
 ### 2026-03-18: Use the simplified artifact model centered on `DigitalArtifact`
 
+- Status: Partially superseded on 2026-03-26 by the explicit `ArtifactHistory` model
 - Decision: `DigitalArtifact` is the governing artifact-level resource; `HistoricalState`, `ArtifactManifestation`, and `LocatedFile` are facet-side classes; `AbstractArtifact`, `ArtifactFlow`, `ArtifactState`, `WorkingState`, and `CurrentState` are not part of the current core.
 - Why:
   - this keeps the core model smaller and easier to resolve in application code
   - it supports sparse cases without requiring every integrated artifact to materialize the full structure
   - it avoids treating artifact facets as ordinary artifact kinds
 - Notes:
-  - the main explicit structure is `DigitalArtifact -> HistoricalState -> ArtifactManifestation -> LocatedFile`
+  - the main explicit structure was originally `DigitalArtifact -> HistoricalState -> ArtifactManifestation -> LocatedFile`
+  - the 2026-03-26 ArtifactHistory decision refines that to `DigitalArtifact -> ArtifactHistory -> HistoricalState -> ArtifactManifestation -> LocatedFile`
   - sparse cases may also use `DigitalArtifact -> hasManifestation -> ArtifactManifestation`
   - working bytes are modeled with `hasWorkingLocatedFile`
 
