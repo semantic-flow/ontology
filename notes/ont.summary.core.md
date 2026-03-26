@@ -71,8 +71,9 @@ Sparse cases are explicitly supported:
 
 - a `DigitalArtifact` may have a `hasWorkingLocatedFile` without materializing an explicit history or working state
 - a `DigitalArtifact` may link directly to an `ArtifactManifestation` when no explicit `ArtifactHistory` / `HistoricalState` structure is materialized
+- a `SemanticMesh` or `Knop` may point directly to its current inventory file via `hasWorkingMeshInventoryFile` or `hasWorkingKnopInventoryFile` without restating inventory-artifact structure in metadata documents
 
-Use the explicit structural relations `hasArtifactHistory`, `hasHistoricalState`, `hasManifestation`, `hasLocatedFile`, and `hasWorkingLocatedFile` for artifact/facet structure.
+Use the explicit structural relations `hasArtifactHistory`, `hasHistoricalState`, `hasManifestation`, `hasLocatedFile`, and `hasWorkingLocatedFile` for artifact/facet structure. Use `hasWorkingMeshInventoryFile` and `hasWorkingKnopInventoryFile` only as owner-level shortcuts to current inventory files.
 
 ## Mesh Structure
 
@@ -113,6 +114,7 @@ Important consequence:
 - `nextHistoryOrdinal` lives on `DigitalArtifact` for default generated history allocation.
 - `nextStateOrdinal` lives on `ArtifactHistory` for default generated state allocation.
 - `hasWorkingLocatedFile` is the sparse working-surface hook.
+- `hasWorkingMeshInventoryFile` and `hasWorkingKnopInventoryFile` are owner-level shortcuts to current inventory files.
 - `locatedFileForState` is an optional shortcut that should agree with `hasManifestation / hasLocatedFile`.
 
 ## Other Important Vocabulary

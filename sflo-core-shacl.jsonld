@@ -330,6 +330,14 @@
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
           "sh:message": "A Knop MUST have exactly one sflo:hasKnopInventory value typed sflo:KnopInventory."
+        },
+        {
+          "sh:path": "sflo:hasWorkingKnopInventoryFile",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:LocatedFile",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, a Knop may have at most one sflo:hasWorkingKnopInventoryFile, and it must be an IRI typed sflo:LocatedFile."
         }
       ]
     },
@@ -359,6 +367,14 @@
           "sh:qualifiedMaxCount": 1,
           "sh:severity": "sh:Violation",
           "sh:message": "A SemanticMesh MUST have exactly one sflo:hasMeshMetadata value typed sflo:MeshMetadata."
+        },
+        {
+          "sh:path": "sflo:hasWorkingMeshInventoryFile",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:LocatedFile",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, a SemanticMesh may have at most one sflo:hasWorkingMeshInventoryFile, and it must be an IRI typed sflo:LocatedFile."
         }
       ]
     },

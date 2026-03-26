@@ -134,6 +134,18 @@
   rdfs:label "has working located file" ;
   rdfs:comment "Relates a DigitalArtifact directly to its working LocatedFile when a mesh wants sparse authoring support without materializing working/current state resources." .
 
+<hasWorkingMeshInventoryFile> a owl:ObjectProperty ;
+  rdfs:domain <SemanticMesh> ;
+  rdfs:range <LocatedFile> ;
+  rdfs:label "has working mesh inventory file" ;
+  rdfs:comment "Convenience shortcut from a SemanticMesh directly to the current working LocatedFile of its mesh inventory document." .
+
+<hasWorkingKnopInventoryFile> a owl:ObjectProperty ;
+  rdfs:domain <Knop> ;
+  rdfs:range <LocatedFile> ;
+  rdfs:label "has working Knop inventory file" ;
+  rdfs:comment "Convenience shortcut from a Knop directly to the current working LocatedFile of its Knop inventory document." .
+
 <hasLocatedFile> a owl:ObjectProperty ;
   rdfs:domain <ArtifactManifestation> ;
   rdfs:range <LocatedFile> ;

@@ -28,12 +28,13 @@ Superseded decisions are intentionally retained for traceability. When a decisio
 ### 2026-03-25: Distinguish mesh metadata and mesh inventory document roles
 
 - Status: Active
-- Decision: In hierarchy-backed serializations, `_mesh/_meta/meta.ttl` carries the mesh identity/description and may point to the mesh inventory with `hasMeshInventory`, while `_mesh/_inventory/inventory.ttl` is the self-contained current-surface map and may repeat both `hasMeshMetadata` and `hasMeshInventory`.
+- Decision: In hierarchy-backed serializations, `_mesh/_meta/meta.ttl` carries only mesh-level facts such as `meshBase` and may point directly to the current mesh inventory file via `hasWorkingMeshInventoryFile`, while `_mesh/_inventory/inventory.ttl` is the canonical self-contained current-surface map. Support-artifact identity/typing, `hasMeshInventory`, and artifact-history facts belong canonically in inventory rather than being repeated in metadata.
 - References: [[wd.task.2026.2026-03-25-mesh-alice-bio]], [[sf.conv.2026.2026-03-25_1413-title-mesh-alice-bio-codex]]
 - Why:
   - mesh metadata and mesh inventory serve different document roles and should not be treated as interchangeable
   - inventory benefits from being self-contained because it is the document most directly concerned with the currently present managed surface
-  - metadata should stay lighter and less repetitive while still pointing readers and tools toward the inventory document
+  - metadata should stay lighter and less repetitive while still pointing readers and tools toward the current inventory file
+  - dedicated owner-level inventory-file shortcuts are justified because only `SemanticMesh` and `Knop` own inventories, and their inventories summarize different scopes
   - this asymmetry is intended as a reusable serialization convention, not just a one-off detail of the Alice Bio fixture
 
 ### 2026-03-21: Adopt a Knop-only naming model
