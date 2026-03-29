@@ -1,4 +1,4 @@
-@base <https://semantic-flow.github.io/semantic-flow-ontology/> .
+@base <https://semantic-flow.github.io/ontology/core> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,9 +15,9 @@
   dcterms:description "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes and their resources." ;
   dcterms:creator <https://djradon.github.io/ns/djradon> ;
   owl:versionInfo "0.0.1" ;
-  owl:versionIRI <https://semantic-flow.github.io/ontology/_knops/_payload/_working/sflo.ttl/sflo.ttl> ;
+  owl:versionIRI <https://semantic-flow.github.io/ontology/core/releases/v0.0.1/semantic-flow-core-ontology.ttl> ;
   vann:preferredNamespacePrefix "sflo" ;
-  vann:preferredNamespaceUri <https://semantic-flow.github.io/semantic-flow-ontology/> .
+  vann:preferredNamespaceUri <https://semantic-flow.github.io/ontology/core/> .
 
 #################################################################
 #################################################################
