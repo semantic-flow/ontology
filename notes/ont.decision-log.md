@@ -27,7 +27,7 @@ Superseded decisions are intentionally retained for traceability. When a decisio
 ### 2026-03-26: Introduce explicit `ArtifactHistory` and remove `ArtifactContainer`
 
 - Status: Active
-- Decision: Reintroduce a narrow explicit `ArtifactHistory` resource as the lineage handle for published artifact history, while keeping `ArtifactFlow` out of the active core. A `DigitalArtifact` relates to one or more histories through `hasArtifactHistory`, may identify the active one through functional `currentArtifactHistory`, and may track `nextHistoryOrdinal`. An `ArtifactHistory` owns `hasHistoricalState` and `latestHistoricalState`, may carry `historyOrdinal` and `nextStateOrdinal`, and is typed only as a `SemanticFlowResource`. Remove `ArtifactContainer` from the active core.
+- Decision: Reintroduce a narrow explicit `ArtifactHistory` resource as the lineage handle for published artifact history, while keeping `ArtifactFlow` out of the active core. A `DigitalArtifact` relates to one or more histories through `hasArtifactHistory`, may identify the active one through functional `currentArtifactHistory`, and may track `nextHistoryOrdinal`. An `ArtifactHistory` owns `hasHistoricalState` and `latestHistoricalState`, may carry `historyOrdinal` and `nextStateOrdinal`; each `HistoricalState` may carry `stateOrdinal`; and `ArtifactHistory` is typed only as a `SemanticFlowResource`. Remove `ArtifactContainer` from the active core.
 - References: [[ont.task.2026.2026-03-26-ArtifactHistory]], [[sf.conv.2026.2026-03-25_1413-title-mesh-alice-bio-codex]]
 - Why:
   - a history landing page should correspond to an explicit resource rather than an exceptional page with no paired resource

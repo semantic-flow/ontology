@@ -112,6 +112,7 @@ Substantive RDF about a referent should normally live in a payload artifact or d
 
 - `ArtifactHistory` is the explicit lineage resource when a mesh materializes history.
 - `HistoricalState` is the explicit state class within an `ArtifactHistory`.
+- `stateOrdinal` lives on `HistoricalState` for default generated state naming like `_s0001`.
 - `currentArtifactHistory` is the `DigitalArtifact`-level pointer to the active explicit history.
 - `latestHistoricalState` is a convenience pointer from `ArtifactHistory`.
 - `nextHistoryOrdinal` lives on `DigitalArtifact` for default generated history allocation.

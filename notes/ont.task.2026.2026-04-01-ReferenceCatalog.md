@@ -168,5 +168,5 @@ That naming is consistent with `_meta` and `_inventory` while staying explicit a
 - [x] Refactor the `08-alice-bio-referenced` fixture state in `mesh-alice-bio` so it introduces a `ReferenceCatalog` artifact and moves the `ReferenceLink` out of Knop inventory.
 - [x] Correct the `ReferenceLink` semantics in the Alice Bio example so `referenceLinkFor` points at the referent resource.
 - [x] Update [08-alice-bio-referenced.jsonld](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/semantic-flow-framework/examples/alice-bio/conformance/08-alice-bio-referenced.jsonld) to match the refactored `08` branch.
-- [ ] Refactor the `09-alice-bio-referenced-woven` target so it weaves the `ReferenceCatalog` artifact rather than inventing more inventory-local link state.
-- [ ] Update the `09` conformance manifest once the woven reference-catalog branch is settled.
+- [x] Refactor the `09-alice-bio-referenced-woven` target so it weaves the `ReferenceCatalog` artifact rather than inventing more inventory-local link state.
+- [x] Update the `09` conformance manifest once the woven reference-catalog branch is settled.

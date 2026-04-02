@@ -111,6 +111,12 @@
   rdfs:label "history ordinal" ;
   rdfs:comment "Machine-oriented ordinal for a numbered default ArtifactHistory resource such as '_history001'." .
 
+<stateOrdinal> a owl:DatatypeProperty ;
+  rdfs:domain <HistoricalState> ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:label "state ordinal" ;
+  rdfs:comment "Machine-oriented ordinal for a numbered default HistoricalState resource such as '_s0001' within its ArtifactHistory." .
+
 <nextHistoryOrdinal> a owl:DatatypeProperty ;
   rdfs:domain <DigitalArtifact> ;
   rdfs:range xsd:nonNegativeInteger ;

@@ -147,7 +147,7 @@ This still leaves room for later named histories such as a redacted or migrated 
 1. Decide the minimal ontology shape for `ArtifactHistory`, especially whether it needs any superclass beyond `SemanticFlowResource`.
 2. Remove `ArtifactContainer` from the core and strip its remaining subclass uses.
 3. Define `hasArtifactHistory`, `currentArtifactHistory`, and move the authoritative use of `hasHistoricalState` / `latestHistoricalState` onto `ArtifactHistory`.
-4. Define the minimal ordinal vocabulary: `historyOrdinal` on `ArtifactHistory`, `nextHistoryOrdinal` on `DigitalArtifact`, and `nextStateOrdinal` on `ArtifactHistory`.
+4. Define the minimal ordinal vocabulary: `historyOrdinal` on `ArtifactHistory`, `stateOrdinal` on `HistoricalState`, `nextHistoryOrdinal` on `DigitalArtifact`, and `nextStateOrdinal` on `ArtifactHistory`.
 5. Update `sflo-core-shacl.jsonld` so shapes validate the revised ontology rather than the current direct-`DigitalArtifact` history model.
 6. Update the path examples and Alice Bio use case to use explicit histories and padded `_historyNNN` / `_sNNNN` names.
 7. Record the decision in the ontology decision log before changing the mesh example branches that depend on it.
