@@ -328,11 +328,6 @@
 # Metadata artifacts
 #################################################################
 
-<ReferentMetadata> a rdfs:Class ;
-  rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
-  rdfs:label "Referent metadata" ;
-  rdfs:comment "A DigitalArtifact RdfDocument used as descriptive metadata about the resource denoted by a Knop's associated Semantic Flow identifier. Especially useful for non-digital referents, but it may also describe digital artifacts." .
-
 <KnopMetadata> a rdfs:Class ;
   rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Knop metadata" ;
@@ -342,13 +337,6 @@
   rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
   rdfs:label "Mesh metadata" ;
   rdfs:comment "A DigitalArtifact RdfDocument used as metadata for a SemanticMesh." .
-
-<hasReferentMetadata> a owl:ObjectProperty ;
-  rdfs:subPropertyOf dcterms:hasPart ;
-  rdfs:domain <Knop> ;
-  rdfs:range <ReferentMetadata> ;
-  rdfs:label "has referent metadata" ;
-  rdfs:comment "Links a Knop to a ReferentMetadata DigitalArtifact resource describing the resource denoted by that Knop's associated Semantic Flow identifier." .
 
 <hasKnopMetadata> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;
@@ -391,3 +379,18 @@
   rdfs:range <KnopInventory> ;
   rdfs:label "has knop inventory" ;
   rdfs:comment "Links a Knop to its KnopInventory resource." .
+
+#################################################################
+# Reference catalog artifacts
+#################################################################
+
+<ReferenceCatalog> a rdfs:Class ;
+  rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
+  rdfs:label "Reference catalog" ;
+  rdfs:comment "A DigitalArtifact RdfDocument used to catalog ReferenceLinks about the resource identified by a Knop or about a SemanticMesh as a managed subject. ReferenceCatalog is intentionally narrow: it is for ReferenceLink relators, not for arbitrary descriptive RDF." .
+
+<hasReferenceCatalog> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:range <ReferenceCatalog> ;
+  rdfs:label "has reference catalog" ;
+  rdfs:comment "Links a Knop or SemanticMesh to its single primary ReferenceCatalog resource when present. Owner constraints are enforced in SHACL rather than through a shared superclass." .

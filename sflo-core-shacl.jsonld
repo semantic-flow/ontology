@@ -289,6 +289,40 @@
       ]
     },
     {
+      "@id": "ReferenceLinkForNotKnopShape",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "ReferenceLink subject must not be a Knop",
+      "rdfs:comment": "Reference links must be about the referent or mesh subject, not about the Knop support object itself.",
+      "sh:targetClass": "sflo:ReferenceLink",
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "sflo:referenceLinkFor MUST identify the actual subject resource, not a sflo:Knop support object.",
+        "sh:severity": "sh:Violation",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology>\nSELECT $this WHERE {\n  $this sflo:referenceLinkFor ?target .\n  ?target a sflo:Knop .\n}"
+      }
+    },
+    {
+      "@id": "ReferenceCatalogOwnerShape",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "ReferenceCatalog owner constraints",
+      "rdfs:comment": "Only Knops and SemanticMeshes may own a ReferenceCatalog in this version of the model.",
+      "sh:targetSubjectsOf": "sflo:hasReferenceCatalog",
+      "sh:property": {
+        "sh:path": "sflo:hasReferenceCatalog",
+        "sh:maxCount": 1,
+        "sh:nodeKind": "sh:IRI",
+        "sh:class": "sflo:ReferenceCatalog",
+        "sh:severity": "sh:Violation",
+        "sh:message": "An owner may have at most one sflo:hasReferenceCatalog value, and it must be an IRI typed sflo:ReferenceCatalog."
+      },
+      "sh:sparql": {
+        "@type": "sh:SPARQLConstraint",
+        "sh:message": "Only sflo:Knop or sflo:SemanticMesh resources may own a sflo:hasReferenceCatalog in this version of the model.",
+        "sh:severity": "sh:Violation",
+        "sh:select": "PREFIX sflo: <https://semantic-flow.github.io/semantic-flow-ontology>\nSELECT DISTINCT $this WHERE {\n  $this sflo:hasReferenceCatalog ?catalog .\n  FILTER NOT EXISTS { $this a sflo:Knop }\n  FILTER NOT EXISTS { $this a sflo:SemanticMesh }\n}"
+      }
+    },
+    {
       "@id": "KnopPayloadArtifactShape",
       "@type": "sh:NodeShape",
       "rdfs:label": "Knop payload artifact",
@@ -338,6 +372,14 @@
           "sh:class": "sflo:LocatedFile",
           "sh:severity": "sh:Warning",
           "sh:message": "If present, a Knop may have at most one sflo:hasWorkingKnopInventoryFile, and it must be an IRI typed sflo:LocatedFile."
+        },
+        {
+          "sh:path": "sflo:hasReferenceCatalog",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:ReferenceCatalog",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, a Knop may have at most one sflo:hasReferenceCatalog, and it must be an IRI typed sflo:ReferenceCatalog."
         }
       ]
     },
@@ -375,6 +417,14 @@
           "sh:class": "sflo:LocatedFile",
           "sh:severity": "sh:Warning",
           "sh:message": "If present, a SemanticMesh may have at most one sflo:hasWorkingMeshInventoryFile, and it must be an IRI typed sflo:LocatedFile."
+        },
+        {
+          "sh:path": "sflo:hasReferenceCatalog",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:ReferenceCatalog",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, a SemanticMesh may have at most one sflo:hasReferenceCatalog, and it must be an IRI typed sflo:ReferenceCatalog."
         }
       ]
     },

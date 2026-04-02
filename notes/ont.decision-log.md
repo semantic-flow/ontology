@@ -10,6 +10,20 @@ created: 1773896763313
 
 Superseded decisions are intentionally retained for traceability. When a decision is reversed or replaced, mark it explicitly rather than deleting it.
 
+### 2026-04-02: Replace `ReferentMetadata` with `ReferenceCatalog`
+
+- Status: Active
+- Decision: Remove `ReferentMetadata` and `hasReferentMetadata` from the live core model. Add a narrow `ReferenceCatalog` support artifact with `hasReferenceCatalog`, keep it restricted to `ReferenceLink` relators, and enforce valid owners through SHACL rather than a shared ontology superclass. Allow at most one `ReferenceCatalog` per `Knop` or `SemanticMesh` in this pass.
+- References: [[ont.task.2026.2026-04-01-ReferenceCatalog]], [[wd.task.2026.2026-03-25-mesh-alice-bio]], [[sf.task.2026.2026-03-29-conformance-for-mesh-alice-bio]]
+- Why:
+  - `ReferentMetadata` overlapped too heavily with the payload-artifact path and kept reopening the question of whether substantive RDF belonged in support artifacts or payload artifacts
+  - `ReferenceLink` relators still need a dedicated managed home, but that home should stay narrow and mechanical rather than turning into a generic referent-RDF bucket
+  - `Knop` and `SemanticMesh` may both own reference catalogs, but reviving a vague common superclass would add abstraction without earning its keep
+- Notes:
+  - use `D/_references/references.ttl` and `_mesh/_references/references.ttl` as the first-pass serialization direction
+  - `referenceLinkFor` must point to the actual subject resource, not to a `Knop`
+  - this decision does not broaden `ReferenceCatalog` to cover `owl:sameAs` or other descriptive/assertive referent RDF
+
 ### 2026-03-26: Introduce explicit `ArtifactHistory` and remove `ArtifactContainer`
 
 - Status: Active

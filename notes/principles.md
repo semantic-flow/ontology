@@ -2,7 +2,7 @@
 id: p9f3gmbx90yp2trxcvrz8pe
 title: Principles
 desc: ''
-updated: 1774383504706
+updated: 1775160825224
 created: 1773878299267
 ---
 
@@ -14,3 +14,7 @@ If you put any [[ont.concepts.semantic-flow-identifier]] in a browser, it should
 ## Composability
 
 Composability is the ability to graft Knops and Meshes onto other meshes. See [[ont.concepts.submesh]] for details. This principle requires that Knops and Meshes are self-contained.
+
+## Transposability
+
+Transposability is the ability to move a mesh to a different <meshBase> and have it work with as little change as possible. Transposability can be useful for changing hosting providers, but also for, say, setting up a different "universe" for independent evolution, i.e. branching.

@@ -80,7 +80,7 @@ Use the explicit structural relations `hasArtifactHistory`, `hasHistoricalState`
 - `SemanticMesh` has `Knop`s and mesh-level support resources.
 - `Knop` has exactly one `designatorPath`.
 - `Knop` has support resources and may have one primary payload resource.
-- The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasReferentMetadata`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
+- The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasReferenceCatalog`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
 
 Current path conventions:
 
@@ -94,7 +94,7 @@ Current path conventions:
 These are artifact-level classes used for primary and support artifacts in the mesh surface, not members of the facet lattice:
 
 - `PayloadArtifact`
-- `ReferentMetadata`
+- `ReferenceCatalog`
 - `KnopMetadata`
 - `KnopInventory`
 - `MeshMetadata`
@@ -104,6 +104,9 @@ Important consequence:
 
 - each of these classes classifies a `DigitalArtifact`
 - a support artifact can still have its own historical states, manifestations, and located files because those hang off the `DigitalArtifact`, not off a separate artifact-lattice branch and not off a separate `Knop`
+- `ReferenceCatalog` is intentionally narrow: use it for managed `ReferenceLink` relators, not for broader descriptive RDF about the referent
+
+Substantive RDF about a referent should normally live in a payload artifact or dataset rather than in a support artifact.
 
 ## Historical And Working Model
 
