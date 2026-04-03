@@ -6,6 +6,8 @@ updated: 1774544367566
 created: 1774544367566
 ---
 
+This task is complete. The live ontology, SHACL, supporting notes, and Alice Bio fixture all now use the explicit `ArtifactHistory` model and the `_historyNNN` / `_sNNNN` path convention described here.
+
 ## Context
 
 The current core artifact model links `HistoricalState` directly from `DigitalArtifact` and treats `_history` material as support structure under the hosting `Knop`.

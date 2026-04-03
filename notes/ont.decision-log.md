@@ -14,7 +14,7 @@ Superseded decisions are intentionally retained for traceability. When a decisio
 
 - Status: Active
 - Decision: Remove `ReferentMetadata` and `hasReferentMetadata` from the live core model. Add a narrow `ReferenceCatalog` support artifact with `hasReferenceCatalog`, keep it restricted to `ReferenceLink` relators, and enforce valid owners through SHACL rather than a shared ontology superclass. Allow at most one `ReferenceCatalog` per `Knop` or `SemanticMesh` in this pass.
-- References: [[ont.task.2026.2026-04-01-ReferenceCatalog]], [[wd.task.2026.2026-03-25-mesh-alice-bio]], [[sf.task.2026.2026-03-29-conformance-for-mesh-alice-bio]]
+- References: [[ont.completed.2026.2026-04-01-ReferenceCatalog]], [[wd.task.2026.2026-03-25-mesh-alice-bio]], [[sf.task.2026.2026-03-29-conformance-for-mesh-alice-bio]]
 - Why:
   - `ReferentMetadata` overlapped too heavily with the payload-artifact path and kept reopening the question of whether substantive RDF belonged in support artifacts or payload artifacts
   - `ReferenceLink` relators still need a dedicated managed home, but that home should stay narrow and mechanical rather than turning into a generic referent-RDF bucket
@@ -29,7 +29,7 @@ Superseded decisions are intentionally retained for traceability. When a decisio
 
 - Status: Active
 - Decision: Reintroduce a narrow explicit `ArtifactHistory` resource as the lineage handle for published artifact history, while keeping `ArtifactFlow` out of the active core. A `DigitalArtifact` relates to one or more histories through `hasArtifactHistory`, may identify the active one through functional `currentArtifactHistory`, and may track `nextHistoryOrdinal`. An `ArtifactHistory` owns `hasHistoricalState` and `latestHistoricalState`, may carry `historyOrdinal` and `nextStateOrdinal`; each `HistoricalState` may carry `stateOrdinal`; and `ArtifactHistory` is typed only as a `SemanticFlowResource`. Remove `ArtifactContainer` from the active core.
-- References: [[ont.task.2026.2026-03-26-ArtifactHistory]], [[sf.conv.2026.2026-03-25_1413-title-mesh-alice-bio-codex]]
+- References: [[ont.completed.2026.2026-03-26-ArtifactHistory]], [[sf.conv.2026.2026-03-25_1413-title-mesh-alice-bio-codex]]
 - Why:
   - a history landing page should correspond to an explicit resource rather than an exceptional page with no paired resource
   - once multiple histories exist, the current/default lineage must be identified explicitly rather than inferred indirectly from lineage-local latest states

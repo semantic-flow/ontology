@@ -15,6 +15,8 @@ created: 1775098297595
 
 ## Summary
 
+This task is complete. The live ontology, SHACL, supporting notes, Alice Bio fixture branches, and conformance manifests have all been updated to use `ReferenceCatalog` instead of `ReferentMetadata`.
+
 The current model has two competing directions for RDF about a referent:
 
 - keep a broad `ReferentMetadata` artifact
