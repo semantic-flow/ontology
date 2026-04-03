@@ -20,7 +20,8 @@ Superseded decisions are intentionally retained for traceability. When a decisio
   - `ReferenceLink` relators still need a dedicated managed home, but that home should stay narrow and mechanical rather than turning into a generic referent-RDF bucket
   - `Knop` and `SemanticMesh` may both own reference catalogs, but reviving a vague common superclass would add abstraction without earning its keep
 - Notes:
-  - use `D/_references/references.ttl` and `_mesh/_references/references.ttl` as the first-pass serialization direction
+  - use `D/_knop/_references/references.ttl` for Knop-owned catalogs and `_mesh/_references/references.ttl` for mesh-owned catalogs
+  - stable `ReferenceLink` identities may be catalog-rooted fragment IRIs such as `<D/_knop/_references#reference001>`
   - `referenceLinkFor` must point to the actual subject resource, not to a `Knop`
   - this decision does not broaden `ReferenceCatalog` to cover `owl:sameAs` or other descriptive/assertive referent RDF
 

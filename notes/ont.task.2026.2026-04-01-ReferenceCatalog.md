@@ -93,16 +93,18 @@ That keeps the live ontology from faking a common superclass merely for slot sym
 
 ### Serialization direction
 
-The likely path pattern is:
+The current direction is:
 
-- `D/_references/references.ttl`
-- `_mesh/_references/references.ttl`
+- Knop-owned catalogs live at `D/_knop/_references/references.ttl`
+- mesh-owned catalogs live at `_mesh/_references/references.ttl`
+- stable `ReferenceLink` identities may be fragment IRIs rooted at the catalog resource, such as `<D/_knop/_references#reference001>`
 
-That naming is consistent with `_meta` and `_inventory` while staying explicit about the artifact role.
+This keeps `ReferenceCatalog` aligned with other support artifacts while allowing one self-contained reference namespace per catalog.
 
 ## Open Issues
 
 - Decide whether `ReferenceCatalog` should eventually get a direct owner-level shortcut analogous to `hasWorkingKnopInventoryFile` / `hasWorkingMeshInventoryFile`, or whether `hasWorkingLocatedFile` on the artifact is enough.
+- Decide later whether reference verification needs its own object model; for now `verifiedAt` / `verifiedBy` remain latest-verification convenience fields on `ReferenceLink`.
 
 ## Decisions
 
@@ -114,7 +116,9 @@ That naming is consistent with `_meta` and `_inventory` while staying explicit a
 - Treat substantive RDF about the referent as payload data rather than as a support-artifact metadata bucket.
 - Support `Knop` and `SemanticMesh` as valid owners of `hasReferenceCatalog` through SHACL rather than by adding a new common superclass.
 - `referenceLinkFor` should point to the actual resource the link is about, not to the Knop support object.
-- Use `D/_references/references.ttl` and `_mesh/_references/references.ttl` as the first-pass serialization pattern.
+- `referenceTargetState` may be used when a `ReferenceLink` should pin to a specific `HistoricalState` rather than only to a broader artifact/resource identity.
+- Use `D/_knop/_references/references.ttl` for Knop-owned catalogs and `_mesh/_references/references.ttl` for mesh-owned catalogs.
+- Allow stable catalog-rooted fragment IRIs such as `<D/_knop/_references#reference001>` for `ReferenceLink` identities.
 - Allow at most one `ReferenceCatalog` per `Knop` or `SemanticMesh` in this pass.
 - Implement `SemanticMesh` ownership in ontology and SHACL now, but leave mesh-owned examples for a later fixture.
 

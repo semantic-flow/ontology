@@ -294,6 +294,14 @@
           "sh:datatype": "xsd:anyURI",
           "sh:severity": "sh:Info",
           "sh:message": "If present, sflo:referenceUriLiteral must be xsd:anyURI."
+        },
+        {
+          "sh:path": "sflo:referenceTargetState",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:HistoricalState",
+          "sh:severity": "sh:Info",
+          "sh:message": "If present, sflo:referenceTargetState should be a single IRI typed sflo:HistoricalState."
         }
       ]
     },

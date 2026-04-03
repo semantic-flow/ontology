@@ -33,8 +33,8 @@ This sketch assumes:
 | `alice/_knop/_meta/meta.ttl` | Located Turtle file providing bytes for `alice/_knop/_meta` | `sflo:LocatedFile`, `sflo:RdfDocument` |
 | `alice/_knop/_inventory` | Knop inventory artifact for `alice` | `sflo:KnopInventory`, `sflo:DigitalArtifact`, `sflo:RdfDocument` |
 | `alice/_knop/_inventory/inventory.ttl` | Located Turtle file providing bytes for `alice/_knop/_inventory` | `sflo:LocatedFile`, `sflo:RdfDocument` |
-| `alice/_references` | Reference catalog artifact for `alice` | `sflo:ReferenceCatalog`, `sflo:DigitalArtifact`, `sflo:RdfDocument` |
-| `alice/_references/references.ttl` | Located Turtle file providing bytes for `alice/_references` | `sflo:LocatedFile`, `sflo:RdfDocument` |
+| `alice/_knop/_references` | Reference catalog artifact for `alice` | `sflo:ReferenceCatalog`, `sflo:DigitalArtifact`, `sflo:RdfDocument` |
+| `alice/_knop/_references/references.ttl` | Located Turtle file providing bytes for `alice/_knop/_references` | `sflo:LocatedFile`, `sflo:RdfDocument` |
 | `alice/bio` | Alice bio as the primary artifact identified by this designator | `sflo:PayloadArtifact`, `sflo:DigitalArtifact` |
 | `alice/bio/_knop` | The Knop for `alice/bio` | `sflo:Knop` |
 | `alice/bio/_knop/_meta` | Knop metadata artifact for `alice/bio` | `sflo:KnopMetadata`, `sflo:DigitalArtifact`, `sflo:RdfDocument` |

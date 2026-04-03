@@ -246,6 +246,13 @@
   rdfs:label "reference target" ;
   rdfs:comment "If present, the reference target is a resource used as a reference-data identifier." .
 
+<referenceTargetState> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <referenceTarget> ;
+  rdfs:domain <ReferenceLink> ;
+  rdfs:range <HistoricalState> ;
+  rdfs:label "reference target state" ;
+  rdfs:comment "If present, the reference target is specifically a HistoricalState rather than a broader artifact/resource identity." .
+
 <referenceUriLiteral> a owl:DatatypeProperty ;
   rdfs:domain <ReferenceLink> ;
   rdfs:range xsd:anyURI ;

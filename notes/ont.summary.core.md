@@ -40,6 +40,8 @@ Use `designatorPath` when you mean the modeled mesh-relative naming value on a `
 Use `designator` only as informal prose shorthand for that value.
 Use `Semantic Flow identifier` when you mean the full IRI formed from a mesh base plus a `Knop`'s `designatorPath`.
 
+For detailed `ReferenceCatalog` / `ReferenceLink` serialization and dereferenceability rules, see [ont.reference-links.md](./ont.reference-links.md).
+
 ### Canonical URLs On Static Hosts
 
 - Prefer slashless canonical Semantic Flow identifiers for non-file referents.
@@ -127,6 +129,7 @@ Substantive RDF about a referent should normally live in a payload artifact or d
 - `ArtifactHistory` is an explicit lineage resource, not a `DigitalArtifactFacet`.
 - `DigitalArtifactFacet` is the common superclass for `HistoricalState`, `ArtifactManifestation`, and `LocatedFile`.
 - `ResourcePage` is a `LocatedFile` subclass for the human-facing HTML resource pages that should accompany every `SemanticFlowResource`
+- `ReferenceLink` may target either a broad resource identity through `referenceTarget` or a version-pinned state through `referenceTargetState`.
 - `designatorPath` is the mesh-relative path-like naming value carried by a `Knop`; it is not a generic path property for every `SemanticFlowResource`.
 - a `Semantic Flow identifier` is the public IRI formed from `meshBase + Knop.designatorPath`; support resources in the mesh may still have ordinary IRIs without thereby being Semantic Flow identifiers.
 - `preferredPayloadFileSlug` is the mutable filename preference.
