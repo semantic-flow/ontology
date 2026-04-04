@@ -143,8 +143,8 @@ This keeps `ReferenceCatalog` aligned with other support artifacts while allowin
 
 ## Testing
 
-- Validate the updated [semantic-flow-core-ontology.ttl](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/ontology/semantic-flow-core-ontology.ttl) with `riot --validate`.
-- Validate the updated [sflo-core-shacl.jsonld](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/ontology/sflo-core-shacl.jsonld) with `riot --validate` and `jq empty`.
+- Validate the updated [semantic-flow-core-ontology.ttl](../semantic-flow-core-ontology.ttl) with `riot --validate`.
+- Validate the updated [sflo-core-shacl.jsonld](../sflo-core-shacl.jsonld) with `riot --validate` and `jq empty`.
 - Run SHACL against representative graphs that include:
   - a `Knop` with one `ReferenceCatalog`
   - a `SemanticMesh` with one `ReferenceCatalog`
@@ -162,17 +162,17 @@ This keeps `ReferenceCatalog` aligned with other support artifacts while allowin
 
 ## Implementation Plan
 
-- [x] Update [semantic-flow-core-ontology.ttl](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/ontology/semantic-flow-core-ontology.ttl) to remove `ReferentMetadata` and `hasReferentMetadata`.
-- [x] Add `ReferenceCatalog` and `hasReferenceCatalog` to [semantic-flow-core-ontology.ttl](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/ontology/semantic-flow-core-ontology.ttl).
-- [x] Update [sflo-core-shacl.jsonld](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/ontology/sflo-core-shacl.jsonld) so `Knop` and `SemanticMesh` may each optionally own one `ReferenceCatalog`.
+- [x] Update [semantic-flow-core-ontology.ttl](../semantic-flow-core-ontology.ttl) to remove `ReferentMetadata` and `hasReferentMetadata`.
+- [x] Add `ReferenceCatalog` and `hasReferenceCatalog` to [semantic-flow-core-ontology.ttl](../semantic-flow-core-ontology.ttl).
+- [x] Update [sflo-core-shacl.jsonld](../sflo-core-shacl.jsonld) so `Knop` and `SemanticMesh` may each optionally own one `ReferenceCatalog`.
 - [x] Add SHACL support that keeps `ReferenceLink` usage aligned with the revised model, especially that `referenceLinkFor` points to the actual subject resource rather than the Knop support object.
-- [x] Update [ont.summary.core.md](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/ontology/notes/ont.summary.core.md) to replace `ReferentMetadata` with `ReferenceCatalog` in the artifact-level support story.
-- [x] Add a decision entry to [ont.decision-log.md](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/ontology/notes/ont.decision-log.md) capturing the removal of `ReferentMetadata` and the introduction of `ReferenceCatalog`.
-- [x] Update [ont.use-cases.alice-bio.md](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/ontology/notes/ont.use-cases.alice-bio.md) so the Alice Bio example reflects a `ReferenceCatalog` artifact rather than referent metadata or inventory-held links.
-- [x] Update the Alice Bio fixture task note at [wd.task.2026.2026-03-25-mesh-alice-bio.md](/home/djradon/hub/semantic-flow/weave/documentation/notes/wd.task.2026.2026-03-25-mesh-alice-bio.md) so `08` and `09` reference the new artifact shape.
-- [x] Update the framework conformance task note at [sf.task.2026.2026-03-29-conformance-for-mesh-alice-bio.md](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/semantic-flow-framework/notes/sf.task.2026.2026-03-29-conformance-for-mesh-alice-bio.md) if the manifest assumptions need to change.
+- [x] Update [[ont.summary.core]] to replace `ReferentMetadata` with `ReferenceCatalog` in the artifact-level support story.
+- [x] Add a decision entry to [[ont.decision-log]] capturing the removal of `ReferentMetadata` and the introduction of `ReferenceCatalog`.
+- [x] Update [[ont.use-cases.alice-bio]] so the Alice Bio example reflects a `ReferenceCatalog` artifact rather than referent metadata or inventory-held links.
+- [x] Update the Alice Bio fixture task note at [[wd.task.2026.2026-03-25-mesh-alice-bio]] so `08` and `09` reference the new artifact shape.
+- [x] Update the framework conformance task note at [[sf.task.2026.2026-03-29-conformance-for-mesh-alice-bio]] if the manifest assumptions need to change.
 - [x] Refactor the `08-alice-bio-referenced` fixture state in `mesh-alice-bio` so it introduces a `ReferenceCatalog` artifact and moves the `ReferenceLink` out of Knop inventory.
 - [x] Correct the `ReferenceLink` semantics in the Alice Bio example so `referenceLinkFor` points at the referent resource.
-- [x] Update [08-alice-bio-referenced.jsonld](/home/djradon/hub/semantic-flow/weave/dependencies/github.com/semantic-flow/semantic-flow-framework/examples/alice-bio/conformance/08-alice-bio-referenced.jsonld) to match the refactored `08` branch.
+- [x] Update [08-alice-bio-referenced.jsonld](../../semantic-flow-framework/examples/alice-bio/conformance/08-alice-bio-referenced.jsonld) to match the refactored `08` branch.
 - [x] Refactor the `09-alice-bio-referenced-woven` target so it weaves the `ReferenceCatalog` artifact rather than inventing more inventory-local link state.
 - [x] Update the `09` conformance manifest once the woven reference-catalog branch is settled.
