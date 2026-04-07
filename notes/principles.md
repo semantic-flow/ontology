@@ -2,7 +2,7 @@
 id: p9f3gmbx90yp2trxcvrz8pe
 title: Principles
 desc: ''
-updated: 1775160825224
+updated: 1775547393408
 created: 1773878299267
 ---
 
@@ -18,3 +18,7 @@ Composability is the ability to graft Knops and Meshes onto other meshes. See [[
 ## Transposability
 
 Transposability is the ability to move a mesh to a different <meshBase> and have it work with as little change as possible. Transposability can be useful for changing hosting providers, but also for, say, setting up a different "universe" for independent evolution, i.e. branching.
+
+## Psuedo-immutability
+
+Ideally, once minted, states don't change. Excpetions for privacy/security concerns are understandable. 
