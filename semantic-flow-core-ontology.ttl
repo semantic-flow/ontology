@@ -407,3 +407,166 @@
   rdfs:range <ReferenceCatalog> ;
   rdfs:label "has reference catalog" ;
   rdfs:comment "Links a Knop or SemanticMesh to its single primary ReferenceCatalog resource when present. Owner constraints are enforced in SHACL rather than through a shared superclass." .
+
+#################################################################
+# Resource page definition artifacts and helpers
+#################################################################
+
+<ResourcePageDefinition> a rdfs:Class ;
+  rdfs:subClassOf <DigitalArtifact>, <RdfDocument>, <SemanticFlowResource> ;
+  rdfs:label "Resource page definition" ;
+  rdfs:comment "A DigitalArtifact RdfDocument used as the authoritative knop-owned definition artifact for a generated resource page. It describes page regions, local bundle members, source bindings, and related composition policy without making the identified resource itself a payload-bearing artifact." .
+
+<ResourcePageBundle> a rdfs:Class ;
+  rdfs:label "Resource page bundle" ;
+  rdfs:comment "A local structural bundle boundary for a knop-owned resource page definition, such as '_knop/_page'. It is a helper concept for bundle-relative semantics and does not by itself imply a governed artifact or require inventory capture of every bundle member." .
+
+<ResourcePageAssetBundle> a rdfs:Class ;
+  rdfs:subClassOf <ResourcePageBundle> ;
+  rdfs:label "Resource page asset bundle" ;
+  rdfs:comment "A local structural bundle boundary for resource-page support assets such as '_knop/_page/_assets'. It does not by itself imply that each contained asset is a governed artifact or a KnopInventory entry." .
+
+<ResourcePageBundleFile> a rdfs:Class ;
+  rdfs:label "Resource page bundle file" ;
+  rdfs:comment "A helper resource representing a file within a local ResourcePageBundle. It exists to keep bundle-relative file semantics explicit and does not by itself imply a governed artifact or inventory entry." .
+
+<ResourcePageRegion> a rdfs:Class ;
+  rdfs:label "Resource page region" ;
+  rdfs:comment "A structural content region described by a ResourcePageDefinition. Use this for page-content composition, not for template-slot wiring or browser chrome concerns." .
+
+<ResourcePageSource> a rdfs:Class ;
+  rdfs:label "Resource page source" ;
+  rdfs:comment "A per-region source binding together with requested state and fallback policy for page-content composition." .
+
+<ResourcePageSourceMode> a rdfs:Class ;
+  rdfs:label "Resource page source mode" ;
+  rdfs:comment "A controlled vocabulary describing whether a ResourcePageSource is pinned to an explicitly requested state or follows the current/default source." .
+
+<ResourcePageSourceMode/Pinned> a <ResourcePageSourceMode> ;
+  rdfs:label "Pinned" ;
+  rdfs:comment "The ResourcePageSource is pinned to explicitly requested source coordinates when provided." .
+
+<ResourcePageSourceMode/Current> a <ResourcePageSourceMode> ;
+  rdfs:label "Current" ;
+  rdfs:comment "The ResourcePageSource should follow the current/default source rather than pinning a specific state." .
+
+<ResourcePageSourceFallbackPolicy> a rdfs:Class ;
+  rdfs:label "Resource page source fallback policy" ;
+  rdfs:comment "A controlled vocabulary describing what fallback, if any, is acceptable when a requested page source target cannot be resolved exactly." .
+
+<ResourcePageSourceFallbackPolicy/ExactOnly> a <ResourcePageSourceFallbackPolicy> ;
+  rdfs:label "Exact only" ;
+  rdfs:comment "Only the exact requested source target is acceptable; otherwise resolution fails." .
+
+<ResourcePageSourceFallbackPolicy/AcceptLatestInRequestedHistory> a <ResourcePageSourceFallbackPolicy> ;
+  rdfs:label "Accept latest in requested history" ;
+  rdfs:comment "If an exact requested state cannot be resolved, the latest available HistoricalState in the requested ArtifactHistory is acceptable." .
+
+<hasResourcePageDefinition> a owl:ObjectProperty ;
+  rdfs:subPropertyOf dcterms:hasPart ;
+  rdfs:domain <Knop> ;
+  rdfs:range <ResourcePageDefinition> ;
+  rdfs:label "has resource page definition" ;
+  rdfs:comment "Links a Knop to its authoritative ResourcePageDefinition artifact when customizable identifier-page behavior is explicitly modeled." .
+
+<hasResourcePageBundle> a owl:ObjectProperty ;
+  rdfs:domain <Knop> ;
+  rdfs:range <ResourcePageBundle> ;
+  rdfs:label "has resource page bundle" ;
+  rdfs:comment "Links a Knop to the local structural bundle boundary for its page-definition resources, such as '_knop/_page'." .
+
+<hasPageBundleFile> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageBundle> ;
+  rdfs:range <ResourcePageBundleFile> ;
+  rdfs:label "has page bundle file" ;
+  rdfs:comment "Relates a ResourcePageBundle to one of its local bundle-member files." .
+
+<hasPageAssetBundle> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageBundle> ;
+  rdfs:range <ResourcePageAssetBundle> ;
+  rdfs:label "has page asset bundle" ;
+  rdfs:comment "Relates a ResourcePageBundle to a nested local asset bundle such as '_assets'." .
+
+<pageBundleRelativePath> a owl:DatatypeProperty ;
+  rdfs:domain <ResourcePageBundleFile> ;
+  rdfs:range xsd:string ;
+  rdfs:label "page bundle relative path" ;
+  rdfs:comment "A bundle-relative file path for a ResourcePageBundleFile, interpreted relative to the owning ResourcePageBundle boundary rather than to the mesh root." .
+
+<hasPageRegion> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageDefinition> ;
+  rdfs:range <ResourcePageRegion> ;
+  rdfs:label "has page region" ;
+  rdfs:comment "Relates a ResourcePageDefinition to one of its authored content regions." .
+
+<regionKey> a owl:DatatypeProperty ;
+  rdfs:domain <ResourcePageRegion> ;
+  rdfs:range xsd:string ;
+  rdfs:label "region key" ;
+  rdfs:comment "A stable application-facing key for a ResourcePageRegion such as 'main' or 'sidebar'." .
+
+<regionOrder> a owl:DatatypeProperty ;
+  rdfs:domain <ResourcePageRegion> ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:label "region order" ;
+  rdfs:comment "Optional presentation order hint for ResourcePageRegion instances when deterministic region sequencing is needed." .
+
+<hasResourcePageSource> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageRegion> ;
+  rdfs:range <ResourcePageSource> ;
+  rdfs:label "has resource page source" ;
+  rdfs:comment "Relates a ResourcePageRegion to one of its source bindings." .
+
+<sourceOrder> a owl:DatatypeProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:label "source order" ;
+  rdfs:comment "Optional order hint for ResourcePageSource instances when a region intentionally composes multiple ordered sources." .
+
+<hasSourceBundleFile> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range <ResourcePageBundleFile> ;
+  rdfs:label "has source bundle file" ;
+  rdfs:comment "Relates a ResourcePageSource to a local ResourcePageBundleFile used as authored input." .
+
+<hasSourceArtifact> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range <DigitalArtifact> ;
+  rdfs:label "has source artifact" ;
+  rdfs:comment "Relates a ResourcePageSource to an in-mesh or otherwise explicitly identified DigitalArtifact used as page content input." .
+
+<hasSourceLocatedFile> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range <LocatedFile> ;
+  rdfs:label "has source located file" ;
+  rdfs:comment "Relates a ResourcePageSource directly to a specific LocatedFile when page content should come from that retrievable bytes identity." .
+
+<hasSourceDistribution> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range dcat:Distribution ;
+  rdfs:label "has source distribution" ;
+  rdfs:comment "Relates a ResourcePageSource to a Distribution describing how extra-mesh or otherwise explicitly packaged source bytes are accessed." .
+
+<hasRequestedSourceHistory> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range <ArtifactHistory> ;
+  rdfs:label "has requested source history" ;
+  rdfs:comment "Relates a ResourcePageSource to the ArtifactHistory it requests when resolution should stay within a specific history boundary." .
+
+<hasRequestedSourceState> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range <HistoricalState> ;
+  rdfs:label "has requested source state" ;
+  rdfs:comment "Relates a ResourcePageSource to an explicitly requested HistoricalState. This names the requested source target, not a runtime-resolved outcome." .
+
+<hasResourcePageSourceMode> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range <ResourcePageSourceMode> ;
+  rdfs:label "has resource page source mode" ;
+  rdfs:comment "Assigns a ResourcePageSourceMode to a ResourcePageSource." .
+
+<hasResourcePageSourceFallbackPolicy> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePageSource> ;
+  rdfs:range <ResourcePageSourceFallbackPolicy> ;
+  rdfs:label "has resource page source fallback policy" ;
+  rdfs:comment "Assigns a ResourcePageSourceFallbackPolicy to a ResourcePageSource." .

@@ -10,6 +10,22 @@ created: 1773896763313
 
 Superseded decisions are intentionally retained for traceability. When a decision is reversed or replaced, mark it explicitly rather than deleting it.
 
+### 2026-04-09: Model customizable identifier pages with bounded page-definition helpers
+
+- Status: Active
+- Decision: Add `ResourcePageDefinition` to the live core model as a Knop-owned support artifact for customizable identifier pages. Model the local `_knop/_page` boundary with `ResourcePageBundle`, model member files with `ResourcePageBundleFile`, model `_knop/_page/_assets` with `ResourcePageAssetBundle`, and model authored content composition with `ResourcePageRegion` plus `ResourcePageSource`. Keep per-source requested state, source mode, and fallback policy in core, but leave template/chrome configuration for the separate config-ontology track.
+- References: [[wd.task.2026.2026-04-08_1545-resource-page-definition-and-sources]], [[wd.task.2026.2026-04-08_1735-page-definition-ontology-and-config]], [[ont.task.2026.2026-03-23-config-modernization]]
+- Why:
+  - identifier-page customization needs an explicit control-plane artifact without pretending the identifier itself is a payload-bearing `DigitalArtifact`
+  - the `_knop/_page` boundary and its member files need explicit semantics without forcing every local helper file into `KnopInventory`
+  - per-source requested state and fallback policy affect resource-page resolution semantics and therefore belong in core rather than being left to ad hoc runtime conventions
+  - template/chrome policy is related, but should remain separate from page-content composition
+- Notes:
+  - prefer `ResourcePageBundle` over `KnopPageResourceBundle`; ownership belongs in the relation `hasResourcePageBundle`, not in the class name
+  - prefer `ResourcePageRegion` over `Slot` in core
+  - prefer `hasRequestedSourceState` over ambiguous names such as `resourcePageSourceState`
+  - `accept` belongs to fallback policy, not to the pinned-vs-current source mode axis
+
 ### 2026-04-02: Replace `ReferentMetadata` with `ReferenceCatalog`
 
 - Status: Active
