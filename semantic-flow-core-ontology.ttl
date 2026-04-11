@@ -461,7 +461,7 @@
 <ResourcePageSource> a rdfs:Class ;
   rdfs:subClassOf <ArtifactResolutionTarget> ;
   rdfs:label "Resource page source" ;
-  rdfs:comment "A page-specific ArtifactResolutionTarget used as a per-region source binding for resource-page composition. A ResourcePageSource may resolve through a target artifact, a direct LocatedFile such as a WorkspaceRelativeFile, or another explicitly packaged target." .
+  rdfs:comment "A page-specific ArtifactResolutionTarget used as a per-region source binding for resource-page composition. It uses the generic artifact-resolution target/history/state/mode/fallback properties directly." .
 
 <hasResourcePageDefinition> a owl:ObjectProperty ;
   rdfs:subPropertyOf dcterms:hasPart ;
@@ -553,52 +553,3 @@
   rdfs:range <ArtifactResolutionFallbackPolicy> ;
   rdfs:label "has artifact resolution fallback policy" ;
   rdfs:comment "Assigns an ArtifactResolutionFallbackPolicy to an ArtifactResolutionTarget." .
-
-<hasSourceArtifact> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <hasTargetArtifact> ;
-  rdfs:domain <ResourcePageSource> ;
-  rdfs:range <DigitalArtifact> ;
-  rdfs:label "has source artifact" ;
-  rdfs:comment "Relates a ResourcePageSource to an in-mesh or otherwise explicitly identified DigitalArtifact used as page content input." .
-
-<hasSourceLocatedFile> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <hasTargetLocatedFile> ;
-  rdfs:domain <ResourcePageSource> ;
-  rdfs:range <LocatedFile> ;
-  rdfs:label "has source located file" ;
-  rdfs:comment "Relates a ResourcePageSource directly to a specific LocatedFile when page content should come from that retrievable bytes identity, including helper cases such as a WorkspaceRelativeFile without requiring an artifact-level target." .
-
-<hasSourceDistribution> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <hasTargetDistribution> ;
-  rdfs:domain <ResourcePageSource> ;
-  rdfs:range dcat:Distribution ;
-  rdfs:label "has source distribution" ;
-  rdfs:comment "Relates a ResourcePageSource to a Distribution describing how extra-mesh or otherwise explicitly packaged source bytes are accessed." .
-
-<hasRequestedSourceHistory> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <hasRequestedTargetHistory> ;
-  rdfs:domain <ResourcePageSource> ;
-  rdfs:range <ArtifactHistory> ;
-  rdfs:label "has requested source history" ;
-  rdfs:comment "Relates a ResourcePageSource to the ArtifactHistory it requests when resolution should stay within a specific history boundary." .
-
-<hasRequestedSourceState> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <hasRequestedTargetState> ;
-  rdfs:domain <ResourcePageSource> ;
-  rdfs:range <HistoricalState> ;
-  rdfs:label "has requested source state" ;
-  rdfs:comment "Relates a ResourcePageSource to an explicitly requested HistoricalState. This names the requested source target, not a runtime-resolved outcome." .
-
-<hasResourcePageSourceMode> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <hasArtifactResolutionMode> ;
-  rdfs:domain <ResourcePageSource> ;
-  rdfs:range <ArtifactResolutionMode> ;
-  rdfs:label "has resource page source mode" ;
-  rdfs:comment "Assigns an ArtifactResolutionMode to a ResourcePageSource." .
-
-<hasResourcePageSourceFallbackPolicy> a owl:ObjectProperty ;
-  rdfs:subPropertyOf <hasArtifactResolutionFallbackPolicy> ;
-  rdfs:domain <ResourcePageSource> ;
-  rdfs:range <ArtifactResolutionFallbackPolicy> ;
-  rdfs:label "has resource page source fallback policy" ;
-  rdfs:comment "Assigns an ArtifactResolutionFallbackPolicy to a ResourcePageSource." .

@@ -13,7 +13,7 @@ Superseded decisions are intentionally retained for traceability. When a decisio
 ### 2026-04-11: Generalize page-source resolution around `ArtifactResolutionTarget`
 
 - Status: Active
-- Decision: Keep `ResourcePageDefinition` as the Knop-owned support artifact for customized identifier pages, but replace the earlier page-bundle helper model with a more general resolution model. Introduce `ArtifactResolutionTarget` as a generic policy-bearing relator for resolving bytes from either a `DigitalArtifact`, a direct `LocatedFile`, or another explicit packaged target. Keep `ResourcePageSource` as a page-specific subclass of `ArtifactResolutionTarget`; keep per-source requested history/state, mode, and fallback policy in core; add `WorkspaceRelativeFile` for workspace-relative unmanaged file references; and use `KnopAssetBundle` only for the bounded `_knop/_assets` helper area. Leave template/chrome configuration for the separate config-ontology track.
+- Decision: Keep `ResourcePageDefinition` as the Knop-owned support artifact for customized identifier pages, but replace the earlier page-bundle helper model with a more general resolution model. Introduce `ArtifactResolutionTarget` as a generic policy-bearing relator for resolving bytes from either a `DigitalArtifact`, a direct `LocatedFile`, or another explicit packaged target. Keep `ResourcePageSource` as a page-specific subclass of `ArtifactResolutionTarget`, but have it use the generic target/history/state/mode/fallback properties directly rather than duplicating page-specific alias properties; add `WorkspaceRelativeFile` for workspace-relative unmanaged file references; and use `KnopAssetBundle` only for the bounded `_knop/_assets` helper area. Leave template/chrome configuration for the separate config-ontology track.
 - References: [[wd.task.2026.2026-04-08_1545-resource-page-definition-and-sources]], [[wd.task.2026.2026-04-08_1735-page-definition-ontology-and-config]], [[ont.task.2026.2026-03-23-config-modernization]]
 - Why:
   - identifier-page customization needs an explicit control-plane artifact without pretending the identifier itself is a payload-bearing `DigitalArtifact`
@@ -25,7 +25,6 @@ Superseded decisions are intentionally retained for traceability. When a decisio
   - template/chrome policy is related, but should remain separate from page-content composition
 - Notes:
   - prefer `ResourcePageRegion` over `Slot` in core
-  - prefer `hasRequestedSourceState` over ambiguous names such as `resourcePageSourceState`
   - `accept` belongs to fallback policy, not to the pinned-vs-current source mode axis
   - `ResourcePageSource` remains useful as a page-specific relator even though the generic pattern is now captured by `ArtifactResolutionTarget`
   - `hasTargetArtifact` is optional when a direct `hasTargetLocatedFile` is sufficient to identify the bytes that should be resolved

@@ -135,7 +135,7 @@ Substantive RDF about a referent should normally live in a payload artifact or d
 - `KnopAssetBundle` is a bounded helper structure for local `_knop/_assets` modeling and does not by itself imply governed artifacts or recursive inventory capture
 - `ArtifactResolutionTarget` is the generic policy-bearing relator for application concerns that need to resolve bytes from an artifact, a specific `LocatedFile`, or another explicit packaged target together with optional history/state/mode/fallback inputs
 - `WorkspaceRelativeFile` is a `LocatedFile` helper addressed by a workspace-relative path rather than an absolute filesystem path
-- `ResourcePageRegion` and `ResourcePageSource` describe page-content composition in core; `ResourcePageSource` specializes `ArtifactResolutionTarget` for page-source binding while template/chrome policy remains a separate config concern
+- `ResourcePageRegion` and `ResourcePageSource` describe page-content composition in core; `ResourcePageSource` specializes `ArtifactResolutionTarget` and uses the generic target/history/state/mode/fallback properties directly while template/chrome policy remains a separate config concern
 - `ReferenceLink` may target either a broad resource identity through `referenceTarget` or a version-pinned state through `referenceTargetState`.
 - `designatorPath` is the mesh-relative path-like naming value carried by a `Knop`; it is not a generic path property for every `SemanticFlowResource`.
 - a `Semantic Flow identifier` is the public IRI formed from `meshBase + Knop.designatorPath`; support resources in the mesh may still have ordinary IRIs without thereby being Semantic Flow identifiers.
