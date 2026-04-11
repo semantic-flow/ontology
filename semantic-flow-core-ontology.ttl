@@ -423,7 +423,7 @@
 
 <ArtifactResolutionTarget> a rdfs:Class ;
   rdfs:label "Artifact resolution target" ;
-  rdfs:comment "A policy-bearing relator that identifies bytes for an application concern by naming a target artifact, a specific LocatedFile, or another explicit packaged/distributed target together with optional requested state, mode, and fallback policy. At least one concrete target should normally be provided, but this ontology does not enforce that cardinality directly." .
+  rdfs:comment "A policy-bearing relator that identifies bytes for an application concern by naming a target artifact, a mesh-local file path string, a specific LocatedFile, or another explicit packaged/distributed target together with optional requested state, mode, and fallback policy. At least one concrete target should normally be provided, but this ontology does not enforce that cardinality directly." .
 
 <ArtifactResolutionMode> a rdfs:Class ;
   rdfs:label "Artifact resolution mode" ;
@@ -449,11 +449,6 @@
   rdfs:label "Accept latest in requested history" ;
   rdfs:comment "If an exact requested state cannot be resolved, the latest available HistoricalState in the requested ArtifactHistory is acceptable." .
 
-<WorkspaceRelativeFile> a rdfs:Class ;
-  rdfs:subClassOf <LocatedFile> ;
-  rdfs:label "Workspace relative file" ;
-  rdfs:comment "A LocatedFile whose bytes are addressed by a path relative to the current workspace root rather than by an absolute filesystem path. It is a helper resource for unmanaged workspace-local inputs and does not by itself imply a governed artifact." .
-
 <ResourcePageRegion> a rdfs:Class ;
   rdfs:label "Resource page region" ;
   rdfs:comment "A structural content region described by a ResourcePageDefinition. Use this for page-content composition, not for template-slot wiring or browser chrome concerns." .
@@ -476,11 +471,11 @@
   rdfs:label "has knop asset bundle" ;
   rdfs:comment "Links a Knop to its bounded local support-asset area, such as '_knop/_assets'." .
 
-<workspaceRelativePath> a owl:DatatypeProperty ;
-  rdfs:domain <WorkspaceRelativeFile> ;
+<targetMeshPath> a owl:DatatypeProperty ;
+  rdfs:domain <ArtifactResolutionTarget> ;
   rdfs:range xsd:string ;
-  rdfs:label "workspace relative path" ;
-  rdfs:comment "A workspace-relative path for a WorkspaceRelativeFile, interpreted relative to the current workspace root rather than as an absolute filesystem path. Values should remain relative." .
+  rdfs:label "target mesh path" ;
+  rdfs:comment "A mesh-root-relative file path naming an unmanaged mesh-local source target that should be resolved directly rather than through artifact history/state lookup. Values should remain relative and stay within the mesh boundary." .
 
 <hasPageRegion> a owl:ObjectProperty ;
   rdfs:domain <ResourcePageDefinition> ;
