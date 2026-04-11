@@ -188,10 +188,10 @@
       }
     },
     {
-      "@id": "delegationChain/",
+      "@id": "hasDelegationChain/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "delegation chain",
-      "rdfs:comment": "Links to a collection of delegation steps showing the authorization chain.",
+      "rdfs:label": "has delegation chain",
+      "rdfs:comment": "Links a provenance context to its collection of delegation steps showing the authorization chain.",
       "schema:domainIncludes": {
         "@id": "ProvenanceContext/"
       },
@@ -248,10 +248,10 @@
       }
     },
     {
-      "@id": "roleType/",
+      "@id": "hasRoleType/",
       "@type": "owl:ObjectProperty",
-      "rdfs:label": "role",
-      "rdfs:comment": "The specific roleType or function the agent performs.",
+      "rdfs:label": "has role type",
+      "rdfs:comment": "Links an agent role assignment to the specific RoleType or function the agent performs.",
       "schema:domainIncludes": {
         "@id": "AgentRole/"
       },

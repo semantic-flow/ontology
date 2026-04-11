@@ -1,0 +1,107 @@
+@base <https://semantic-flow.github.io/ontology/config> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix sflo: <https://semantic-flow.github.io/ontology/core/> .
+
+<> a owl:Ontology ;
+  dcterms:title "Semantic Flow Config Ontology" ;
+  dcterms:description "Vocabulary for Semantic Flow configuration resources and first-pass resource-page presentation configuration. Content composition terms such as page regions, page sources, and bundle-relative content files remain in the core ontology." ;
+  dcterms:creator <https://djradon.github.io/ns/djradon> ;
+  owl:versionInfo "0.1.0-draft" ;
+  owl:imports <https://semantic-flow.github.io/ontology/core/> ;
+  vann:preferredNamespacePrefix "sfcfg" ;
+  vann:preferredNamespaceUri <https://semantic-flow.github.io/ontology/config/> .
+
+#################################################################
+#################################################################
+# Generic configuration model
+#################################################################
+#################################################################
+
+<Config> a rdfs:Class ;
+  rdfs:label "Config" ;
+  rdfs:comment "An RDF configuration description used to control or parameterize Semantic Flow behavior. A Config may be attached directly to a resource or realized as a separately managed ConfigArtifact. This ontology intentionally does not define generic key-level merge semantics, precedence rules, or regex-based bulk template matching." .
+
+<ConfigArtifact> a rdfs:Class ;
+  rdfs:subClassOf <Config>, sflo:DigitalArtifact, sflo:RdfDocument ;
+  rdfs:label "Config artifact" ;
+  rdfs:comment "A named reusable Config that is also a mesh-manageable DigitalArtifact RdfDocument. Use when a config needs stable identity, revision history, working files, or reuse across multiple configured resources." .
+
+<hasConfig> a owl:ObjectProperty ;
+  rdfs:domain rdfs:Resource ;
+  rdfs:range <Config> ;
+  owl:inverseOf <configFor> ;
+  rdfs:label "has config" ;
+  rdfs:comment "Associates a resource with one or more configuration descriptions. Precedence and merge behavior are application-defined rather than implicit in this ontology." .
+
+<configFor> a owl:ObjectProperty ;
+  rdfs:domain <Config> ;
+  rdfs:range rdfs:Resource ;
+  owl:inverseOf <hasConfig> ;
+  rdfs:label "config for" ;
+  rdfs:comment "Inverse of hasConfig: identifies a resource that a Config is intended to configure." .
+
+<hasEffectiveConfig> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <hasConfig> ;
+  rdfs:domain rdfs:Resource ;
+  rdfs:range <Config> ;
+  rdfs:label "has effective config" ;
+  rdfs:comment "Associates a resource with a computed effective Config. This should be treated as a runtime, view, or debugging convenience rather than as authoritative source data." .
+
+#################################################################
+#################################################################
+# Resource-page presentation configuration
+#################################################################
+#################################################################
+
+<ResourcePagePresentationConfig> a rdfs:Class ;
+  rdfs:subClassOf <Config> ;
+  rdfs:label "Resource page presentation config" ;
+  rdfs:comment "A Config describing presentation and chrome preferences adjacent to a ResourcePageDefinition. It names templates, stylesheets, and similar presentation artifacts, but does not encode authored content regions, source bindings, or source-resolution policy; those belong in the core ontology." .
+
+<ResourcePageTemplate> a rdfs:Class ;
+  rdfs:subClassOf sflo:DigitalArtifact ;
+  rdfs:label "Resource page template" ;
+  rdfs:comment "A DigitalArtifact used as a template input for generated resource pages. Template selection should remain explicit or narrowly scoped; this ontology does not define regex-driven template mapping sets." .
+
+<InnerResourcePageTemplate> a rdfs:Class ;
+  rdfs:subClassOf <ResourcePageTemplate> ;
+  rdfs:label "Inner resource page template" ;
+  rdfs:comment "A ResourcePageTemplate used for the inner or body portion of a generated resource page." .
+
+<OuterResourcePageTemplate> a rdfs:Class ;
+  rdfs:subClassOf <ResourcePageTemplate> ;
+  rdfs:label "Outer resource page template" ;
+  rdfs:comment "A ResourcePageTemplate used for the outer shell, chrome, or frame of a generated resource page." .
+
+<ResourcePageStylesheet> a rdfs:Class ;
+  rdfs:subClassOf sflo:DigitalArtifact ;
+  rdfs:label "Resource page stylesheet" ;
+  rdfs:comment "A stylesheet DigitalArtifact referenced by generated resource pages." .
+
+<hasResourcePagePresentationConfig> a owl:ObjectProperty ;
+  rdfs:subPropertyOf <hasConfig> ;
+  rdfs:domain sflo:ResourcePageDefinition ;
+  rdfs:range <ResourcePagePresentationConfig> ;
+  rdfs:label "has resource page presentation config" ;
+  rdfs:comment "Associates a ResourcePageDefinition with adjacent presentation/chrome configuration. Broader defaults, if modeled later, should layer through generic config attachment rather than through regex-based template mapping." .
+
+<hasInnerResourcePageTemplate> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePagePresentationConfig> ;
+  rdfs:range <InnerResourcePageTemplate> ;
+  rdfs:label "has inner resource page template" ;
+  rdfs:comment "Relates a ResourcePagePresentationConfig to an inner/body template artifact." .
+
+<hasOuterResourcePageTemplate> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePagePresentationConfig> ;
+  rdfs:range <OuterResourcePageTemplate> ;
+  rdfs:label "has outer resource page template" ;
+  rdfs:comment "Relates a ResourcePagePresentationConfig to an outer/chrome template artifact." .
+
+<hasResourcePageStylesheet> a owl:ObjectProperty ;
+  rdfs:domain <ResourcePagePresentationConfig> ;
+  rdfs:range <ResourcePageStylesheet> ;
+  rdfs:label "has resource page stylesheet" ;
+  rdfs:comment "Relates a ResourcePagePresentationConfig to one of its stylesheet artifacts." .

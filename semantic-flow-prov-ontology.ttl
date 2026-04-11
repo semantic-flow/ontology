@@ -89,11 +89,11 @@
   rdfs:label "primary agent" ;
   rdfs:comment "Identifies the primary responsible agent for a ProvenanceContext." .
 
-<delegationChain> a owl:ObjectProperty ;
+<hasDelegationChain> a owl:ObjectProperty ;
   rdfs:domain <ProvenanceContext> ;
   rdfs:range <DelegationChain> ;
-  rdfs:label "delegation chain" ;
-  rdfs:comment "Links a ProvenanceContext to a DelegationChain." .
+  rdfs:label "has delegation chain" ;
+  rdfs:comment "Links a ProvenanceContext to its DelegationChain." .
 
 <agentRoles> a owl:ObjectProperty ;
   rdfs:domain <ProvenanceContext> ;
@@ -119,11 +119,11 @@
   rdfs:label "has agent role" ;
   rdfs:comment "Associates an AgentRoleCollection with one of its AgentRole assignments." .
 
-<roleType> a owl:ObjectProperty ;
+<hasRoleType> a owl:ObjectProperty ;
   rdfs:subPropertyOf prov:hadRole ;
   rdfs:domain <AgentRole> ;
   rdfs:range <RoleType> ;
-  rdfs:label "role type" ;
+  rdfs:label "has role type" ;
   rdfs:comment "Assigns a RoleType to an AgentRole." .
 
 <triggeredByActivity> a owl:ObjectProperty ;

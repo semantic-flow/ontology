@@ -173,28 +173,28 @@
       "rdfs:comment": "A stylesheet artifact referenced by resource pages. As an AbstractArtifact, it may evolve via Flow/State and be realized as one or more AbstractFiles."
     },
     {
-      "@id": "innerTemplate",
+      "@id": "hasInnerTemplate",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": "TemplateMapping",
       "rdfs:range": "InnerTemplate",
-      "rdfs:label": "inner template",
-      "rdfs:comment": "Inner template for generated resource pages."
+      "rdfs:label": "has inner template",
+      "rdfs:comment": "Associates a TemplateMapping with its inner template for generated resource pages."
     },
     {
-      "@id": "outerTemplate",
+      "@id": "hasOuterTemplate",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": "TemplateMapping",
       "rdfs:range": "OuterTemplate",
-      "rdfs:label": "outer template",
-      "rdfs:comment": "Outer template for generated resource pages."
+      "rdfs:label": "has outer template",
+      "rdfs:comment": "Associates a TemplateMapping with its outer template for generated resource pages."
     },
     {
-      "@id": "stylesheet",
+      "@id": "hasStylesheet",
       "@type": "owl:ObjectProperty",
       "rdfs:domain": "TemplateMapping",
       "rdfs:range": "Stylesheet",
-      "rdfs:label": "stylesheet",
-      "rdfs:comment": "Stylesheet artifact to include in generated resource pages."
+      "rdfs:label": "has stylesheet",
+      "rdfs:comment": "Associates a TemplateMapping with a stylesheet artifact to include in generated resource pages."
     },
     {
       "@id": "mappingPriority",
