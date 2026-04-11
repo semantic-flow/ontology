@@ -138,7 +138,13 @@
   rdfs:domain <DigitalArtifact> ;
   rdfs:range <LocatedFile> ;
   rdfs:label "has working located file" ;
-  rdfs:comment "Relates a DigitalArtifact directly to its working LocatedFile when a mesh wants sparse authoring support without materializing working/current state resources." .
+  rdfs:comment "Relates a DigitalArtifact directly to its working LocatedFile when a mesh wants sparse authoring support without materializing working/current state resources. When workingFilePath is also asserted and the LocatedFile denotes a mesh-addressable local file, the two SHOULD identify the same current bytes." .
+
+<workingFilePath> a owl:DatatypeProperty ;
+  rdfs:domain <DigitalArtifact> ;
+  rdfs:range xsd:string ;
+  rdfs:label "working file path" ;
+  rdfs:comment "A local runtime path for the current working bytes of a DigitalArtifact. The value is resolved relative to the current mesh root unless a later operational profile says otherwise, may include '../' segments when allowed by operational configuration, and does not by itself imply a mesh-addressable LocatedFile or public IRI. When hasWorkingLocatedFile is also asserted and denotes a mesh-addressable local file, the two SHOULD identify the same current bytes." .
 
 <hasWorkingMeshInventoryFile> a owl:ObjectProperty ;
   rdfs:domain <SemanticMesh> ;
@@ -475,7 +481,7 @@
   rdfs:domain <ArtifactResolutionTarget> ;
   rdfs:range xsd:string ;
   rdfs:label "target mesh path" ;
-  rdfs:comment "A mesh-root-relative file path naming an unmanaged mesh-local source target that should be resolved directly rather than through artifact history/state lookup. Values should remain relative and stay within the mesh boundary." .
+  rdfs:comment "A path resolved relative to the current mesh root that names an unmanaged local source target and should be resolved directly rather than through artifact history/state lookup. Values should remain relative; '../' segments may be allowed by operational configuration, but absolute host paths should not be persisted here." .
 
 <hasPageRegion> a owl:ObjectProperty ;
   rdfs:domain <ResourcePageDefinition> ;
