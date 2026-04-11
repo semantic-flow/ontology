@@ -146,6 +146,12 @@
   rdfs:label "working file path" ;
   rdfs:comment "A local runtime path for the current working bytes of a DigitalArtifact. The value is resolved relative to the current mesh root unless a later operational profile says otherwise, may include '../' segments when allowed by operational configuration, and does not by itself imply a mesh-addressable LocatedFile or public IRI. When hasWorkingLocatedFile is also asserted and denotes a mesh-addressable local file, the two SHOULD identify the same current bytes." .
 
+<workingAccessUrl> a owl:DatatypeProperty ;
+  rdfs:domain <DigitalArtifact> ;
+  rdfs:range xsd:anyURI ;
+  rdfs:label "working access URL" ;
+  rdfs:comment "A current access URL for the working bytes of a DigitalArtifact when those bytes may be fetched or streamed from a remote or otherwise non-local location. This does not by itself imply that a runtime may use network access; that remains an operational-policy question. When workingFilePath, hasWorkingLocatedFile, or both are also asserted, all declared current-byte locators SHOULD identify the same current bytes." .
+
 <hasWorkingMeshInventoryFile> a owl:ObjectProperty ;
   rdfs:domain <SemanticMesh> ;
   rdfs:range <LocatedFile> ;

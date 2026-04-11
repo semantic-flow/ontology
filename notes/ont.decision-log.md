@@ -28,8 +28,10 @@ Superseded decisions are intentionally retained for traceability. When a decisio
   - `accept` belongs to fallback policy, not to the pinned-vs-current source mode axis
   - `ResourcePageSource` remains useful as a page-specific relator even though the generic pattern is now captured by `ArtifactResolutionTarget`
   - `hasTargetArtifact` is optional when `targetMeshPath` or a direct `hasTargetLocatedFile` is sufficient to identify the bytes that should be resolved
-  - `workingFilePath` is the operational local current-byte locator for a `DigitalArtifact`; `hasWorkingLocatedFile` remains the semantic `LocatedFile` facet hook and the two should agree when both denote the same local current file
+  - `workingFilePath` is the operational local current-byte locator for a `DigitalArtifact`; `workingAccessUrl` is the operational remote/external current-byte locator; `hasWorkingLocatedFile` remains the semantic `LocatedFile` facet hook
+  - when `workingFilePath`, `workingAccessUrl`, and `hasWorkingLocatedFile` are all present for the same current working surface, they should agree and mismatch should fail closed in operational profiles that rely on them
   - allowed-directory rules for `targetMeshPath` and `workingFilePath` belong to host/runtime operational config rather than to core ontology
+  - network-use policy for `workingAccessUrl` also belongs to host/runtime operational config rather than to core ontology
 
 ### 2026-04-09: Model customizable identifier pages with bounded page-definition helpers
 
