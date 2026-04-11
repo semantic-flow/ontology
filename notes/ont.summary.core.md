@@ -82,7 +82,7 @@ Use the explicit structural relations `hasArtifactHistory`, `hasHistoricalState`
 - `SemanticMesh` has `Knop`s and mesh-level support resources.
 - `Knop` has exactly one `designatorPath`.
 - `Knop` has support resources and may have one primary payload resource.
-- `Knop` may also have a `ResourcePageDefinition` plus a local `ResourcePageBundle` for customized identifier-page composition.
+- `Knop` may also have a `ResourcePageDefinition` plus an optional `KnopAssetBundle` for customized identifier-page composition and local support assets.
 - The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasReferenceCatalog`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
 
 Current path conventions:
@@ -132,8 +132,10 @@ Substantive RDF about a referent should normally live in a payload artifact or d
 - `DigitalArtifactFacet` is the common superclass for `HistoricalState`, `ArtifactManifestation`, and `LocatedFile`.
 - `ResourcePage` is a `LocatedFile` subclass for the human-facing HTML resource pages that should accompany every `SemanticFlowResource`
 - `ResourcePageDefinition` is a separate artifact-level control resource for customized identifier-page composition; it is not the same thing as the generated HTML `ResourcePage`
-- `ResourcePageBundle`, `ResourcePageBundleFile`, and `ResourcePageAssetBundle` are bounded helper structures for local `_knop/_page` modeling and do not by themselves imply governed artifacts or recursive inventory capture
-- `ResourcePageRegion` and `ResourcePageSource` describe page-content composition in core; template/chrome policy should remain a separate config concern
+- `KnopAssetBundle` is a bounded helper structure for local `_knop/_assets` modeling and does not by itself imply governed artifacts or recursive inventory capture
+- `ArtifactResolutionTarget` is the generic policy-bearing relator for application concerns that need to resolve bytes from an artifact, a specific `LocatedFile`, or another explicit packaged target together with optional history/state/mode/fallback inputs
+- `WorkspaceRelativeFile` is a `LocatedFile` helper addressed by a workspace-relative path rather than an absolute filesystem path
+- `ResourcePageRegion` and `ResourcePageSource` describe page-content composition in core; `ResourcePageSource` specializes `ArtifactResolutionTarget` for page-source binding while template/chrome policy remains a separate config concern
 - `ReferenceLink` may target either a broad resource identity through `referenceTarget` or a version-pinned state through `referenceTargetState`.
 - `designatorPath` is the mesh-relative path-like naming value carried by a `Knop`; it is not a generic path property for every `SemanticFlowResource`.
 - a `Semantic Flow identifier` is the public IRI formed from `meshBase + Knop.designatorPath`; support resources in the mesh may still have ordinary IRIs without thereby being Semantic Flow identifiers.

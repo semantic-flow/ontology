@@ -10,9 +10,29 @@ created: 1773896763313
 
 Superseded decisions are intentionally retained for traceability. When a decision is reversed or replaced, mark it explicitly rather than deleting it.
 
-### 2026-04-09: Model customizable identifier pages with bounded page-definition helpers
+### 2026-04-11: Generalize page-source resolution around `ArtifactResolutionTarget`
 
 - Status: Active
+- Decision: Keep `ResourcePageDefinition` as the Knop-owned support artifact for customized identifier pages, but replace the earlier page-bundle helper model with a more general resolution model. Introduce `ArtifactResolutionTarget` as a generic policy-bearing relator for resolving bytes from either a `DigitalArtifact`, a direct `LocatedFile`, or another explicit packaged target. Keep `ResourcePageSource` as a page-specific subclass of `ArtifactResolutionTarget`; keep per-source requested history/state, mode, and fallback policy in core; add `WorkspaceRelativeFile` for workspace-relative unmanaged file references; and use `KnopAssetBundle` only for the bounded `_knop/_assets` helper area. Leave template/chrome configuration for the separate config-ontology track.
+- References: [[wd.task.2026.2026-04-08_1545-resource-page-definition-and-sources]], [[wd.task.2026.2026-04-08_1735-page-definition-ontology-and-config]], [[ont.task.2026.2026-03-23-config-modernization]]
+- Why:
+  - identifier-page customization needs an explicit control-plane artifact without pretending the identifier itself is a payload-bearing `DigitalArtifact`
+  - page-source resolution is a broader application concern than resource-page rendering alone and should not be trapped in page-specific bundle vocabulary
+  - a source should be allowed to resolve directly from a `LocatedFile` when no artifact-level target is available, while still supporting artifact-targeted resolution with explicit history/state policy
+  - `_knop/_page` should remain a normal support artifact surface centered on `page.ttl`, not a mini container model for every authored file involved in page generation
+  - `_knop/_assets` still benefits from a bounded helper concept, but content/helper files should not all be forced into an asset or bundle abstraction
+  - per-source requested state and fallback policy affect runtime resolution semantics and therefore belong in core rather than being left to ad hoc conventions
+  - template/chrome policy is related, but should remain separate from page-content composition
+- Notes:
+  - prefer `ResourcePageRegion` over `Slot` in core
+  - prefer `hasRequestedSourceState` over ambiguous names such as `resourcePageSourceState`
+  - `accept` belongs to fallback policy, not to the pinned-vs-current source mode axis
+  - `ResourcePageSource` remains useful as a page-specific relator even though the generic pattern is now captured by `ArtifactResolutionTarget`
+  - `hasTargetArtifact` is optional when a direct `hasTargetLocatedFile` is sufficient to identify the bytes that should be resolved
+
+### 2026-04-09: Model customizable identifier pages with bounded page-definition helpers
+
+- Status: Superseded on 2026-04-11 by the `ArtifactResolutionTarget` decision
 - Decision: Add `ResourcePageDefinition` to the live core model as a Knop-owned support artifact for customizable identifier pages. Model the local `_knop/_page` boundary with `ResourcePageBundle`, model member files with `ResourcePageBundleFile`, model `_knop/_page/_assets` with `ResourcePageAssetBundle`, and model authored content composition with `ResourcePageRegion` plus `ResourcePageSource`. Keep per-source requested state, source mode, and fallback policy in core, but leave template/chrome configuration for the separate config-ontology track.
 - References: [[wd.task.2026.2026-04-08_1545-resource-page-definition-and-sources]], [[wd.task.2026.2026-04-08_1735-page-definition-ontology-and-config]], [[ont.task.2026.2026-03-23-config-modernization]]
 - Why:
@@ -21,10 +41,7 @@ Superseded decisions are intentionally retained for traceability. When a decisio
   - per-source requested state and fallback policy affect resource-page resolution semantics and therefore belong in core rather than being left to ad hoc runtime conventions
   - template/chrome policy is related, but should remain separate from page-content composition
 - Notes:
-  - prefer `ResourcePageBundle` over `KnopPageResourceBundle`; ownership belongs in the relation `hasResourcePageBundle`, not in the class name
-  - prefer `ResourcePageRegion` over `Slot` in core
-  - prefer `hasRequestedSourceState` over ambiguous names such as `resourcePageSourceState`
-  - `accept` belongs to fallback policy, not to the pinned-vs-current source mode axis
+  - the later 2026-04-11 decision keeps `ResourcePageDefinition`, `ResourcePageRegion`, and `ResourcePageSource`, but removes the bundle-specific helper vocabulary in favor of generic artifact-resolution terms plus `KnopAssetBundle`
 
 ### 2026-04-02: Replace `ReferentMetadata` with `ReferenceCatalog`
 
