@@ -13,12 +13,12 @@ Superseded decisions are intentionally retained for traceability. When a decisio
 ### 2026-04-11: Generalize page-source resolution around `ArtifactResolutionTarget`
 
 - Status: Active
-- Decision: Keep `ResourcePageDefinition` as the Knop-owned support artifact for customized identifier pages, but replace the earlier page-bundle helper model with a more general resolution model. Introduce `ArtifactResolutionTarget` as a generic policy-bearing relator for resolving bytes from either a `DigitalArtifact`, a direct mesh-local path string, a direct `LocatedFile`, or another explicit packaged target. Keep `ResourcePageSource` as a page-specific subclass of `ArtifactResolutionTarget`, but have it use the generic target/history/state/mode/fallback properties directly rather than duplicating page-specific alias properties; use `targetMeshPath` for unmanaged mesh-local file references; and use `KnopAssetBundle` only for the bounded `_knop/_assets` helper area. Leave template/chrome configuration for the separate config-ontology track.
+- Decision: Keep `ResourcePageDefinition` as the Knop-owned support artifact for customized identifier pages, but replace the earlier page-bundle helper model with a more general resolution model. Introduce `ArtifactResolutionTarget` as a generic policy-bearing relator for resolving bytes from either a `DigitalArtifact`, a direct mesh-local path string, a direct access URL, a direct `LocatedFile`, or another explicit packaged target. Keep `ResourcePageSource` as a page-specific subclass of `ArtifactResolutionTarget`, but have it use the generic target/history/state/mode/fallback properties directly rather than duplicating page-specific alias properties; use `targetMeshPath` for unmanaged mesh-local file references; use `targetAccessUrl` for explicit remote/external target URLs when operational policy allows them; and use `KnopAssetBundle` only for the bounded `_knop/_assets` helper area. Leave template/chrome configuration for the separate config-ontology track.
 - References: [[wd.task.2026.2026-04-08_1545-resource-page-definition-and-sources]], [[wd.task.2026.2026-04-08_1735-page-definition-ontology-and-config]], [[ont.task.2026.2026-03-23-config-modernization]]
 - Why:
   - identifier-page customization needs an explicit control-plane artifact without pretending the identifier itself is a payload-bearing `DigitalArtifact`
   - page-source resolution is a broader application concern than resource-page rendering alone and should not be trapped in page-specific bundle vocabulary
-  - a source should be allowed to resolve directly from a mesh-local path string or a direct `LocatedFile` when no artifact-level target is available, while still supporting artifact-targeted resolution with explicit history/state policy
+  - a source should be allowed to resolve directly from a mesh-local path string, a direct access URL, or a direct `LocatedFile` when no artifact-level target is available, while still supporting artifact-targeted resolution with explicit history/state policy
   - `_knop/_page` should remain a normal support artifact surface centered on `page.ttl`, not a mini container model for every authored file involved in page generation
   - `_knop/_assets` still benefits from a bounded helper concept, but content/helper files should not all be forced into an asset or bundle abstraction
   - per-source requested state and fallback policy affect runtime resolution semantics and therefore belong in core rather than being left to ad hoc conventions
@@ -27,11 +27,12 @@ Superseded decisions are intentionally retained for traceability. When a decisio
   - prefer `ResourcePageRegion` over `Slot` in core
   - `accept` belongs to fallback policy, not to the pinned-vs-current source mode axis
   - `ResourcePageSource` remains useful as a page-specific relator even though the generic pattern is now captured by `ArtifactResolutionTarget`
-  - `hasTargetArtifact` is optional when `targetMeshPath` or a direct `hasTargetLocatedFile` is sufficient to identify the bytes that should be resolved
+  - `hasTargetArtifact` is optional when `targetMeshPath`, `targetAccessUrl`, or a direct `hasTargetLocatedFile` is sufficient to identify the bytes that should be resolved
   - `workingFilePath` is the operational local current-byte locator for a `DigitalArtifact`; `workingAccessUrl` is the operational remote/external current-byte locator; `hasWorkingLocatedFile` remains the semantic `LocatedFile` facet hook
   - when `workingFilePath`, `workingAccessUrl`, and `hasWorkingLocatedFile` are all present for the same current working surface, they should agree and mismatch should fail closed in operational profiles that rely on them
   - allowed-directory rules for `targetMeshPath` and `workingFilePath` belong to host/runtime operational config rather than to core ontology
   - network-use policy for `workingAccessUrl` also belongs to host/runtime operational config rather than to core ontology
+  - network-use policy for `targetAccessUrl` also belongs to host/runtime operational config rather than to core ontology
 
 ### 2026-04-09: Model customizable identifier pages with bounded page-definition helpers
 

@@ -489,6 +489,12 @@
   rdfs:label "target mesh path" ;
   rdfs:comment "A path resolved relative to the current mesh root that names an unmanaged local source target and should be resolved directly rather than through artifact history/state lookup. Values should remain relative; '../' segments may be allowed by operational configuration, but absolute host paths should not be persisted here." .
 
+<targetAccessUrl> a owl:DatatypeProperty ;
+  rdfs:domain <ArtifactResolutionTarget> ;
+  rdfs:range xsd:anyURI ;
+  rdfs:label "target access URL" ;
+  rdfs:comment "An access URL for the target bytes of an ArtifactResolutionTarget when those bytes may be fetched or streamed from a remote or otherwise non-local location. This does not by itself imply that a runtime may use network access; that remains an operational-policy question. When targetMeshPath, hasTargetArtifact, hasTargetLocatedFile, or other explicit target locators are also asserted, all declared target locators SHOULD identify the same target bytes." .
+
 <hasPageRegion> a owl:ObjectProperty ;
   rdfs:domain <ResourcePageDefinition> ;
   rdfs:range <ResourcePageRegion> ;
