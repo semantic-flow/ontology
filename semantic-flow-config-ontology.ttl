@@ -1,13 +1,14 @@
 @base <https://semantic-flow.github.io/ontology/config> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix sflo: <https://semantic-flow.github.io/ontology/core/> .
 
 <> a owl:Ontology ;
   dcterms:title "Semantic Flow Config Ontology" ;
-  dcterms:description "Vocabulary for Semantic Flow configuration resources and first-pass resource-page presentation configuration. Content composition terms such as page regions, page sources, and bundle-relative content files remain in the core ontology." ;
+  dcterms:description "Vocabulary for Semantic Flow configuration resources, first-pass operational runtime-resolution policy, and first-pass resource-page presentation configuration. Content composition terms such as page regions, page sources, and direct target/current-byte locators remain in the core ontology." ;
   dcterms:creator <https://djradon.github.io/ns/djradon> ;
   owl:versionInfo "0.1.0-draft" ;
   owl:imports <https://semantic-flow.github.io/ontology/core/> ;
@@ -49,6 +50,131 @@
   rdfs:range <Config> ;
   rdfs:label "has effective config" ;
   rdfs:comment "Associates a resource with a computed effective Config. This should be treated as a runtime, view, or debugging convenience rather than as authoritative source data." .
+
+#################################################################
+#################################################################
+# Operational runtime-resolution configuration
+#################################################################
+#################################################################
+
+<OperationalConfig> a rdfs:Class ;
+  rdfs:subClassOf <Config> ;
+  rdfs:label "Operational config" ;
+  rdfs:comment "A Config describing host/runtime policy rather than portable mesh behavior. OperationalConfig is the broader first-pass root for execution-surface policy such as local-path and remote-access allowances used by CLI, daemon, or similar runtime surfaces. Narrower specializations such as RuntimeResolutionConfig may be added later if the vocabulary grows enough to justify them." .
+
+<RepoOperationalConfig> a rdfs:Class ;
+  rdfs:subClassOf <OperationalConfig> ;
+  rdfs:label "Repo operational config" ;
+  rdfs:comment "An OperationalConfig intended to travel with a checkout or repo, for example via a root-level file such as /.sf-repo-access.ttl. RepoOperationalConfig may allow repo-internal or constrained repo-adjacent access, but should not by itself imply arbitrary host access outside the checked-out repo boundary." .
+
+<LocalOperationalConfig> a rdfs:Class ;
+  rdfs:subClassOf <OperationalConfig> ;
+  rdfs:label "Local operational config" ;
+  rdfs:comment "An OperationalConfig intended to remain user- or machine-local, for example via ~/.sf-local-access.ttl. Use for broader host trust decisions such as extra-repo local-directory allowances, remote-access allowances, or user-specific operational restrictions/extensions that should not travel with the repo by default." .
+
+<LocalPathAccessRule> a rdfs:Class ;
+  rdfs:label "Local path access rule" ;
+  rdfs:comment "A rule describing when an operational local-path locator such as workingFilePath or targetMeshPath may resolve outside the default runtime boundary. The first-pass model is deny-by-default: access is allowed only when at least one applicable LocalPathAccessRule matches." .
+
+<LocalPathBase> a rdfs:Class ;
+  rdfs:label "Local path base" ;
+  rdfs:comment "A controlled vocabulary naming the base against which a LocalPathAccessRule pathPrefix should be interpreted." .
+
+<LocalPathBase/MeshRoot> a <LocalPathBase> ;
+  rdfs:label "Mesh root local path base" ;
+  rdfs:comment "Interpret the pathPrefix relative to the current mesh root." .
+
+<LocalPathBase/UserHome> a <LocalPathBase> ;
+  rdfs:label "User home local path base" ;
+  rdfs:comment "Interpret the pathPrefix relative to the current user's home directory." .
+
+<LocalPathBase/AbsolutePath> a <LocalPathBase> ;
+  rdfs:label "Absolute path local path base" ;
+  rdfs:comment "Interpret the pathPrefix as an absolute host path prefix." .
+
+<LocalPathLocatorKind> a rdfs:Class ;
+  rdfs:label "Local path locator kind" ;
+  rdfs:comment "A controlled vocabulary naming which local-path locator kinds a LocalPathAccessRule applies to." .
+
+<LocalPathLocatorKind/Any> a <LocalPathLocatorKind> ;
+  rdfs:label "Any local path locator kind" ;
+  rdfs:comment "Applies to any supported local-path locator kind." .
+
+<LocalPathLocatorKind/WorkingFilePath> a <LocalPathLocatorKind> ;
+  rdfs:label "Working file path local path locator kind" ;
+  rdfs:comment "Applies specifically to workingFilePath resolution." .
+
+<LocalPathLocatorKind/TargetMeshPath> a <LocalPathLocatorKind> ;
+  rdfs:label "Target mesh path local path locator kind" ;
+  rdfs:comment "Applies specifically to targetMeshPath resolution." .
+
+<RemoteAccessRule> a rdfs:Class ;
+  rdfs:label "Remote access rule" ;
+  rdfs:comment "A rule describing when a direct remote/external locator such as workingAccessUrl or targetAccessUrl may be followed. The first-pass model is deny-by-default: remote access is allowed only when at least one applicable RemoteAccessRule matches." .
+
+<RemoteLocatorKind> a rdfs:Class ;
+  rdfs:label "Remote locator kind" ;
+  rdfs:comment "A controlled vocabulary naming which remote locator kinds a RemoteAccessRule applies to." .
+
+<RemoteLocatorKind/Any> a <RemoteLocatorKind> ;
+  rdfs:label "Any remote locator kind" ;
+  rdfs:comment "Applies to any supported remote locator kind." .
+
+<RemoteLocatorKind/WorkingAccessUrl> a <RemoteLocatorKind> ;
+  rdfs:label "Working access URL remote locator kind" ;
+  rdfs:comment "Applies specifically to workingAccessUrl resolution." .
+
+<RemoteLocatorKind/TargetAccessUrl> a <RemoteLocatorKind> ;
+  rdfs:label "Target access URL remote locator kind" ;
+  rdfs:comment "Applies specifically to targetAccessUrl resolution." .
+
+<hasLocalPathAccessRule> a owl:ObjectProperty ;
+  rdfs:domain <OperationalConfig> ;
+  rdfs:range <LocalPathAccessRule> ;
+  rdfs:label "has local path access rule" ;
+  rdfs:comment "Associates an OperationalConfig with one of its local-path access rules. This ontology intentionally defines positive allow rules only; deny behavior is expressed by absence of a matching rule rather than by a separate deny vocabulary in the first pass." .
+
+<hasRemoteAccessRule> a owl:ObjectProperty ;
+  rdfs:domain <OperationalConfig> ;
+  rdfs:range <RemoteAccessRule> ;
+  rdfs:label "has remote access rule" ;
+  rdfs:comment "Associates an OperationalConfig with one of its remote-access rules. This ontology intentionally defines positive allow rules only; deny behavior is expressed by absence of a matching rule rather than by a separate deny vocabulary in the first pass." .
+
+<hasLocalPathBase> a owl:ObjectProperty ;
+  rdfs:domain <LocalPathAccessRule> ;
+  rdfs:range <LocalPathBase> ;
+  rdfs:label "has local path base" ;
+  rdfs:comment "Identifies the base against which a LocalPathAccessRule pathPrefix is interpreted." .
+
+<hasLocalPathLocatorKind> a owl:ObjectProperty ;
+  rdfs:domain <LocalPathAccessRule> ;
+  rdfs:range <LocalPathLocatorKind> ;
+  rdfs:label "has local path locator kind" ;
+  rdfs:comment "Identifies which local-path locator kind a LocalPathAccessRule applies to." .
+
+<pathPrefix> a owl:DatatypeProperty ;
+  rdfs:domain <LocalPathAccessRule> ;
+  rdfs:range xsd:string ;
+  rdfs:label "path prefix" ;
+  rdfs:comment "A normalized path-prefix string interpreted relative to the rule's declared LocalPathBase. The first-pass model favors explicit path prefixes over regex or implicit base semantics." .
+
+<hasRemoteLocatorKind> a owl:ObjectProperty ;
+  rdfs:domain <RemoteAccessRule> ;
+  rdfs:range <RemoteLocatorKind> ;
+  rdfs:label "has remote locator kind" ;
+  rdfs:comment "Identifies which remote locator kind a RemoteAccessRule applies to." .
+
+<allowedRemoteScheme> a owl:DatatypeProperty ;
+  rdfs:domain <RemoteAccessRule> ;
+  rdfs:range xsd:string ;
+  rdfs:label "allowed remote scheme" ;
+  rdfs:comment "A URI scheme such as https that is allowed by a RemoteAccessRule." .
+
+<allowedRemoteOrigin> a owl:DatatypeProperty ;
+  rdfs:domain <RemoteAccessRule> ;
+  rdfs:range xsd:anyURI ;
+  rdfs:label "allowed remote origin" ;
+  rdfs:comment "An allowed remote origin or origin-like base URI for a RemoteAccessRule. Interpretation should stay conservative and fail closed when the runtime cannot determine that a candidate URL matches the configured origin boundary." .
 
 #################################################################
 #################################################################

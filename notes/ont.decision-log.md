@@ -10,6 +10,24 @@ created: 1773896763313
 
 Superseded decisions are intentionally retained for traceability. When a decision is reversed or replaced, mark it explicitly rather than deleting it.
 
+### 2026-04-12: Model operational runtime-resolution policy in the config ontology with repo/local access layers
+
+- Status: Active
+- Decision: Keep the first-pass operational runtime-resolution vocabulary in the live config ontology rather than blocking on a separate host/operational companion ontology. Use `OperationalConfig` as the broad root concept, with `RepoOperationalConfig` for repo-traveling policy and `LocalOperationalConfig` for user- or machine-local policy. Model local-boundary allowances with positive `LocalPathAccessRule` resources carrying an explicit base plus `pathPrefix`, and model remote-boundary allowances with positive `RemoteAccessRule` resources carrying locator-kind plus scheme/origin constraints. Keep mesh-managed `ConfigArtifact` work distinct from host trust/access policy even though both live in the broader config line.
+- References: [[wd.task.2026.2026-04-11_1723-operational-config-for-runtime-resolution]], [[wd.task.2026.2026-04-08_1545-resource-page-definition-and-sources]], [[wd.task.2026.2026-04-08_1735-page-definition-ontology-and-config]], [[ont.task.2026.2026-03-23-config-modernization]]
+- Why:
+  - CLI and daemon both need the same operational path/URL policy surface, so the first-pass model should not stay daemon-centric
+  - the current config ontology already provides the generic `Config` substrate, so keeping operational policy there is a smaller and clearer first step than introducing a separate namespace immediately
+  - repo-traveling policy and machine-local policy have different trust/portability expectations and should not be collapsed into one undifferentiated config source
+  - the immediate runtime need is a deny-by-default allowlist model for `workingFilePath` and `targetMeshPath`, not a larger filesystem-resource ontology
+  - explicit rule objects with declared bases and path prefixes are easier to implement and reason about than regex or implicit serializer-dependent base semantics
+- Notes:
+  - the first-pass effective policy is the union of discovered applicable positive allow rules from repo and local config; absence of a matching rule denies access
+  - likely conventional files are `/.sf-repo-access.ttl` and `~/.sf-local-access.ttl`, but the exact discovery contract remains an application-level concern
+  - a repo-traveling access file should not by itself imply arbitrary host access outside the checked-out repo boundary
+  - richer directory-resource modeling or explicit deny/override vocabulary can be added later if real pressure appears
+  - `RuntimeResolutionConfig` may still appear later as a narrower subtype if the operational vocabulary grows enough to justify it
+
 ### 2026-04-11: Generalize page-source resolution around `ArtifactResolutionTarget`
 
 - Status: Active
