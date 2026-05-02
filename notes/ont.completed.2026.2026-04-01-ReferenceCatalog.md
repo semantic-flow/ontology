@@ -168,7 +168,7 @@ This keeps `ReferenceCatalog` aligned with other support artifacts while allowin
 - [x] Add SHACL support that keeps `ReferenceLink` usage aligned with the revised model, especially that `referenceLinkFor` points to the actual subject resource rather than the Knop support object.
 - [x] Update [[ont.summary.core]] to replace `ReferentMetadata` with `ReferenceCatalog` in the artifact-level support story.
 - [x] Add a decision entry to [[ont.decision-log]] capturing the removal of `ReferentMetadata` and the introduction of `ReferenceCatalog`.
-- [x] Update [[ont.use-cases.alice-bio]] so the Alice Bio example reflects a `ReferenceCatalog` artifact rather than referent metadata or inventory-held links.
+- [x] Update [[ont.use-case.biographical-data-publishing]] so the Alice Bio example reflects a `ReferenceCatalog` artifact rather than referent metadata or inventory-held links.
 - [x] Update the Alice Bio fixture task note at [[wd.task.2026.2026-03-25-mesh-alice-bio]] so `08` and `09` reference the new artifact shape.
 - [x] Update the framework conformance task note at [[sf.task.2026.2026-03-29-conformance-for-mesh-alice-bio]] if the manifest assumptions need to change.
 - [x] Refactor the `08-alice-bio-referenced` fixture state in `mesh-alice-bio` so it introduces a `ReferenceCatalog` artifact and moves the `ReferenceLink` out of Knop inventory.

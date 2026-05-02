@@ -140,7 +140,7 @@ This still leaves room for later named histories such as a redacted or migrated 
 - update `semantic-flow-core-ontology.ttl` to remove `ArtifactContainer`, add `ArtifactHistory`, `hasArtifactHistory`, `currentArtifactHistory`, `historyOrdinal`, `nextHistoryOrdinal`, `nextStateOrdinal`, and revise comments/domain expectations for history relations
 - update `sflo-core-shacl.jsonld` so validation matches the revised core model, especially around `hasHistoricalState`, `latestHistoricalState`, and any assumptions that still target `DigitalArtifact` directly
 - update `notes/ont.summary.core.md` to describe the revised artifact/history model and new path examples
-- update `notes/ont.use-cases.alice-bio.md` so history resources and states use the new explicit `ArtifactHistory` framing rather than direct artifact-to-state structure
+- update `notes/ont.use-case.biographical-data-publishing.md` so history resources and states use the new explicit `ArtifactHistory` framing rather than direct artifact-to-state structure
 - add a decision entry in `notes/ont.decision-log.md` adopting `ArtifactHistory` and the `_historyNNN` / `_sNNNN` default naming direction while keeping `ArtifactFlow` out of the active core
 - update [wd.task.2026.2026-03-25-mesh-alice-bio.md](../../../documentation/notes/wd.task.2026.2026-03-25-mesh-alice-bio.md) so the branch plan and example paths for woven history generation match the new model
 

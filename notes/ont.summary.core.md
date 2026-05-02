@@ -167,4 +167,4 @@ Also do not assume:
 
 ## Example
 
-For a concrete sketch of the current model, see [ont.use-cases.alice-bio.md](./ont.use-cases.alice-bio.md).
+For a use-case-oriented sketch that exercises the current model, see [[ont.use-case.biographical-data-publishing]].
