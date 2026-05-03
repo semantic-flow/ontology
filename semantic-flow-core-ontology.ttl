@@ -138,19 +138,19 @@
   rdfs:domain <DigitalArtifact> ;
   rdfs:range <LocatedFile> ;
   rdfs:label "has working located file" ;
-  rdfs:comment "Relates a DigitalArtifact directly to its working LocatedFile when a mesh wants sparse authoring support without materializing working/current state resources. When workingFilePath is also asserted and the LocatedFile denotes a mesh-addressable local file, the two SHOULD identify the same current bytes." .
+  rdfs:comment "Relates a DigitalArtifact directly to its working LocatedFile when a mesh wants sparse authoring support without materializing working/current state resources. When workingLocalRelativePath is also asserted and the LocatedFile denotes a mesh-addressable local file, the two SHOULD identify the same current bytes." .
 
-<workingFilePath> a owl:DatatypeProperty ;
+<workingLocalRelativePath> a owl:DatatypeProperty ;
   rdfs:domain <DigitalArtifact> ;
   rdfs:range xsd:string ;
-  rdfs:label "working file path" ;
-  rdfs:comment "A local runtime path for the current working bytes of a DigitalArtifact. The value is resolved relative to the current mesh root unless a later operational profile says otherwise, may include '../' segments when allowed by operational configuration, and does not by itself imply a mesh-addressable LocatedFile or public IRI. When hasWorkingLocatedFile is also asserted and denotes a mesh-addressable local file, the two SHOULD identify the same current bytes." .
+  rdfs:label "working local relative path" ;
+  rdfs:comment "A local relative path for the current working bytes of a DigitalArtifact. The value is resolved relative to the current mesh root, may include '../' segments when allowed by active config, and does not by itself imply a mesh-addressable LocatedFile or public IRI. Absolute host paths should not be persisted here. When hasWorkingLocatedFile is also asserted and denotes a mesh-addressable local file, the two SHOULD identify the same current bytes." .
 
 <workingAccessUrl> a owl:DatatypeProperty ;
   rdfs:domain <DigitalArtifact> ;
   rdfs:range xsd:anyURI ;
   rdfs:label "working access URL" ;
-  rdfs:comment "A current access URL for the working bytes of a DigitalArtifact when those bytes may be fetched or streamed from a remote or otherwise non-local location. This does not by itself imply that a runtime may use network access; that remains an operational-policy question. When workingFilePath, hasWorkingLocatedFile, or both are also asserted, all declared current-byte locators SHOULD identify the same current bytes." .
+  rdfs:comment "A current access URL for the working bytes of a DigitalArtifact when those bytes may be fetched or streamed from a remote or otherwise non-local location. This does not by itself imply that a runtime may use network access; that remains an operational-policy question. When workingLocalRelativePath, hasWorkingLocatedFile, or both are also asserted, all declared current-byte locators SHOULD identify the same current bytes." .
 
 <hasWorkingMeshInventoryFile> a owl:ObjectProperty ;
   rdfs:domain <SemanticMesh> ;
@@ -483,17 +483,17 @@
   rdfs:label "has knop asset bundle" ;
   rdfs:comment "Links a Knop to its bounded local support-asset area, such as '_knop/_assets'." .
 
-<targetMeshPath> a owl:DatatypeProperty ;
+<targetLocalRelativePath> a owl:DatatypeProperty ;
   rdfs:domain <ArtifactResolutionTarget> ;
   rdfs:range xsd:string ;
-  rdfs:label "target mesh path" ;
-  rdfs:comment "A path resolved relative to the current mesh root that names an unmanaged local source target and should be resolved directly rather than through artifact history/state lookup. Values should remain relative; '../' segments may be allowed by operational configuration, but absolute host paths should not be persisted here." .
+  rdfs:label "target local relative path" ;
+  rdfs:comment "A local relative path resolved from the current mesh root that names an unmanaged local source target and should be resolved directly rather than through artifact history/state lookup. Values should remain relative; '../' segments may be allowed by active config, but absolute host paths should not be persisted here." .
 
 <targetAccessUrl> a owl:DatatypeProperty ;
   rdfs:domain <ArtifactResolutionTarget> ;
   rdfs:range xsd:anyURI ;
   rdfs:label "target access URL" ;
-  rdfs:comment "An access URL for the target bytes of an ArtifactResolutionTarget when those bytes may be fetched or streamed from a remote or otherwise non-local location. This does not by itself imply that a runtime may use network access; that remains an operational-policy question. When targetMeshPath, hasTargetArtifact, hasTargetLocatedFile, or other explicit target locators are also asserted, all declared target locators SHOULD identify the same target bytes." .
+  rdfs:comment "An access URL for the target bytes of an ArtifactResolutionTarget when those bytes may be fetched or streamed from a remote or otherwise non-local location. This does not by itself imply that a runtime may use network access; that remains an operational-policy question. When targetLocalRelativePath, hasTargetArtifact, hasTargetLocatedFile, or other explicit target locators are also asserted, all declared target locators SHOULD identify the same target bytes." .
 
 <hasPageRegion> a owl:ObjectProperty ;
   rdfs:domain <ResourcePageDefinition> ;

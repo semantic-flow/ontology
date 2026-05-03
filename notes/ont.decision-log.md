@@ -10,28 +10,28 @@ created: 1773896763313
 
 Superseded decisions are intentionally retained for traceability. When a decision is reversed or replaced, mark it explicitly rather than deleting it.
 
-### 2026-04-12: Model operational runtime-resolution policy in the config ontology with repo/local access layers
+### 2026-04-12: Model runtime-resolution policy in the config ontology with mesh/local access layers
 
 - Status: Active
-- Decision: Keep the first-pass operational runtime-resolution vocabulary in the live config ontology rather than blocking on a separate host/operational companion ontology. Use `OperationalConfig` as the broad root concept, with `RepoOperationalConfig` for repo-traveling policy and `LocalOperationalConfig` for user- or machine-local policy. Model local-boundary allowances with positive `LocalPathAccessRule` resources carrying an explicit base plus `pathPrefix`, and model remote-boundary allowances with positive `RemoteAccessRule` resources carrying locator-kind plus scheme/origin constraints. Keep mesh-managed `ConfigArtifact` work distinct from host trust/access policy even though both live in the broader config line.
+- Decision: Keep the first-pass runtime-resolution vocabulary in the live config ontology rather than blocking on a separate host/operational companion ontology. Use `MeshConfig` for portable mesh-carried config and `LocalConfig` for user- or machine-local config; keep `OperationalConfig` for host/runtime policy rather than making mesh config a subclass of it. Model local-boundary allowances with positive `LocalPathAccessRule` resources carrying an explicit base plus `pathPrefix`, and model remote-boundary allowances with positive `RemoteAccessRule` resources carrying locator-kind plus scheme/origin constraints.
 - References: [[wd.task.2026.2026-04-11_1723-operational-config-for-runtime-resolution]], [[wd.task.2026.2026-04-08_1545-resource-page-definition-and-sources]], [[wd.task.2026.2026-04-08_1735-page-definition-ontology-and-config]], [[ont.task.2026.2026-03-23-config-modernization]]
 - Why:
   - CLI and daemon both need the same operational path/URL policy surface, so the first-pass model should not stay daemon-centric
   - the current config ontology already provides the generic `Config` substrate, so keeping operational policy there is a smaller and clearer first step than introducing a separate namespace immediately
-  - repo-traveling policy and machine-local policy have different trust/portability expectations and should not be collapsed into one undifferentiated config source
-  - the immediate runtime need is a deny-by-default allowlist model for `workingFilePath` and `targetMeshPath`, not a larger filesystem-resource ontology
+  - mesh-carried config and machine-local config have different trust/portability expectations and should not be collapsed into one undifferentiated config source
+  - the immediate runtime need is a deny-by-default allowlist model for `workingLocalRelativePath` and `targetLocalRelativePath`, not a larger filesystem-resource ontology
   - explicit rule objects with declared bases and path prefixes are easier to implement and reason about than regex or implicit serializer-dependent base semantics
 - Notes:
-  - the first-pass effective policy is the union of discovered applicable positive allow rules from repo and local config; absence of a matching rule denies access
-  - likely conventional files are `/.sf-repo-access.ttl` and `~/.sf-local-access.ttl`, but the exact discovery contract remains an application-level concern
-  - a repo-traveling access file should not by itself imply arbitrary host access outside the checked-out repo boundary
+  - the first-pass effective policy is the union of discovered applicable positive allow rules from mesh and local config; absence of a matching rule denies access
+  - likely conventional files are `_mesh/_config/config.ttl` and `~/.sf-local-access.ttl`, but the exact discovery contract remains an application-level concern
+  - mesh-carried config should not by itself imply arbitrary host access outside the active workspace boundary
   - richer directory-resource modeling or explicit deny/override vocabulary can be added later if real pressure appears
   - `RuntimeResolutionConfig` may still appear later as a narrower subtype if the operational vocabulary grows enough to justify it
 
 ### 2026-04-11: Generalize page-source resolution around `ArtifactResolutionTarget`
 
 - Status: Active
-- Decision: Keep `ResourcePageDefinition` as the Knop-owned support artifact for customized identifier pages, but replace the earlier page-bundle helper model with a more general resolution model. Introduce `ArtifactResolutionTarget` as a generic policy-bearing relator for resolving bytes from either a `DigitalArtifact`, a direct mesh-local path string, a direct access URL, a direct `LocatedFile`, or another explicit packaged target. Keep `ResourcePageSource` as a page-specific subclass of `ArtifactResolutionTarget`, but have it use the generic target/history/state/mode/fallback properties directly rather than duplicating page-specific alias properties; use `targetMeshPath` for unmanaged mesh-local file references; use `targetAccessUrl` for explicit remote/external target URLs when operational policy allows them; and use `KnopAssetBundle` only for the bounded `_knop/_assets` helper area. Leave template/chrome configuration for the separate config-ontology track.
+- Decision: Keep `ResourcePageDefinition` as the Knop-owned support artifact for customized identifier pages, but replace the earlier page-bundle helper model with a more general resolution model. Introduce `ArtifactResolutionTarget` as a generic policy-bearing relator for resolving bytes from either a `DigitalArtifact`, a direct mesh-local path string, a direct access URL, a direct `LocatedFile`, or another explicit packaged target. Keep `ResourcePageSource` as a page-specific subclass of `ArtifactResolutionTarget`, but have it use the generic target/history/state/mode/fallback properties directly rather than duplicating page-specific alias properties; use `targetLocalRelativePath` for unmanaged mesh-local file references; use `targetAccessUrl` for explicit remote/external target URLs when operational policy allows them; and use `KnopAssetBundle` only for the bounded `_knop/_assets` helper area. Leave template/chrome configuration for the separate config-ontology track.
 - References: [[wd.task.2026.2026-04-08_1545-resource-page-definition-and-sources]], [[wd.task.2026.2026-04-08_1735-page-definition-ontology-and-config]], [[ont.task.2026.2026-03-23-config-modernization]]
 - Why:
   - identifier-page customization needs an explicit control-plane artifact without pretending the identifier itself is a payload-bearing `DigitalArtifact`
@@ -45,10 +45,10 @@ Superseded decisions are intentionally retained for traceability. When a decisio
   - prefer `ResourcePageRegion` over `Slot` in core
   - `accept` belongs to fallback policy, not to the pinned-vs-current source mode axis
   - `ResourcePageSource` remains useful as a page-specific relator even though the generic pattern is now captured by `ArtifactResolutionTarget`
-  - `hasTargetArtifact` is optional when `targetMeshPath`, `targetAccessUrl`, or a direct `hasTargetLocatedFile` is sufficient to identify the bytes that should be resolved
-  - `workingFilePath` is the operational local current-byte locator for a `DigitalArtifact`; `workingAccessUrl` is the operational remote/external current-byte locator; `hasWorkingLocatedFile` remains the semantic `LocatedFile` facet hook
-  - when `workingFilePath`, `workingAccessUrl`, and `hasWorkingLocatedFile` are all present for the same current working surface, they should agree and mismatch should fail closed in operational profiles that rely on them
-  - allowed-directory rules for `targetMeshPath` and `workingFilePath` belong to host/runtime operational config rather than to core ontology
+  - `hasTargetArtifact` is optional when `targetLocalRelativePath`, `targetAccessUrl`, or a direct `hasTargetLocatedFile` is sufficient to identify the bytes that should be resolved
+  - `workingLocalRelativePath` is the operational local current-byte locator for a `DigitalArtifact`; `workingAccessUrl` is the operational remote/external current-byte locator; `hasWorkingLocatedFile` remains the semantic `LocatedFile` facet hook
+  - when `workingLocalRelativePath`, `workingAccessUrl`, and `hasWorkingLocatedFile` are all present for the same current working surface, they should agree and mismatch should fail closed in operational profiles that rely on them
+  - allowed-directory rules for `targetLocalRelativePath` and `workingLocalRelativePath` belong to host/runtime operational config rather than to core ontology
   - network-use policy for `workingAccessUrl` also belongs to host/runtime operational config rather than to core ontology
   - network-use policy for `targetAccessUrl` also belongs to host/runtime operational config rather than to core ontology
 

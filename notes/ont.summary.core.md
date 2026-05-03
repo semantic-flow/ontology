@@ -72,12 +72,12 @@ Interpretation:
 Sparse cases are explicitly supported:
 
 - a `DigitalArtifact` may have a `hasWorkingLocatedFile` without materializing an explicit history or working state
-- a `DigitalArtifact` may have a `workingFilePath` when runtime operations need a local current-byte path that is not itself a mesh-addressable `LocatedFile`
+- a `DigitalArtifact` may have a `workingLocalRelativePath` when runtime operations need a local current-byte path that is not itself a mesh-addressable `LocatedFile`
 - a `DigitalArtifact` may have a `workingAccessUrl` when its current working bytes are externally accessible without first being copied into a mesh-local working file
 - a `DigitalArtifact` may link directly to an `ArtifactManifestation` when no explicit `ArtifactHistory` / `HistoricalState` structure is materialized
 - a `SemanticMesh` or `Knop` may point directly to its current inventory file via `hasWorkingMeshInventoryFile` or `hasWorkingKnopInventoryFile` without restating inventory-artifact structure in metadata documents
 
-Use the explicit structural relations `hasArtifactHistory`, `hasHistoricalState`, `hasManifestation`, `hasLocatedFile`, and `hasWorkingLocatedFile` for artifact/facet structure. Use `workingFilePath` as the local runtime current-byte locator when present, `workingAccessUrl` as the remote/external current-byte locator when present and operationally allowed, and treat `hasWorkingMeshInventoryFile` and `hasWorkingKnopInventoryFile` only as owner-level shortcuts to current inventory files.
+Use the explicit structural relations `hasArtifactHistory`, `hasHistoricalState`, `hasManifestation`, `hasLocatedFile`, and `hasWorkingLocatedFile` for artifact/facet structure. Use `workingLocalRelativePath` as the local runtime current-byte locator when present, `workingAccessUrl` as the remote/external current-byte locator when present and operationally allowed, and treat `hasWorkingMeshInventoryFile` and `hasWorkingKnopInventoryFile` only as owner-level shortcuts to current inventory files.
 
 ## Mesh Structure
 
@@ -124,7 +124,7 @@ Substantive RDF about a referent should normally live in a payload artifact or d
 - `nextHistoryOrdinal` lives on `DigitalArtifact` for default generated history allocation.
 - `nextStateOrdinal` lives on `ArtifactHistory` for default generated state allocation.
 - `hasWorkingLocatedFile` is the sparse working-surface hook when the current bytes are also modeled as a `LocatedFile`.
-- `workingFilePath` is the operational local-path hook for current working bytes and may be present even when no mesh-addressable `LocatedFile` is asserted.
+- `workingLocalRelativePath` is the operational local-path hook for current working bytes and may be present even when no mesh-addressable `LocatedFile` is asserted.
 - `workingAccessUrl` is the operational remote/external current-byte hook when a runtime is allowed to fetch the current bytes without first importing them.
 - `hasWorkingMeshInventoryFile` and `hasWorkingKnopInventoryFile` are owner-level shortcuts to current inventory files.
 - `locatedFileForState` is an optional shortcut that should agree with `hasManifestation / hasLocatedFile`.

@@ -62,33 +62,33 @@
   rdfs:label "Operational config" ;
   rdfs:comment "A Config describing host/runtime policy rather than portable mesh behavior. OperationalConfig is the broader first-pass root for execution-surface policy such as local-path and remote-access allowances used by CLI, daemon, or similar runtime surfaces. Narrower specializations such as RuntimeResolutionConfig may be added later if the vocabulary grows enough to justify them." .
 
-<RepoOperationalConfig> a rdfs:Class ;
-  rdfs:subClassOf <OperationalConfig> ;
-  rdfs:label "Repo operational config" ;
-  rdfs:comment "An OperationalConfig intended to travel with a checkout or repo, for example via a root-level file such as /.sf-repo-access.ttl. RepoOperationalConfig may allow repo-internal or constrained repo-adjacent access, but should not by itself imply arbitrary host access outside the checked-out repo boundary." .
+<MeshConfig> a rdfs:Class ;
+  rdfs:subClassOf <Config> ;
+  rdfs:label "Mesh config" ;
+  rdfs:comment "A portable Config intended to travel with a Semantic Mesh, conventionally under mesh-owned config support such as _mesh/_config. MeshConfig may describe expected mesh behavior and local-relative source relationships, but it is not by itself host trust policy and should not imply arbitrary host access outside the active workspace boundary." .
 
-<LocalOperationalConfig> a rdfs:Class ;
-  rdfs:subClassOf <OperationalConfig> ;
-  rdfs:label "Local operational config" ;
-  rdfs:comment "An OperationalConfig intended to remain user- or machine-local, for example via ~/.sf-local-access.ttl. Use for broader host trust decisions such as extra-repo local-directory allowances, remote-access allowances, or user-specific operational restrictions/extensions that should not travel with the repo by default." .
+<LocalConfig> a rdfs:Class ;
+  rdfs:subClassOf <Config> ;
+  rdfs:label "Local config" ;
+  rdfs:comment "A Config intended to remain user- or machine-local, for example via ~/.sf-local-config.ttl. Use for host-local preferences and trust decisions such as extra-workspace local-directory allowances, remote-access allowances, or user-specific operational restrictions/extensions that should not travel with a mesh by default." .
 
 <LocalPathAccessRule> a rdfs:Class ;
   rdfs:label "Local path access rule" ;
-  rdfs:comment "A rule describing when an operational local-path locator such as workingFilePath or targetMeshPath may resolve outside the default runtime boundary. The first-pass model is deny-by-default: access is allowed only when at least one applicable LocalPathAccessRule matches." .
+  rdfs:comment "A rule describing when an operational local-path locator such as workingLocalRelativePath or targetLocalRelativePath may resolve outside the default runtime boundary. The first-pass model is deny-by-default: access is allowed only when at least one applicable LocalPathAccessRule matches." .
 
 <LocalPathBase> a rdfs:Class ;
   rdfs:label "Local path base" ;
   rdfs:comment "A controlled vocabulary naming the base against which a LocalPathAccessRule pathPrefix should be interpreted." .
 
-<LocalPathBase/MeshRoot> a <LocalPathBase> ;
+<meshRootPathBase> a <LocalPathBase> ;
   rdfs:label "Mesh root local path base" ;
   rdfs:comment "Interpret the pathPrefix relative to the current mesh root." .
 
-<LocalPathBase/UserHome> a <LocalPathBase> ;
+<userHomePathBase> a <LocalPathBase> ;
   rdfs:label "User home local path base" ;
   rdfs:comment "Interpret the pathPrefix relative to the current user's home directory." .
 
-<LocalPathBase/AbsolutePath> a <LocalPathBase> ;
+<absolutePathBase> a <LocalPathBase> ;
   rdfs:label "Absolute path local path base" ;
   rdfs:comment "Interpret the pathPrefix as an absolute host path prefix." .
 
@@ -96,17 +96,13 @@
   rdfs:label "Local path locator kind" ;
   rdfs:comment "A controlled vocabulary naming which local-path locator kinds a LocalPathAccessRule applies to." .
 
-<LocalPathLocatorKind/Any> a <LocalPathLocatorKind> ;
-  rdfs:label "Any local path locator kind" ;
-  rdfs:comment "Applies to any supported local-path locator kind." .
+<workingLocalRelativePathLocatorKind> a <LocalPathLocatorKind> ;
+  rdfs:label "Working local relative path locator kind" ;
+  rdfs:comment "Applies specifically to workingLocalRelativePath resolution." .
 
-<LocalPathLocatorKind/WorkingFilePath> a <LocalPathLocatorKind> ;
-  rdfs:label "Working file path local path locator kind" ;
-  rdfs:comment "Applies specifically to workingFilePath resolution." .
-
-<LocalPathLocatorKind/TargetMeshPath> a <LocalPathLocatorKind> ;
-  rdfs:label "Target mesh path local path locator kind" ;
-  rdfs:comment "Applies specifically to targetMeshPath resolution." .
+<targetLocalRelativePathLocatorKind> a <LocalPathLocatorKind> ;
+  rdfs:label "Target local relative path locator kind" ;
+  rdfs:comment "Applies specifically to targetLocalRelativePath resolution." .
 
 <RemoteAccessRule> a rdfs:Class ;
   rdfs:label "Remote access rule" ;
@@ -116,29 +112,25 @@
   rdfs:label "Remote locator kind" ;
   rdfs:comment "A controlled vocabulary naming which remote locator kinds a RemoteAccessRule applies to." .
 
-<RemoteLocatorKind/Any> a <RemoteLocatorKind> ;
-  rdfs:label "Any remote locator kind" ;
-  rdfs:comment "Applies to any supported remote locator kind." .
-
-<RemoteLocatorKind/WorkingAccessUrl> a <RemoteLocatorKind> ;
+<workingAccessUrlLocatorKind> a <RemoteLocatorKind> ;
   rdfs:label "Working access URL remote locator kind" ;
   rdfs:comment "Applies specifically to workingAccessUrl resolution." .
 
-<RemoteLocatorKind/TargetAccessUrl> a <RemoteLocatorKind> ;
+<targetAccessUrlLocatorKind> a <RemoteLocatorKind> ;
   rdfs:label "Target access URL remote locator kind" ;
   rdfs:comment "Applies specifically to targetAccessUrl resolution." .
 
 <hasLocalPathAccessRule> a owl:ObjectProperty ;
-  rdfs:domain <OperationalConfig> ;
+  rdfs:domain <Config> ;
   rdfs:range <LocalPathAccessRule> ;
   rdfs:label "has local path access rule" ;
-  rdfs:comment "Associates an OperationalConfig with one of its local-path access rules. This ontology intentionally defines positive allow rules only; deny behavior is expressed by absence of a matching rule rather than by a separate deny vocabulary in the first pass." .
+  rdfs:comment "Associates a Config with one of its local-path access rules. Mesh-carried rules describe expected local-relative access and remain capped by runtime workspace boundaries; local config rules may grant broader host-local trust. This ontology intentionally defines positive allow rules only; deny behavior is expressed by absence of a matching rule rather than by a separate deny vocabulary in the first pass." .
 
 <hasRemoteAccessRule> a owl:ObjectProperty ;
-  rdfs:domain <OperationalConfig> ;
+  rdfs:domain <Config> ;
   rdfs:range <RemoteAccessRule> ;
   rdfs:label "has remote access rule" ;
-  rdfs:comment "Associates an OperationalConfig with one of its remote-access rules. This ontology intentionally defines positive allow rules only; deny behavior is expressed by absence of a matching rule rather than by a separate deny vocabulary in the first pass." .
+  rdfs:comment "Associates a Config with one of its remote-access rules. Remote access remains operationally fail-closed unless the active runtime explicitly accepts the relevant config layer. This ontology intentionally defines positive allow rules only; deny behavior is expressed by absence of a matching rule rather than by a separate deny vocabulary in the first pass." .
 
 <hasLocalPathBase> a owl:ObjectProperty ;
   rdfs:domain <LocalPathAccessRule> ;

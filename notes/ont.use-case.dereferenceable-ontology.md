@@ -90,12 +90,12 @@ A sidecar layout keeps the public mesh boundary explicit. A common shape is:
 * `examples/` or `test/` for project examples and validation fixtures
 * `docs/` as the Semantic Flow sidecar mesh and GitHub Pages root
 
-The mesh can use `workingFilePath` to point from the sidecar mesh to adjacent repo-local source files. When versioning is enabled, woven release snapshots should still be materialized inside the mesh by default so published historical bytes remain under the public mesh root.
+The mesh can use `workingLocalRelativePath` to point from the sidecar mesh to adjacent repo-local source files. When versioning is enabled, woven release snapshots should still be materialized inside the mesh by default so published historical bytes remain under the public mesh root.
 
 Whole-repo meshes are still useful for fixture repositories and deliberately mesh-native reference publications. They are usually the wrong default for active ontology projects because normal source-tree movement would churn public identifiers, and generated resource pages could accidentally expose more of the repo than intended. See [[wu.repository-options]] for the broader repository-topology distinction.
 
 ## Fixture Direction
 
-A good fixture for this use case should be small but real: a tiny ontology, a tiny SHACL graph, and a docs-rooted sidecar mesh. It should exercise `owl:Ontology`, `sh:ShapesGraph`, `RdfDocument`, `workingFilePath`, `owl:versionIRI`, artifact-local release paths, and copy-on-weave historical snapshots without trying to model a large domain.
+A good fixture for this use case should be small but real: a tiny ontology, a tiny SHACL graph, and a docs-rooted sidecar mesh. It should exercise `owl:Ontology`, `sh:ShapesGraph`, `RdfDocument`, `workingLocalRelativePath`, `owl:versionIRI`, artifact-local release paths, and copy-on-weave historical snapshots without trying to model a large domain.
 
 The fixture should prove the ontology-publishing mechanics, not the completeness of the domain ontology. A small SRD-inspired ontology or similar public-domain/open-license vocabulary is enough if it demonstrates the real publication pressure: stable ontology and SHACL IRIs, versioned bytes, generated pages, and source files that live adjacent to the mesh rather than inside it.
