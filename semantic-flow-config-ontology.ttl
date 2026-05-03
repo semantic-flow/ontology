@@ -72,6 +72,12 @@
   rdfs:label "Local config" ;
   rdfs:comment "A Config intended to remain user- or machine-local, for example via ~/.sf-local-config.ttl. Use for host-local preferences and trust decisions such as extra-workspace local-directory allowances, remote-access allowances, or user-specific operational restrictions/extensions that should not travel with a mesh by default." .
 
+<workspaceRootRelativeToMeshRoot> a owl:DatatypeProperty ;
+  rdfs:domain <MeshConfig> ;
+  rdfs:range xsd:string ;
+  rdfs:label "workspace root relative to mesh root" ;
+  rdfs:comment "A normalized relative path from the mesh root to the containing local workspace root, used by portable sidecar mesh config to describe how the mesh is situated inside a larger project. This should not be interpreted as an absolute host path or as a broad access grant; local-path access still requires explicit LocalPathAccessRule entries and remains capped by the active runtime workspace boundary." .
+
 <LocalPathAccessRule> a rdfs:Class ;
   rdfs:label "Local path access rule" ;
   rdfs:comment "A rule describing when an operational local-path locator such as workingLocalRelativePath or targetLocalRelativePath may resolve outside the default runtime boundary. The first-pass model is deny-by-default: access is allowed only when at least one applicable LocalPathAccessRule matches." .

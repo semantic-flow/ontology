@@ -28,6 +28,20 @@ Superseded decisions are intentionally retained for traceability. When a decisio
   - richer directory-resource modeling or explicit deny/override vocabulary can be added later if real pressure appears
   - `RuntimeResolutionConfig` may still appear later as a narrower subtype if the operational vocabulary grows enough to justify it
 
+### 2026-05-03: Sidecar MeshConfig Records Portable Workspace Relationship
+
+- Status: Active
+- Decision: Add `workspaceRootRelativeToMeshRoot` to `MeshConfig` so a sidecar mesh can carry the portable relationship from its mesh root to its containing workspace root, for example `"../"` for a mesh rooted at `docs/`.
+- References: [[ont.task.2026.2026-03-23-config-modernization]], [[ont.use-case.dereferenceable-ontology]]
+- Why:
+  - a sidecar mesh often needs to travel with the knowledge that it lives inside a larger project tree
+  - the portable relationship is the relative path from mesh root to workspace root, not the absolute host path of the checkout
+  - explicit local-path access rules remain separate from this relationship; knowing the workspace boundary does not grant access by itself
+- Notes:
+  - `weave mesh create --workspace . --mesh-root docs ...` should create `docs/_mesh/_config/config.ttl` with a `MeshConfig` that records `workspaceRootRelativeToMeshRoot "../"`
+  - whole-root meshes where workspace root and mesh root are the same do not need a config artifact solely to record `"."`
+  - local runtimes can use the recorded relationship as a portable boundary hint while still enforcing their active workspace boundary and explicit allow rules
+
 ### 2026-04-11: Generalize page-source resolution around `ArtifactResolutionTarget`
 
 - Status: Active
