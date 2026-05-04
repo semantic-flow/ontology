@@ -14,8 +14,9 @@
   dcterms:title "Semantic Flow Ontology" ;
   dcterms:description "The Semantic Flow ontology defines the classes and properties used for defining and describing semantic meshes and their resources." ;
   dcterms:creator <https://djradon.github.io/ns/djradon> ;
-  owl:versionInfo "0.0.1" ;
-  owl:versionIRI <https://semantic-flow.github.io/ontology/core/releases/v0.0.1/semantic-flow-core-ontology.ttl> ;
+  owl:versionInfo "0.0.2" ;
+  owl:versionIRI <https://semantic-flow.github.io/mesh-sidecar-fantasy-rules/ontology/releases/v0.0.2/ttl/fantasy-rules-ontology.ttl> ;
+  dcterms:hasVersion <https://semantic-flow.github.io/mesh-sidecar-fantasy-rules/ontology/releases/v0.0.2> ;
   vann:preferredNamespacePrefix "sflo" ;
   vann:preferredNamespaceUri <https://semantic-flow.github.io/ontology/core/> .
 
@@ -195,6 +196,16 @@
 <RdfDocument> a rdfs:Class ;
   rdfs:label "RDF document" ;
   rdfs:comment "A content-kind classification for resources whose content is at least one RDF graph. It may be applied selectively to a DigitalArtifact or to a specific DigitalArtifactFacet such as an ArtifactManifestation or LocatedFile." .
+
+#################################################################
+# Compatibility
+#################################################################
+
+<compatibleWith> a owl:ObjectProperty ;
+  rdfs:domain rdfs:Resource ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "compatible with" ;
+  rdfs:comment "Relates a resource to another resource it is intended to interoperate with or conform to." .
 
 #################################################################
 # Web presentation
