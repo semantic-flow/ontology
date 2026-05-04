@@ -11,6 +11,7 @@
     "dcterms": "http://purl.org/dc/terms/",
     "schema": "https://schema.org/",
     "sflo": "https://semantic-flow.github.io/semantic-flow-ontology/",
+    "sfc": "https://semantic-flow.github.io/ontology/core/",
     "sh:targetClass": {
       "@type": "@id"
     },
@@ -397,6 +398,49 @@
           "sh:class": "sflo:ReferenceCatalog",
           "sh:severity": "sh:Warning",
           "sh:message": "If present, a Knop may have at most one sflo:hasReferenceCatalog, and it must be an IRI typed sflo:ReferenceCatalog."
+        },
+        {
+          "sh:path": "sfc:hasExtractionSource",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sfc:ExtractionSource",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, a Knop may have at most one sfc:hasExtractionSource value, and it must be an IRI typed sfc:ExtractionSource."
+        }
+      ]
+    },
+    {
+      "@id": "ExtractionSourceShape",
+      "@type": "sh:NodeShape",
+      "rdfs:label": "ExtractionSource basics",
+      "rdfs:comment": "An ExtractionSource identifies the RDF artifact state used to ground an extracted Knop-managed resource.",
+      "sh:targetClass": "sfc:ExtractionSource",
+      "sh:property": [
+        {
+          "sh:path": "sfc:hasTargetArtifact",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:RdfDocument",
+          "sh:severity": "sh:Violation",
+          "sh:message": "An ExtractionSource MUST identify exactly one target artifact, and that artifact must be an IRI typed sflo:RdfDocument."
+        },
+        {
+          "sh:path": "sfc:hasRequestedTargetState",
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sflo:HistoricalState",
+          "sh:severity": "sh:Warning",
+          "sh:message": "If present, sfc:hasRequestedTargetState should be a single IRI typed sflo:HistoricalState."
+        },
+        {
+          "sh:path": "sfc:hasArtifactResolutionMode",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:nodeKind": "sh:IRI",
+          "sh:class": "sfc:ArtifactResolutionMode",
+          "sh:severity": "sh:Violation",
+          "sh:message": "An ExtractionSource MUST identify exactly one sfc:hasArtifactResolutionMode value typed sfc:ArtifactResolutionMode."
         }
       ]
     },

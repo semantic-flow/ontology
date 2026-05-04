@@ -85,7 +85,7 @@ Use the explicit structural relations `hasArtifactHistory`, `hasHistoricalState`
 - `Knop` has exactly one `designatorPath`.
 - `Knop` has support resources and may have one primary payload resource.
 - `Knop` may also have a `ResourcePageDefinition` plus an optional `KnopAssetBundle` for customized identifier-page composition and local support assets.
-- The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasReferenceCatalog`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
+- The current slot vocabulary uses explicit properties such as `hasKnop`, `hasPayloadArtifact`, `hasReferenceCatalog`, `hasExtractionSource`, `hasKnopMetadata`, and `hasKnopInventory` rather than a generic `containsSemanticFlowResource`.
 
 Current path conventions:
 
@@ -138,6 +138,7 @@ Substantive RDF about a referent should normally live in a payload artifact or d
 - `ResourcePageDefinition` is a separate artifact-level control resource for customized identifier-page composition; it is not the same thing as the generated HTML `ResourcePage`
 - `KnopAssetBundle` is a bounded helper structure for local `_knop/_assets` modeling and does not by itself imply governed artifacts or recursive inventory capture
 - `ArtifactResolutionTarget` is the generic policy-bearing relator for application concerns that need to resolve bytes from an artifact, a direct mesh-local path string, a direct access URL, a specific `LocatedFile`, or another explicit packaged target together with optional history/state/mode/fallback inputs
+- `ExtractionSource` specializes `ArtifactResolutionTarget` for the source RDF document bytes from which a Knop-managed resource was extracted or first grounded; Knops link to it with `hasExtractionSource`, usually as an inventory-rooted fragment such as `D/_knop/_inventory#extraction-source`
 - `ResourcePageRegion` and `ResourcePageSource` describe page-content composition in core; `ResourcePageSource` specializes `ArtifactResolutionTarget` and uses the generic target/history/state/mode/fallback properties directly while template/chrome policy remains a separate config concern
 - `ReferenceLink` may target either a broad resource identity through `referenceTarget` or a version-pinned state through `referenceTargetState`.
 - `designatorPath` is the mesh-relative path-like naming value carried by a `Knop`; it is not a generic path property for every `SemanticFlowResource`.

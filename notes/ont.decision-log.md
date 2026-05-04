@@ -53,6 +53,16 @@ Superseded decisions are intentionally retained for traceability. When a decisio
   - a source should be allowed to resolve directly from a mesh-local path string, a direct access URL, or a direct `LocatedFile` when no artifact-level target is available, while still supporting artifact-targeted resolution with explicit history/state policy
   - `_knop/_page` should remain a normal support artifact surface centered on `page.ttl`, not a mini container model for every authored file involved in page generation
   - `_knop/_assets` still benefits from a bounded helper concept, but content/helper files should not all be forced into an asset or bundle abstraction
+
+### 2026-05-04: Model Extraction Source Binding As An Inventory Relator
+
+- Status: Active
+- Decision: Add `ExtractionSource` as an `ArtifactResolutionTarget` subclass for the RDF document bytes from which a Knop-managed resource was extracted or first grounded, and add `hasExtractionSource` from `Knop` to `ExtractionSource`. Use inventory-rooted fragment IRIs such as `D/_knop/_inventory#extraction-source` for the carried local extraction slices.
+- References: [[wd.task.2026.2026-05-03-term-extraction]], [[wd.task.2026.2026-05-02-fantasy-rules-sidecar]], [[sf.spec.2026-04-05-extract-behavior]]
+- Why:
+  - Extraction source binding is not a `ReferenceLink`; it is operational provenance for the extracted identifier surface and should sit with the Knop inventory that already carries current support artifact state.
+  - Reusing the generic artifact-resolution properties keeps pinned and current source resolution explicit while leaving broader enumeration value normalization for a separate ontology task.
+  - Hash-fragment inventory IRIs are acceptable here as long as generated inventory resource pages preserve a named section for dereferenceability.
   - per-source requested state and fallback policy affect runtime resolution semantics and therefore belong in core rather than being left to ad hoc conventions
   - template/chrome policy is related, but should remain separate from page-content composition
 - Notes:

@@ -437,6 +437,17 @@
   rdfs:label "Artifact resolution target" ;
   rdfs:comment "A policy-bearing relator that identifies bytes for an application concern by naming a target artifact, a mesh-local file path string, a specific LocatedFile, or another explicit packaged/distributed target together with optional requested state, mode, and fallback policy. At least one concrete target should normally be provided, but this ontology does not enforce that cardinality directly." .
 
+<ExtractionSource> a rdfs:Class ;
+  rdfs:subClassOf <ArtifactResolutionTarget> ;
+  rdfs:label "Extraction source" ;
+  rdfs:comment "An artifact-resolution target that identifies the RDF document bytes from which a Knop-managed resource was extracted or first grounded." .
+
+<hasExtractionSource> a owl:ObjectProperty ;
+  rdfs:domain <Knop> ;
+  rdfs:range <ExtractionSource> ;
+  rdfs:label "has extraction source" ;
+  rdfs:comment "Links a Knop to the artifact-resolution target that identifies the source RDF document bytes for the resource managed by that Knop." .
+
 <ArtifactResolutionMode> a rdfs:Class ;
   rdfs:label "Artifact resolution mode" ;
   rdfs:comment "A controlled vocabulary describing whether an ArtifactResolutionTarget is pinned to an explicitly requested state or follows the current/default artifact surface." .
